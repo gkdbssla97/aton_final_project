@@ -1,5 +1,6 @@
 package com.example.aton_final_project.controller.admin;
 
+import com.example.aton_final_project.model.dto.InquiryRegisterResponseDto;
 import com.example.aton_final_project.model.dto.MemberResponseDto;
 import com.example.aton_final_project.model.dto.MemberServiceRegisterResponseDto;
 import com.example.aton_final_project.service.file.FileService;
@@ -88,6 +89,27 @@ public class AdminMainController {
         System.out.println(fileUrl.split("uploaded_files")[1]);
 
         return "pages/admin-service-page";
+    }
+
+    /**
+     * 전체 회원 문의 내역
+     * @return
+     */
+    @GetMapping("/inquiry-details-page")
+    public String adminInquiryListPage(HttpServletRequest request, Model model) throws Exception {
+        HttpSession session = request.getSession(true);
+        MemberResponseDto loginMember = (MemberResponseDto) session.getAttribute(LOGIN_MEMBER);
+
+        if (loginMember == null) {
+            return "redirect:/login";
+        }
+        List<InquiryRegisterResponseDto> inquiryList = inquiryService.findAllInquiry();
+        System.out.println(inquiryList);
+        System.out.println("size; " + inquiryList.size());
+        model.addAttribute("member", loginMember);
+        model.addAttribute("inquiryList", inquiryList);
+
+        return "pages/admin-inquiry-details";
     }
 
     public void printSessionInfo(HttpServletRequest request) {
