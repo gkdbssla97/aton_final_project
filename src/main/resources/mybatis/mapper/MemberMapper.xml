@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.aton_final_project.model.dao.MemberMapper">
+    <!--    회원가입-->
+    <insert id="joinAdmin" parameterType="com.example.aton_final_project.model.dto.MemberRequestDto" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO member(email, username, password, phoneNo, telcoTycd, registerDate)
+        VALUES (#{memberRequestDto.email}, #{memberRequestDto.username}, #{memberRequestDto.password},
+                #{memberRequestDto.phoneNo}, #{memberRequestDto.telcoTycd}, #{memberRequestDto.registerDate});
+    </insert>
+    <insert id="authorizeAdmin">
+        INSERT INTO memberauthoritiesmapping(member_id, member_authorities_code_id)
+        VALUES (#{memberId}, 1);
+    </insert>
+    <insert id="joinMember">
+        INSERT INTO member(email, username, password, phoneNo, telcoTycd, registerDate)
+        VALUES (#{email}, #{username}, #{password}, #{phoneNo}, #{telcoTycd}, #{registerDate});
+    </insert>
+    <insert id="authorizeMember">
+        INSERT INTO memberauthoritiesmapping(member_id, member_authorities_code_id)
+        VALUES (#{memberId}, 2);
+    </insert>
+    <insert id="saveMemberAccessKey">
+        INSERT INTO accesstoken(member_id, authorization, encrypt_key, email)
+        VALUES (#{memberId}, #{authorization}, #{encryptKey}, #{email});
+    </insert>
+
+    <!--    회원 정보 가져오기-->
+<!--    <select id="findMemberByEmailAndPassword" resultType="com.example.aton_final_project.model.dto.MemberResponseDto">-->
+<!--        SELECT member_id AS 'id',-->
+<!--               username,-->
+<!--               email,-->
+<!--               password,-->
+<!--               phoneNo,-->
+<!--               telcoTycd,-->
+<!--               registerDate-->
+<!--        FROM member-->
+<!--        WHERE email = #{email} AND password = #{password}-->
+<!--    </select>-->
+    <!--    회원과 연관된 암호화키 가져오기-->
+    <select id="findEncryptKeyByMemberId" resultType="string">
+        SELECT encrypt_key
+        FROM accesstoken
+        WHERE member_id = #{memberId}
+    </select>
+    <select id="findMemberKeyByEmail" resultType="com.example.aton_final_project.model.dto.AccessTokenDto">
+        SELECT encrypt_key AS 'encryptKey',
+               member_id   AS 'memberId',
+               authorization
+        FROM accesstoken
+        WHERE email = #{email}
+    </select>
+    <select id="findMemberById" resultType="com.example.aton_final_project.model.dto.MemberResponseDto">
+        select email, password, username, phoneNo
+        from member
+        where member_id = #{memberId}
+    </select>
+<!--    회원의 권한정보 가져오기-->
+    <select id="findMemberAuthorityByMemberId" resultType="Long">
+        SELECT c.member_authorities_code_id
+        FROM memberauthoritiesmapping a
+                 JOIN member m ON m.member_id = a.member_id
+                 JOIN memberauthoritiescode c ON a.member_authorities_code_id = c.member_authorities_code_id
+        WHERE m.member_id = #{memberId}
+        ORDER BY c.member_authorities_code_id
+        LIMIT 1;
+    </select>
+<!--    회원 정보 수정-->
+    <update id="editMemberInformation">
+        UPDATE member
+        SET password   = #{newPassword},
+            updateDate = #{updateDate}
+        WHERE member_id = #{memberId}
+    </update>
+<!--    &lt;!&ndash;    회원정보 수정&ndash;&gt;-->
+<!--    &lt;!&ndash;탈퇴&ndash;&gt;-->
+<!--    <delete id="deleteMember">-->
+<!--        delete-->
+<!--        from member-->
+<!--        where userId = #{userId} and phoneNo = #{phoneNo}-->
+<!--    </delete>-->
+<!--    <select id="findAuthoritiesMappingByUserId" resultType="com.example.miniProj3.domain.dto.MemberAuthoritiesMappingDto">-->
+<!--        SELECT member_authorities_mapping_id as 'memberAuthoritiesMappingId',-->
+<!--               member_authorities_code_id as 'memberAuthoritiesCodeId',-->
+<!--               member_id as'memberId'-->
+<!--        FROM memberauthoritiesmapping mp-->
+<!--        where mp.member_id-->
+<!--                  in (select member_id from member m where m.userId = #{userId});-->
+<!--    </select>-->
+<!--    <select id="findAuthoritiesCodeByCodeId" resultType="com.example.miniProj3.domain.member.MemberAuthoritiesCode">-->
+<!--        SELECT member_authorities_code_id as 'memberAuthoritiesCodeId',-->
+<!--               authority,-->
+<!--               registerDate-->
+<!--        FROM memberAuthoritiesCode mp-->
+<!--        where member_authorities_code_id = #{memberAuthoritiesCodeId}-->
+<!--    </select>-->
+
+</mapper>

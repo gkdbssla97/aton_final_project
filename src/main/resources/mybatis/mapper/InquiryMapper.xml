@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.aton_final_project.model.dao.InquiryMapper">
+    <!--    단건 회원문의 서비스 저장-->
+    <insert id="saveInquiry">
+        INSERT INTO inquiry(category, title, contents, registerDate, member_id)
+        VALUES (#{inquiryRegisterRequestDto.category}, #{inquiryRegisterRequestDto.title},
+                #{inquiryRegisterRequestDto.contents}, #{inquiryRegisterRequestDto.registerDate}, #{memberId});
+    </insert>
+<!--    회원 문의 전체 내역 조회-->
+    <select id="findInquiriesRegisterById" resultType="com.example.aton_final_project.model.dto.InquiryRegisterResponseDto">
+        SELECT inquiry_id     AS id,
+               CASE category
+                   WHEN '0001' THEN '일반문의'
+                   WHEN '0002' THEN '계정문의'
+                   WHEN '0003' THEN '탈퇴문의'
+                   WHEN '0004' THEN '신고/이용제한'
+                   END        AS category,
+               title,
+               contents,
+               inquiry_status AS inquiryStatus,
+               registerDate   AS registerDate
+        FROM inquiry i
+        where member_id = #{memberId};
+    </select>
+<!--    회원 문의 단건 ID 조회-->
+    <select id="findInquiryIdByMemberId" resultType="Long">
+        SELECT inquiry_id
+        FROM inquiry
+        WHERE member_id = #{memberId}
+        ORDER BY inquiry_id DESC
+        LIMIT 1;
+    </select>
+<!--    <select id="findFilesById" resultType="com.example.aton_final_project.model.dto.FilesDto">-->
+<!--        SELECT filename,-->
+<!--               file_url AS 'fileUrl',-->
+<!--               original_filename AS 'originalFileName'-->
+<!--        FROM inquiryfiles-->
+<!--        WHERE file_id = #{fileId}-->
+<!--    </select>-->
+    <select id="findAllFiles" resultType="com.example.aton_final_project.model.dto.FilesDto">
+        SELECT filename,
+               file_url          AS 'fileUrl',
+               original_filename AS 'originalFileName'
+        FROM inquiryfiles
+    </select>
+    <insert id="saveInquiryFile">
+        INSERT INTO inquiryfiles(file_url, filename, original_filename, inquiry_id)
+        VALUES (#{filesDto.fileUrl}, #{filesDto.filename}, #{filesDto.originalFileName}, #{inquiryId});
+    </insert>
+</mapper>

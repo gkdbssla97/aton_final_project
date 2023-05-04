@@ -1,0 +1,470 @@
+@charset "utf-8";
+/* reset */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,button{margin:0;padding:0}
+fieldset,img{border:0 none}
+dl,ul,ol,menu,li{list-style:none}
+blockquote, q{quotes: none}
+blockquote:before, blockquote:after,q:before, q:after{content:'';content:none}
+input,select,textarea,button{vertical-align:middle}
+input::-ms-clear{display:none}
+button{border:0 none;background-color:transparent;cursor:pointer}
+body{background:#fff}
+body,th,td,input,select,textarea,button{font-size:13px;line-height:1.5;font-family:'맑은 고딕', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif, '돋움', dotum;color:#1e1e1e}/* 2017-06-19 수정 *//* 2017-08-14 수정 */
+html:lang(ja) body, html:lang(ja) th, html:lang(ja) td, html:lang(ja) input, html:lang(ja) select, html:lang(ja) textarea, html:lang(ja) button{font-family:'Hiragino Kaku Gothic Pro', Meiryo, 'MS PGothic', 'Apple SD Gothic Neo', 'Helvetica Neue', 'Malgun Gothic', Helvetica, Arial, sans-serif}/* 2017-07-28 추가 */
+a{color:#1e1e1e;text-decoration:none}
+a:active, a:hover{text-decoration:underline}
+a:active{background-color:transparent}
+address,caption,cite,code,dfn,em,var{font-style:normal;font-weight:normal}
+
+/* global */
+#kakaoIndex a{overflow:hidden;position:absolute;left:-9999px;margin:0;padding:0}
+#kakaoIndex a:focus{left:0}
+.ir_pm{display:block;overflow:hidden;font-size:0;line-height:0;text-indent:-9999px}
+.ir_wa{display:block;overflow:hidden;position:relative;z-index:-1;width:100%;height:100%}
+.ir_caption{overflow:hidden;width:1px;font-size:1px;line-height:0;text-indent:-9999px}
+.screen_out{overflow:hidden;position:absolute;width:0;height:0;line-height:0;text-indent:-9999px}
+.hide{display:none}
+
+/* common */
+.thumb_img{display:block}
+.ico_cs{display:inline-block;overflow:hidden;font-size:0;line-height:0;text-indent:-9999px;background-image:url('../img/ico_cs_200120.png');background-repeat:no-repeat;background-position:0 0}/* 2020-01-20 수정 */
+
+.btn_cs{display:inline-block;padding:0 63px;line-height:40px;height:42px;font-size:15px;color:#1e1e1e;background-color:#e8e8e8}/* 2017-07-28 수정 */
+.btn_cs:hover, .btn_cs:focus{background-color:#d3d3d3;text-decoration:none}
+.btn_cs2{background-color:#ffe500}/* 2020-01-20 수정 */
+.btn_cs2:hover, .btn_cs2:focus{background-color:#F4d202}
+.wrap_sort .opt_sort{display:inline-block;padding-left:8px;color:#878787}
+.wrap_sort .opt_sort:hover, .wrap_sort .opt_sort.focus, .wrap_sort .opt_on{font-weight:bold;color:#1e1e1e;text-decoration: underline;} /** 2022-08-23 bella 수정 **/
+
+/* layout */
+#kakaoWrap{min-width:1020px}
+#kakaoHead{display:block;border-bottom:1px solid #e8e8e8}/* 2017-08-22 수정 */
+#kakaoContent{display:block;width:990px;margin:0 auto;min-height:484px}/* 2017-08-03 수정 */
+#cMain{width:990px;height:100%;overflow: hidden} /* 2020-01-29 수정 */
+/*#cMain::after{display: block;content: ''; clear: both;} !* 2020-01-29 수정 *!*/
+#mFeature{float:left;height:100%;width:160px;padding-right:20px}/* 2017-06-28 수정 */
+#kakaoFoot{border-top:1px solid #e8e8e8;height:179px}
+
+/* head */
+.cs_head{position:relative;width:990px;height:99px;margin:0 auto;padding-top:51px}
+.cs_head:after{display:block;visibility:hidden;height:0;font-size:0;clear:both;content:''}
+.cs_head .tit_cs{float:left;margin:5px 35px 0 0}
+.cs_head .tit_cs #kakaoServiceLogo, .tit_cs .img_cs{display:block}
+.wrap_search{position:relative;float:left}/* 2017-08-03 수정 */ /* 2021-06-11수정*/
+.wrap_search .search_keyword{position: absolute;width: 478px;margin-top: 15px;left:14px;}
+.wrap_search .search_keyword a{margin-right: 10px;color: #555555;}
+.cs_head .box_searchbar{position:relative;border:1px solid #1e1e1e;color:#1e1e1e;width:478px;height:46px}
+.cs_head .box_searchbar .lab_keyword{position:absolute;top:2px;left:14px;font-size:15px;line-height:43px;z-index:5}/* 2017-08-22 수정 */
+.cs_head .box_searchbar .tf_keyword{position:absolute;width:429px;height:100%;border:0 none;background-color:transparent;z-index:10;font-size:15px;text-indent:14px;line-height:43px}/* 2017-07-28 수정 */
+.cs_head .box_searchbar .btn_search{position:absolute;top:11px;right:12px;width:24px;height:24px;background-position:0 0}/* 2017-07-28 수정 */
+.cs_head .on .lab_keyword{display:none}
+.cs_head .box_suggest{display:none;position:absolute;top:47px;left:0;width:478px;border:1px solid #e8e8e8;-webkit-box-shadow:2px 4px 15px rgba(0,0,0,0.1);box-shadow:2px 4px 15px rgba(0,0,0,0.1);background-color:#fff;z-index:10}/* 2017-07-28 수정 *//* 2017-08-03 수정 */
+.cs_head .search_on .box_suggest{display:block}/* 2017-08-03 수정 */
+.cs_head .list_suggest{margin:12px 0 14px}/* 2017-07-28 수정 */
+.cs_head .list_suggest .link_suggest{display:block;overflow:hidden;width:444px;height:28px;padding:0 17px;line-height:30px;text-overflow:ellipsis;white-space:nowrap;letter-spacing:-1px}/* 2017-07-28 수정 *//* 2017-08-03 수정 */
+.cs_head .list_suggest .link_suggest:hover, .cs_head .list_suggest .link_suggest:focus{background-color:#f6f6f6;text-decoration:none}/* 2017-08-03 수정 */
+.cs_head .list_suggest strong{color:#2c91ef;font-weight:normal}/* 2017-07-28 수정 */
+.cs_head .info_other{position:absolute;top:20px;right:0}/* 2017-07-28 수정 */
+.cs_head .info_other:after{display:block;visibility:hidden;height:0;font-size:0;clear:both;content:''}
+.info_other .link_jp{float:left;margin-right:2px;line-height:20px}/* 2017-07-28 수정 */
+.info_other .link_jp .ico_cs{width:5px;height:7px;margin:8px 0 0 5px;background-position:0 -56px;vertical-align:top} /* 2017-07-28 수정 */
+.info_other .link_lang{display:inline-block;line-height:20px}/* 2017-07-28 수정 */
+.info_other .link_lang .ico_cs{width:7px;height:5px;margin:8px 0 0 9px;background-position:0 -40px;vertical-align:top}/* 2017-07-28 수정 */
+.info_other .open_lang .link_lang .ico_cs{width:7px;height:5px;margin:8px 0 0 9px;background-position:0 -48px;vertical-align:top}/* 2022-12-14 접근성 수정 */
+
+/* 2020-05 개인정보 분리 개편 추가 */
+.info_other .wrap_lang{float:left;width:70px;position:relative;text-align:right}
+.info_other .wrap_login{float:left;width:50px;position:relative;text-align:right}
+.info_other .wrap_logout{float:left;width:auto;position:relative;text-align:right;margin-left:20px;} /* 2020-09-03 bella 추가*/
+.info_other .link_login{display:inline-block;line-height:20px}/* 2020-04-01 추가 */
+.info_other .open_lang .list_lang{display:block}
+/* // 2020-05 개인정보 분리 개편 추가 */
+.info_other .list_lang{display:none;position:absolute;right:0;width:66px;padding:3px 7px;text-align:left;border:1px solid #1e1e1e;background-color:#fff} /* 22.12.14 접근성 수정 > top -8 삭제*/
+.info_other .list_lang li{line-height:23px}
+.info_other .list_lang li .link_item{position:relative;display:block;padding-right:19px}
+.info_other .list_lang li .ico_cs{position:absolute;top:8px;right:3px;display:none;width:7px;height:5px;background-position:0 -48px}
+.info_other .list_lang .on .ico_cs{display:inline-block}
+.cs_navi{width:100%;height:50px;border-top:1px solid #e8e8e8}/* 2017-08-22 수정 */
+.cs_navi .inner_navi{overflow:hidden;width:990px;margin:12px auto;font-size:15px;}/* 2017-08-22 수정 */ /* 2019-09-25 접근성이슈 bella 수정*/
+.cs_navi .tit_notice{float:left;margin-right:11px;padding: 5px 0 5px 0;} /* 2019-09-25 접근성이슈 bella 수정*/
+.cs_navi .list_notice{float:left;padding: 5px 0 5px 0;} /* 2019-09-25 접근성이슈 bella 수정*/
+.cs_navi .list_path{overflow:hidden;padding: 5px 0 5px 0;} /* 2019-09-25 접근성이슈 bella 수정*/
+.cs_navi .list_path li{float:left;color:#777}
+.cs_navi .list_path .link_path{font-size:15px;color:#212121;margin: 5px} /* 2019-09-25 접근성이슈 bella 수정*/
+.cs_navi .list_path .ico_arr{width:5px;height:9px;margin:0 6px 0 2px;background-position:-84px -24px;text-align: center;vertical-align: middle}
+
+/* main */
+.wrap_main .cs_head{height:137px;padding-top:90px}
+.wrap_main .cs_head .box_searchbar{width:543px}
+.wrap_main .cs_head .box_searchbar .tf_keyword{width:494px}
+.wrap_main .cs_head .box_suggest{width:543px}
+.wrap_main .cs_head .list_suggest .link_suggest{width:509px}/* 2017-08-03 수정 */
+.wrap_main .cs_navi{border-bottom:1px solid #000}
+/* 2017-07-12 수정 시작 */
+/* 고객센터 서비스 */
+.wrap_service{position:relative}/* 2017-08-03 수정 */
+.wrap_service .tit_main{display:block;margin-top:61px;font-size:21px}
+.service_main{padding-bottom:9px}/* 2017-07-28 수정 */
+.sub_open .service_main{display:none}
+.service_main .list_main{overflow:hidden;margin-top:42px}
+.service_main .list_main li{float:left;width:140px;margin: 5px 0 27px 25px;} /* 2019-09-23 접근성이슈 bella 수정*/
+.service_main .list_main .fst{margin: 5px 0 0 5px;} /* 2019-09-23 접근성이슈 bella 수정*/
+.service_main .list_main li .link_service{display:block}
+.service_main .list_main .txt_service{display:block;height:44px;margin-top:10px;font-size:15px}
+.service_sub{display:none}
+.sub_open .service_sub{display:block}
+.service_sub .list_sub{overflow:hidden;width:990px;margin-top:40px}
+.service_sub .list_sub > li{float:left;width:190px;height:430px;padding:18px 8px 40px 0}/* 2020-09-03 bella.yk 수정 */
+.service_sub .list_sub .tit_sub{font-size:15px}/* 2017-08-02 수정 *//* 2017-08-09 수정 */
+.service_sub .sub_menu > li{margin-top:12px}
+.service_sub .sub_menu > li:first-child{margin-top:23px}
+.service_sub .sub_menu .link_sub{color:#919191;font-size:14px}/* 2017-07-28 수정 */
+.service_sub .sub_menu .ico_new{width:11px;height:11px;margin-top:6px;background-position:-28px -64px;vertical-align:top}/* 2017-07-28 수정 */
+.wrap_service .btn_more{position:absolute;top:0;right:0;width:120px;height:36px;background-color:#5b5b5b;color:#fff; margin-right:5px;} /* 2019-09-23 접근성이슈 bella 수정*/
+/*html:lang(en) .service_main .list_main li{margin-left:72px}*/
+/*html:lang(en) .service_main .list_main .fst{margin-left:0}*/
+
+/* 카카오계정관리, 카카오신고센터 */
+.wrap_etc{padding:59px 0 80px;overflow:hidden;width:100%;border-top:1px solid #eee}/* 2017-07-31 수정 *//* 2017-08-03 수정 */
+.wrap_etc .info_etc{float:left;width:480px}
+.wrap_etc .info_set{margin-right:15px} /* 2021-02-15 28 > 15  bella 수정*/
+.info_etc .tit_info{display:block;width:100%;margin-bottom:21px;font-size:21px}/* 2017-07-31 수정 */
+.info_etc .list_info{overflow:hidden;width:100%}/* 2017-07-31 수정 */
+.info_etc .list_info li{float:left;width:100%;font-size:15px;margin: 2px 5px 2px 5px;} /* 2019-09-23 접근성이슈 bella 수정*/
+.info_set .list_info li{width:230px} /* 2019-09-23 접근성이슈 bella 수정*/
+.info_etc .link_info .ico_arr{width:5px;height:9px;margin-left:4px;background-position:-84px -24px}
+/* 2017-07-12 수정 끝 */
+
+/* gnb */
+.tit_menu{font-size:21px;margin-top:50px}
+#kakaoGnb .list_menu{margin-top:50px}
+#kakaoGnb .list_menu li{margin: 0 0 20px 5px;font-size:15px} /* 2019-09-23 접근성이슈 bella 수정*/
+#kakaoGnb .list_menu .link_menu{font-weight:bold;color:#878787}/* 2017-06-29 수정 */
+#kakaoGnb .list_menu .on .link_menu, #kakaoGnb .list_menu .link_menu:hover, #kakaoGnb .list_menu .link_menu:focus{color:#1e1e1e;text-decoration:underline}/* 2017-06-29 수정 */
+
+/* public */
+.cont_public{position:relative;float:right;border-left:1px solid #e8e8e8;width:750px;padding-left:58px;min-height:700px;padding-bottom:60px}
+.cont_public .tit_public{font-size:32px;margin:47px 0 45px}/* 2017-06-28 수정 */
+/* 2017-06-21 삭제 시작 */
+/*
+.cont_public .tab_menu{width:100%;overflow:hidden;margin-top:42px;position:relative}
+.cont_public .tab_menu:after{position:absolute;bottom:0;display:block;height:2px;width:100%;font-size:0;clear:both;content:'';left:0;right:0;background-color:#000}
+.cont_public .tab_menu li{float:left;position:relative;z-index:5;margin-left:-1px}
+.cont_public .tab_menu li:first-child{margin-left:0}
+.cont_public .tab_menu li .link_tab{display:block;height:36px;padding:11px 31px 0;font-size:15px;border-top:1px solid #e8e8e8;border-right:1px solid #e8e8e8;border-left:1px solid #e8e8e8;border-bottom:2px solid #000}
+.cont_public .tab_menu .on .link_tab{padding:10px 29px 0 30px;border-top:2px solid #000;border-right:2px solid #000;border-left:2px solid #000;border-bottom:2px solid #fff;margin-right:1px}
+*/
+/* 2017-06-21 삭제 끝 */
+/* 2017-06-19 수정 시작 */
+.cont_public .wrap_cont{padding-bottom:30px;border-top:2px solid #000;border-bottom:1px solid #000}/* 2017-07-28 추가 */
+.cont_public .wrap_keyword + .wrap_cont{border-top:1px solid #000}/* 2017-07-28 추가 */
+.cont_public .wrap_cont > .item_info{padding: 12px 0 16px;border-top:1px solid #e8e8e8;overflow:hidden} /* 2019-09-24 기존과 padding 사이즈 맞게 bella 수정*/
+.cont_public .wrap_cont > .item_info:first-child{margin-top:30px;border-top:0 none}
+.cont_public .info_tit{overflow:hidden}
+.cont_public .wrap_cont .link_cont{float:left;width:740px;margin:5px;} /* 접근성 이슈 수정 2022-10-28 */
+.cont_public .wrap_cont .link_cont:hover, .cont_public .wrap_cont .link_cont:focus{text-decoration:none}/* 2017-08-11 위치 수정 */
+.cont_public .wrap_cont .tit_info{float:left;width:540px;font-size:15px;font-weight:normal;margin-right:40px;margin-left: 5px;} /* 접근성 이슈 수정 2022-10-28 */
+.cont_public .wrap_cont .num_info{float:left;width:55px;margin: 0;font-size:15px} /* 접근성 이슈 수정 2022-10-28 */
+.cont_public .wrap_cont .txt_date{float:left;width:85px;color:#878787}
+.cont_public .wrap_cont .btn_arr{float:right;width:16px;height:16px;margin-right:14px} /* 접근성 이슈 수정 2022-10-28 */
+.cont_public .wrap_cont .ico_arr{display:block;width:16px;height:10px;margin-top:3px;background-position:-28px -52px}
+.cont_public .wrap_cont .on .ico_arr{background-position:-28px -40px}
+.cont_public .wrap_btn{clear:both;overflow: hidden}/* 2018-08-06 수정 */ /* 2018-08-28 수정 */ /* 2020-01-29 수정 */
+/*.cont_public .wrap_btn::after{display: block;content: '';clear: both;} !* 2020-01-29 수정 *!*/
+.cont_public .btn_cs{float:right;margin: 50px 5px 5px 0;font-weight:bold} /* 2018-08-06 수정 *//* 2018-08-28 수정 */ /* 2019-09-23 접근성이슈 bella 수정*/
+/* 일반 문의사항 내용 */
+.cont_public .wrap_cont > .item_info .info_cont{display:none;overflow:hidden;width:690px;text-align:left;margin:15px 0 15px 60px;font-size:15px;line-height:27px}/* 2017-07-31 수정 *//* 2017-08-14 수정 */
+.cont_public .wrap_cont .on .info_cont{display:block}
+.cont_public .wrap_cont .on .tit_info{font-size:21px;line-height:27px;font-weight:bold}
+.cont_public .wrap_cont .txt_detail, .cont_public .wrap_cont .tit_detail, .cont_public .wrap_cont .list_detail, .cont_public .wrap_cont .thumb_img{display:block;margin-top:30px}
+.cont_public .wrap_sort{position:absolute;top:61px;right:0}
+/* 유용한팁 */
+.cont_public .wrap_tip, .cont_public .wrap_notice{margin-top:42px;padding-bottom:30px;border-top:2px solid #212121}/* 2017-07-28 수정 */
+.cont_public .wrap_tip .link_cont:hover, .wrap_tip .link_cont:focus{text-decoration:underline}/* 2017-08-11 위치 수정 */
+.cont_public .wrap_tip .num_info{color:#D87E08;font-size:18px;margin:0;} /* 접근성 이슈 수정 2022-10-28 */
+.cont_public .wrap_tip .tit_info{font-size:18px;margin-left: 5px;}/* 접근성 이슈 수정 2022-10-28 */
+/*.cont_public .wrap_tip .link_cont{font-size:18px} 2017-08-11 삭제 */
+.cont_public .wrap_notice .tit_info{width:510px;margin-right: 55px;}/* 2017-08-14 수정 */
+/* 2017-06-19 수정 끝 */
+
+/* 2018-08-06 추가/수정 시작 */
+.cont_public .txt_solution{display:inline-block;margin-top:50px;line-height:42px;color:#666} /* 2018-08-28 수정 */
+.cont_public .bundle_btn{display:inline-block;float:right}
+.cont_public .bundle_btn .btn_cs{float:none;width:186px;padding:0;font-weight:bold;text-align:center}/* 2018-08-28 추가 */
+.cont_public .bundle_btn .btn_cs .ico_kakaotalk{width:19px;height:18px;margin:10px 1px 0 0;background-position:-100px 0;vertical-align:top}/* 2020-01-20 수정 */
+.cont_public .bundle_btn .btn_cs .ico_write{width:17px;height:17px;margin:12px 3px 0 0;background-position:-80px -60px;vertical-align:top} /* 2018-08-28 클래스명 수정 */
+.cont_public .bundle_btn .btn_cs + .btn_cs{margin-left:4px}/* 2018-08-28 클래스명 수정 */
+/* 2018-08-06 추가/수정 끝 */
+
+/* help */
+.cont_help{position:relative}
+.cont_help .tit_help{margin-top:50px;font-size:21px;letter-spacing:-1px}
+.cont_help .tit_help_sub{color: #0747a6;font-weight: initial;margin-left: 5px;font-size: 18px;} /* 2021-06-04 추가 */
+.cont_help .wrap_sort{position:absolute;top:10px;right:0}
+.help_contents ol, .help_contents ol > li{list-style: list-item} /* 2022-07-07 bella 추가 > KCS-858*/
+.help_contents ol > li{list-style-position: inside} /* 2022-07-07 bella 추가 > KCS-858*/
+.help_contents img{max-width: 100%; height: auto !important;} /* 2022-12-05 bella 추가 > KCSACC-128*/
+/* 2017-06-21 수정 시작 */
+.wrap_keyword{border-top:2px solid #212121;margin-top:26px;padding:17px 5px 4px}/* 2017-07-28 수정 */
+/*.cont_public .wrap_keyword{border-bottom:1px solid #212121} 2017-07-28 삭제 */
+.wrap_keyword .txt_keyword{overflow:hidden;display:inline-block;margin-bottom:1px;padding: 5px 0 5px 0;white-space:normal;font-size:15px} /* 2019-09-25 접근성이슈 bella 수정*/
+.wrap_keyword .txt_keyword .link_keyword{font-weight:bold;float:left;color:#878787;margin: 0 5px 0 5px;}/* 2017-06-29 수정 */ /* 2019-09-25 접근성이슈 bella 수정*/
+.wrap_keyword .on .link_keyword, .wrap_keyword .link_keyword:hover, .wrap_keyword .link_keyword:focus{text-decoration:underline;color:#1e1e1e}/* 2017-06-29 수정 */
+.wrap_keyword .txt_keyword .ico_dot{float:left;width:5px;height:5px;margin:8px 7px;background-position:-84px -48px}
+.wrap_keyword_2depth{margin-left:60px;}
+.wrap_keyword_3depth{margin-left:120px;}
+/* 2017-06-21 수정 끝 */
+.cont_help .wrap_que{border-top:1px solid #212121;margin-bottom:60px}
+.cont_help .list_que{overflow:hidden;margin:35px 0 15px 0}
+.cont_help .list_que li{margin-bottom:35px;font-size:15px;line-height:27px}
+.wrap_que .link_item{color:#0747a6;}
+.wrap_que .link_item.helps_title{font-size: 18px;} /* 2021-06-07 추 */
+.wrap_que .helps_category{font-size: 14px;} /* 2021-06-07 추가 */
+.wrap_que .helps_contents{height: 50px;text-overflow: ellipsis;display: -webkit-box;overflow: hidden;-webkit-line-clamp: 2;-webkit-box-orient: vertical;white-space: break-spaces;} /* 2021-06-07 추가 */
+.cont_help .wrap_null{border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8;padding:50px 20px 49px;text-align:center;font-size:15px}
+
+/* paging */
+.paging_comm{border-top:1px solid #000;margin-top:-1px;padding-top:24px;text-align:center}/* 2017-07-28 수정 */
+.paging_comm .link_page{display:inline-block;margin-right:28px;line-height:30px}
+.paging_comm em.link_page, .paging_comm .link_page:hover, .paging_comm .link_page:focus{font-weight:bold;text-decoration:underline}
+.paging_comm .btn_paging{width:28px;height:28px;display:inline-block;border:1px solid #d4d4d4;vertical-align:top}
+.paging_comm .btn_fst{margin-right:3px}
+.paging_comm .btn_prev{margin-right:29px}
+.paging_comm .btn_lst{margin-left:3px}
+.paging_comm .btn_paging .ico_arr{display:block;margin:10px auto 0;height:9px}
+.paging_comm .btn_fst .ico_arr{width:11px;background-position:-68px 0}
+.paging_comm .btn_lst .ico_arr{width:11px;background-position:-84px 0}
+.paging_comm .btn_prev .ico_arr{width:5px;background-position:-68px 0}
+.paging_comm .btn_next .ico_arr{width:5px;background-position:-84px 0}
+.paging_comm .btn_paging:hover, .paging_comm .btn_paging:focus{width:30px;height:30px;border:0 none;background-color:#1e1e1e}
+.paging_comm .btn_fst:hover .ico_arr, .paging_comm .btn_fst:focus .ico_arr{background-position:-68px -12px}
+.paging_comm .btn_lst:hover .ico_arr, .paging_comm .btn_lst:focus .ico_arr{background-position:-84px -12px}
+.paging_comm .btn_prev:hover .ico_arr, .paging_comm .btn_prev:focus .ico_arr{background-position:-68px -36px}
+.paging_comm .btn_next:hover .ico_arr, .paging_comm .btn_next:focus .ico_arr{background-position:-84px -36px}
+
+/* question */
+.txt_required{position:absolute;top:105px;right:0}
+.info_confirm{overflow:hidden;border-top:2px solid #1e1e1e;width:750px;background-color:#ffdc00}/* 2017-06-28 수정 */
+.info_confirm .img_question{float:left}
+.info_confirm .tit_confirm{float:left;width:110px;padding:25px 15px;font-size:15px;text-align:center}
+.info_confirm .tit_confirm .txt_caution{display:block;width:110px;height:17px;margin:0 auto;overflow:hidden;font-size:0;line-height:0;text-indent:-9999px;background:url(/img/cskakaocom/pc/txt_caution.gif) no-repeat 0 0}/* 2017-05-19 추가 */
+html:lang(en) .info_confirm .tit_confirm .txt_caution, html:lang(ja) .info_confirm .tit_confirm .txt_caution{width:85px;height:17px;margin:5px 12px 0;background:url(/img/cskakaocom/pc/txt_caution_en.gif) no-repeat 0 0}/* 2017-08-21 추가 */
+/* 2019-02-11 @anna.ya 꼭 문의하기 줄간격 줄여달라 요청 KCS-442 */
+.info_confirm .txt_confirm{float:right;width:528px;padding:25px 40px 23px;/*line-height:27px;*/font-size:15px;background-color:#fff}
+/* .info_confirm .btn_file{text-decoration:underline;color:#2c91ef}
+.info_confirm .btn_file .ico_arr{width:6px;height:8px;margin:8px 0 0 5px;background-position:0 -56px;vertical-align:top} 2017-05-19 삭제 */
+.info_confirm .link_more{text-decoration:underline;color:#2c91ef}
+.info_question{float:left;border-bottom:1px solid #e8e8e8}/* 2017-05-19 수정 */
+.info_question:after{display:block;visibility:hidden;height:0;font-size:0;clear:both;content:''}/* 2017-05-19 추가 */
+.info_question.fst{border-top:1px solid #1e1e1e}
+.info_question dt{float:left;width:132px;padding:28px 0 28px 19px;font-size:15px;letter-spacing:-1px}/* 2017-05-19 수정 */
+.info_question dd{float:right;width:579px;padding:18px 0 18px 20px}/* 2017-05-19 수정 */
+
+.info_question .wrap_item{float:left;position:relative;margin:0;border:1px solid #919191;height:38px;width:577px}/* 2017-08-17 수정 */
+.info_question .wrap_item .txt_placeholder{position:absolute;top:8px;left:12px;font-size:15px;z-index:5;color:#919191}/* 2017-07-28 수정 */
+.info_question .txt_placeholder .emph_txt{font-weight:bold;color:#1e1e1e}
+.info_question .wrap_item .inp_info{width:551px;height:100%;border:none 0;line-height:36px;position:absolute;top:0;left:0;right:0;padding:0 13px;background-color:transparent;font-size:15px;z-index:10}
+.info_question .wrap_tf{height:261px}
+/* 2019-02-14 @anna.ya 문의하기 상단 여백 요청 KCS-446 */
+.info_question .wrap_tf .tf_info{width:549px;height:230px;padding:14px;resize:none}/*2019-02-14 수정*/
+
+.info_question .wrap_select{float:left;position:relative;margin:0;border:1px solid #919191;width:282px;height:38px}/* 2017-08-17 수정 */
+.info_question .wrap_select2{margin-left:10px}
+.info_question .wrap_select .link_select{position:absolute;top:8px;left:12px;right:12px;display:block;font-size:15px;cursor: pointer}/* 2022-10-20 수정 */
+.info_question .wrap_select .link_unselect{color:#919191}/* 2017-07-06 수정 */
+.info_question .wrap_select .link_select:hover{text-decoration:none}
+.info_question .wrap_select .list_select{display:none;position:absolute;top:38px;left:-1px;width:100%;height:114px;padding:15px 0;background-color:#fff;overflow-y:auto;border:1px solid #919191;-webkit-box-shadow:1px 2px 1px 0 rgba(0,0,0,0.1);box-shadow:1px 2px 1px 0 rgba(0,0,0,0.1)}/* 2017-05-19 수정 *//* 2017-08-17 수정 */
+.info_question .open_select{z-index:20}/* 2017-07-06 수정 */
+.info_question .open_select .list_select{display:block;z-index:20}
+.info_question .list_select li{height:28px}
+.info_question .list_select li .link_opt{display:block;font-size:15px;padding:0 17px;line-height:28px}/* 2017-07-04 수정 */
+.info_question .list_select li .link_opt:hover{background-color:#f6f6f6;text-decoration:none}
+.info_question .wrap_select .ico_arr{position:absolute;top:8px;right:3px;width:7px;height:5px;background-position:0 -40px}/* 2017-06-13 수정 */
+.info_question .open_select .ico_arr{background-position:0 -48px}
+.info_question .info_disable .ico_arr{background-position:-12px -52px}
+
+/* 2020-05 개인정보 분리 개편 추가 */
+.info_question .txt_confirm{float:right;width:528px;padding:25px 25px 25px;/*line-height:27px;*/font-size:15px;background-color:#fff} /* 20.05.08 bella 추가*/
+
+.info_question .info_disable{background-color:#f9f9f9;border-color:#e8e8e8}/* 2017-08-17 수정 */
+.info_question .info_disable .txt_placeholder{color:#919191} /* 2020-07-20 수정 */
+
+/*.info_question .wrap_id{width:282px} 2017-05-19 삭제 */
+/*.info_question .wrap_id .inp_info{width:256px} 2017-05-19 삭제 */
+
+.info_question .wrap_nation{width:135px;border-right:0 none}
+.info_question .wrap_nationinfo{display:none;position:absolute;top:40px;left:-1px;width:577px;background-color:#fff;border-left:1px solid #919191;border-right:1px solid #919191;z-index:5}/* 2017-05-19 수정 *//* 2017-08-17 수정 */
+.info_question .open_select .wrap_nationinfo{display:block;z-index:20}
+.wrap_nationinfo .box_search{position:relative}
+.wrap_nationinfo .box_search .ico_cs{position:absolute;top:9px;left:9px;width:20px;height:20px;background-position:0 -64px}
+.wrap_nationinfo .box_search .txt_placeholder{position:absolute;top:9px;left:47px;color:#878787}/* 2017-07-04 수정 */
+.wrap_nationinfo .inp_nation{display:block;width:100%;height:39px;border:0;line-height:39px;text-indent:45px}
+.info_question .wrap_nationinfo .list_nationinfo{height:162px}
+.wrap_nationinfo .list_nationinfo li .link_opt{font-size:13px}/* 2016-07-04 추가 */
+.wrap_nationinfo .list_nationinfo .num_item{display:inline-block;width:50px}
+.info_question .wrap_phone{width:441px}
+.info_question .wrap_phone .inp_info{width:415px}
+
+/* 2020-05 개인정보 분리 개편 추가 */
+.info_question .wrap_agree{width:410px}
+.info_question .wrap_birth{width:195px}
+.info_question .wrap_agree .inp_info{width:385px}
+.info_question .wrap_birth .inp_info{width:180px}
+.info_question .wrap_birth .inp_info{width: 10px;}
+.info_question .wrap_blank{float: left; position: relative; margin: 0 5px 0 5px; height: 38px;}
+/* // 2020-05 개인정보 분리 개편 추가 */
+
+/* 2017-07-06 수정 시작 */
+.info_question .wrap_upload{float:left;position:relative;border:1px solid #919191;height:38px;width:577px;margin-top:10px}/* 2017-08-17 수정 */
+.info_question .wrap_upload .txt_upload{position:absolute;top:10px;right:41px}
+.info_question .wrap_upload .btn_delete{position:absolute;top:10px;right:9px;width:21px;height:21px;z-index:15}
+.info_question .wrap_upload .ico_upload{display:block;width:11px;height:11px;margin:5px;background-position:-68px -48px}
+.info_question .wrap_file{width:579px;height:40px;background-color:#ebf5fd;border:0 none}
+.info_question .wrap_file.focus{outline:1px dotted #000;outline:-webkit-focus-ring-color auto 5px; outline-offset: -5px}/* 2017-08-10 추가 */ /* 2019-09-23 접근성이슈 bella 수정*/
+.info_question .wrap_file .inp_file{position:absolute;top:0;left:0;width:100%;height:100%;border:0 none;opacity:0.01;filter:alpha(opacity=1);cursor:pointer;outline:0 none;font-size:0;line-height:0;z-index:5}/* 2017-07-04 수정 */
+.info_question .wrap_file .ico_file{position:absolute;top:15px;right:14px;width:11px;height:11px;background-position:0 -28px}
+.info_question .wrap_bar{width:579px;height:40px;margin-top:13px;border:0 none}
+.info_question .wrap_bar .txt_upload{right:0}
+.info_question .wrap_bar .info_range{position:absolute;top:50%;left:0;width:518px;height:6px;margin-top:-3px;background-color:#f0f0f0}
+.info_question .wrap_bar .range_on{position:absolute;top:0;left:0;width:0;height:6px;background-color:#2c91ef}
+.info_question .wrap_thumbnail{margin-top: 10px;position:relative;width: 579px;height: 125px; overflow-x: scroll;overflow-y: hidden;white-space: nowrap;}
+.info_question .wrap_thumbnail div{position:relative;display:inline-block;width: 20%;height: 110px;padding: 7px;}
+.info_question .wrap_thumbnail img{position:absolute;width: 90%;height: 110px;padding: 3px 2px 2px 2px;}
+.info_question .wrap_thumbnail .divOthers{position:absolute;width: 81%;height: 110px;padding: 3px 7px 2px 7px;background: #e8e8e8;display: flex;align-items: center;justify-content: center;word-break: break-all;white-space: pre-line;}
+.info_question .wrap_thumbnail .divOthers span{font-size: 15px;width: 90%;text-align: center;white-space: break-spaces;}
+.info_question .wrap_thumbnail .btn_delete{position: absolute;top: -3px;left: 110px;background-image: url(/img/ico_cs_200120.png);background-repeat: no-repeat;width: 17px;height: 17px;margin: 5px;background-position: -64px -44px;background-color: lightgray;border-radius: 50%;}
+.info_question .info_progress{position:absolute;top:0;left:0;height:100%;background-color:#ffdc00}
+.info_question .wrap_upload .txt_placeholder{position:absolute;top:8px;left:12px;font-size:15px;z-index:5;color:#1e1e1e}/* 2017-07-28 수정 */
+.info_question .wrap_complete{border-color:#2c91ef}
+.info_question .wrap_complete .txt_placeholder, .info_question .wrap_complete .txt_upload{color:#2c91ef}
+.info_question .wrap_error{border-color:#ff3a30}
+.info_question .wrap_error .txt_placeholder, .info_question .wrap_error .txt_upload{color:#ff3a30}
+/* 2017-07-06 수정 끝 */
+.info_question .desc_info{float:left;margin-top:10px;font-size:13px;color:#878787}
+.info_question2 dt{width:520px;padding:19px}/* 2017-05-19 수정 */
+.info_question2 dd{width:150px;padding:19px;text-align:right}/* 2017-05-19 수정 */
+.info_question .wrap_check{overflow:hidden;display:table;width:100%;font-size:15px;padding:10px 0 10px 0;}
+.info_question .info_check{display:inline-block;display:table-cell;width:150px;vertical-align:middle;text-align:right}/* 2017-05-19 수정 */
+.info_question .item_radio:first-child{margin-left:0}/* 2017-05-19 수정 */
+.info_question .item_radio{display:inline-block;margin-left:25px;position:relative}/* 2017-05-19 수정 */
+.info_question .item_radio .lab_radio{display:inline-block;margin-left:26px}
+.info_question .item_radio .account_radio{display:inline-block;margin-left:26px}
+.info_question .item_radio .inp_radio{position:absolute;top:2px;left:0;width:18px;height:18px;opacity:0.01;filter:alpha(opacity=1)}
+.info_question .item_radio .ico_cs{position:absolute;top:2px;left:0;width:18px;height:18px;background-position:-48px 0}
+.info_question .checked .ico_cs{background-position:-48px -20px}
+.info_question .desc_check{float:left;display:table-cell;width:360px;padding:10px 14px}
+
+.info_question .desc_caution{display:none;float:left;margin-top:7px;font-size:15px;color:#f63e2d}/* 2017-07-06 수정 */
+/* 개인정보 이용동의 */
+/* 2017-05-19 수정 시작 */
+.info_agree{float:left;margin-top:-1px;}
+.info_agree .tit_agree{display:block;margin-top:40px;margin-bottom:15px;font-size:15px;font-weight:normal}/* 2017-07-04 수정 */
+.info_agree .desc_agree{margin-top:15px;color:#878787}
+.info_agree .desc_agree_sub{margin-top:13px;} /* 2020-11-02 추가 */
+/* .info_agree .desc_agree .emph_txt{font-weight:bold} 2017-05-19 삭제 */
+.info_agree .desc_more{margin-top:10px;color:#878787}
+.info_agree .desc_more .link_more{color:#2c91ef}
+.info_agree .wrap_check{margin-top:40px;line-height:22px}/* 2017-07-28 수정 */
+.info_agree .item_check{display:inline-block;position:relative;padding-left: 20px;bottom: 20px;}/* 2017-07-28 수정 */
+.info_agree .item_check .lab_check{display:inline-block;margin-left:25px}
+.info_agree .item_check .inp_check{position:absolute;top:4px;left:0;width:18px;height:18px;opacity:0.01;filter:alpha(opacity=1)}/* 2017-07-28 수정 */
+.info_agree .item_check .inp_check:focus + .lab_check .ico_cs{outline:1px dotted #000;outline:-webkit-focus-ring-color auto 5px;}  /* 2022-10-20 수정 */
+.info_agree .item_check .ico_cs{position:absolute;top:4px;left:0;width:18px;height:18px;background-position:-28px 0;cursor:pointer;} /* 2022-10-20 수정 */
+.info_agree .checked .ico_cs{background-position:-28px -20px}
+.info_agree .focus{outline:1px dotted #000;outline:-webkit-focus-ring-color auto 5px}/* 2017-08-10 추가 *//* 2017-08-17 추가 */
+.info_agree .wrap_check .emph_txt{color:#ff3a30;line-height:20px;}
+.info_agree .tbl_privacy{margin-top:25px;text-align:left;border-top:2px solid #e8e8e8;border-bottom:1px solid #e8e8e8;border-collapse:collapse;border-spacing:0}
+.info_agree .tbl_privacy th{padding:13px 17px;color:#878787;font-weight:normal}/* 2017-07-04 수정 */
+.info_agree .tbl_privacy td{padding:13px 17px;color:#878787;border-top:1px solid #e8e8e8}
+.info_agree .tbl_privacy .tbl_border_left{border-left: 1px solid #e8e8e8;}
+.info_agree .tbl_privacy .txt_bold{font-weight: bolder;font-size: 15px;}
+
+/* 2020-05 개인정보 분리 개편 추가 */
+.info_agree .info_check{overflow:hidden;display:table;width:100%;font-size:15px}
+.info_agree .info_check{display:inline-block;display:table-cell;width:150px;vertical-align:middle;text-align:right}/* 2017-05-19 수정 */
+.info_agree .item_radio:first-child{margin-left:0}/* 2017-05-19 수정 */
+.info_agree .item_radio{display:inline-block;margin-left:25px;position:relative}/* 2017-05-19 수정 */
+.info_agree .item_radio .lab_radio{display:inline-block;margin-left:26px}
+.info_agree .item_radio .inp_radio{position:absolute;top:2px;left:0;width:18px;height:18px;opacity:0.01;filter:alpha(opacity=1)}
+.info_agree .item_radio .ico_cs{position:absolute;top:2px;left:0;width:18px;height:18px;background-position:-48px 0}
+.info_agree .item_radio .checked .ico_cs{background-position:-48px -20px}
+.info_agree .desc_check{float:left;display:table-cell;}
+
+.info_agree .info_question .btn_cert{float:right;width:118px;height:42px;color:#1e1e1e;background-color:#ffe500;border: 0 none; cursor: pointer;text-align: center;line-height: 42px;}
+.info_agree .desc_caution{display:none;margin:8px 0 0 97px;color:#ff3a30;line-height:20px}/* 2017-05-19 수정 */
+/*.info_agree .info_question .btn_cert:hover, .cont_layer .wrap_phone .btn_cert:focus{color:#1b1b1b;background-color:#d0d0d0}*/
+/* // 2020-05 개인정보 분리 개편 추가 */
+
+/* 2017-05-19 수정 끝 */
+/* footer */
+.inner_footer{position:relative;width:990px;height:149px;margin:0 auto;padding-top:29px}
+/*
+.footer_cont{position:absolute;top:71px;right:0}
+.footer_cont .tit_util{display:block;width:147px;height:20px;padding:7px 13px;border:1px solid #1e1e1e;font-weight:normal}
+.footer_cont .link_util{position:relative;display:block;color:#1e1e1e}
+.footer_cont .link_util:hover{text-decoration:none}
+.footer_cont .link_util .ico_cs{position:absolute;top:6px;right:0;width:7px;height:5px;background-position:0 -40px}
+.util_open .link_util .ico_cs{background-position:0 -48px}
+.footer_cont .list_util{display:none;position:absolute;bottom:35px;right:0;width:147px;padding:14px 13px 11px;border:1px solid #1e1e1e;background-color:#fff}
+.util_open .list_util{display:block}
+.footer_cont .list_util li{line-height:29px} 2017-08-02삭제 */
+.footer_info .link_info{display:inline-block;margin-right:10px;color:#787878}/* 2017-08-02 수정 */
+.footer_info .txt_emph{font-weight:bold}/* 2017-08-02 추가 */
+.footer_info .ico_new{width:11px;height:11px;margin-top:5px;background-position:-28px -64px;vertical-align:top}/* 2017-08-09 수정 */
+.footer_info .txt_copyright{display:block;margin-top:28px;font-size:13px;color:#787878}/* 2017-08-02 수정 */
+.footer_info .txt_copyright .link_kakako{color:#787878}
+
+/* layer */
+.layer_open .dimmed_layer, .layer_open .basic_layer{display:block}
+.dimmed_layer{display:none;position:fixed;left:0;top:0;z-index:50;width:100%;height:100%;background-color:#000;opacity:0.1;filter:alpha(opacity=10)}
+.basic_layer {display:none;overflow-y: auto;position: fixed;top: 0;left: 0;width: 100%;height: 100%; z-index: 60}
+.basic_layer .inner_basic_layer{display:table;width:100%;height:100%}
+.basic_layer .wrap_cont{display:table-cell;padding:60px 0;vertical-align:middle}
+.basic_layer .cont_layer{position:relative;z-index:55;width:428px;height:auto;padding:50px 55px 55px;background-color:#fff;text-align:center;margin:0 auto}
+.layer_head{overflow:hidden;width:100%} /** 200908 bella.yk max-width 제거*/
+.layer_body{width:100%;padding-bottom:28px}
+.layer_head .tit_layer{display:block;margin-bottom:15px;font-size:21px;font-weight:normal;line-height:28px}
+.layer_body .desc_txt{margin-top:3px;line-height:27px;font-size:15px}
+.layer_body .txt_emph{color:#ff3a30}
+.layer_body .txt_bold{font-weight: bold}
+.layer_foot{display:inline-block;overflow:hidden;margin-right:10px;vertical-align:top}
+.layer_foot .btn_layer{float:left;width:auto;height:42px;margin-left:10px;padding:0 30px;color:#fff;background-color:#1e1e1e;line-height:42px}
+.layer_foot .btn_layer:hover, .layer_foot .btn_layer:focus{color:#626262}
+.layer_foot .btn_layer2{color:#1e1e1e;background-color:#e8e8e8}
+.layer_foot .btn_layer2:hover, .layer_foot .btn_layer2:focus{color:#1b1b1b;background-color:#d0d0d0}
+.layer_foot .btn_close{position:absolute;top:15px;right:13px;width:25px;height:25px}
+.layer_foot .btn_close .ico_cs{width:18px;height:18px;margin:3px auto;background-position:-48px -40px}
+.basic_layer .cont_police{width:370px}
+.cont_police .layer_head, .cont_police .layer_body{text-align:left}
+.cont_police .layer_body .emph_txt{color:#ff3a30}
+.cont_police .layer_body .desc_txt{line-height:22px}
+.basic_layer .cont_police2{width:500px}
+.cont_police2 .layer_head, .cont_police2 .layer_body{text-align:left}
+.cont_police2 .layer_body .desc_txt{font-size:14px;line-height:22px}
+.cont_layer .wrap_sms{overflow:hidden;width:100%;margin-top:15px}/* 2017-05-19 수정 */ /* 2021-02-02 수정 */
+.cont_layer .lab_sms{float:left;width:97px;margin-top:12px}
+.cont_layer .inp_sms{float:left;width:371px;height:40px;line-height:40px;padding:0 15px;border:1px solid #e8e8e8}
+.cont_layer .wrap_phone{margin-top:37px}
+.cont_layer .wrap_phone .inp_sms{width:238px}
+.cont_layer .wrap_phone .btn_sms{float:right;width:118px;height:42px;color:#1e1e1e;background-color:#e8e8e8}
+.cont_layer .desc_caution{display:none;margin:8px 0 0 97px;color:#ff3a30;line-height:20px}/* 2017-05-19 수정 */
+.cont_layer .desc_info{display:none;margin:8px 0 0 97px;color:#2c91ef;line-height:20px}/* 2017-05-19 수정 */
+.cont_layer .wrap_phone .btn_sms:hover, .cont_layer .wrap_phone .btn_sms:focus{color:#1b1b1b;background-color:#d0d0d0}
+
+/* 지식 재산권 상품명, 아이디 read only시 회색 처리 */
+input#product_id:read-only { background-color: lightgray; }
+input#product_name:read-only { background-color: lightgray; }
+
+/*엔보이*/
+/*.bundle_btn{position: relative;}
+.cont_envoy{position: absolute;width: 60px;}
+.cont_envoy .kakao_envoy{position: relative;}
+.cont_envoy .bundle_btn{position: relative;}
+.cont_envoy .kakao_envoy .util_webchat{position: absolute;right: -400px;bottom: 0;}*/
+/*.cont_envoy .kakao_envoy{position: absolute;right: 0;bottom: 0;}*/
+/*.cont_envoy .kakao_envoy .util_webchat{position: absolute;right: -84px;bottom: 55px;}*/
+
+
+/*user_support_center temp setting*/
+.user_center_btn{float:right;width:118px;height:42px;color:#1e1e1e;background-color:#ffe500;border: 0 none; cursor: pointer;text-align: center;line-height: 42px;}
+.info_question .wrap_agree{width:410px}

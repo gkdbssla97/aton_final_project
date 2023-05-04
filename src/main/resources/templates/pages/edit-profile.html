@@ -1,0 +1,262 @@
+<!--
+=========================================================
+* Material Dashboard 2 - v3.0.5
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/material-dashboard
+* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+
+<head>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <title>
+    서비스 신청
+  </title>
+  <!--     Fonts and icons     -->
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
+  <!-- Nucleo Icons -->
+  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <!-- CSS Files -->
+  <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.0.5" rel="stylesheet" />
+  <!-- Nepcha Analytics (nepcha.com) -->
+  <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
+  <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+</head>
+
+<body class="g-sidenav-show  bg-gray-200">
+<style>
+ div >.inputSpan {
+   font-weight: 600;
+   color: #344767;
+  }
+  #serviceInput {
+    line-height: 2.5;
+  }
+</style>
+<div th:replace="~{fragment/sidebar :: sidebar(${member})}"></div>
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <div th:replace="~{fragment/header :: header}"></div>
+    <!-- End Navbar -->
+<!--    서비스 신청 작성란-->
+    <div class="container-fluid py-4">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="card mt-4">
+            <div class="card-header p-3">
+              <h5 class="mb-0" style="text-align: center">회원정보 수정</h5>
+            </div>
+            <div id = "serviceInput" class="card-body p-3 pb-0">
+              <span class = "inputSpan">사용자 이름</span>
+              <div class="input-group input-group-outline">
+                <input class="form-control" onfocus="focused(this)" onfocusout="defocused(this)" readonly th:value="${member.username}">
+              </div>
+              <span class = "inputSpan">이메일</span>
+              <div class="input-group input-group-outline">
+                <input class="form-control" onfocus="focused(this)" onfocusout="defocused(this)" readonly th:value="${member.email}">
+              </div>
+              <span class = "inputSpan">휴대폰 번호</span>
+              <div class="input-group input-group-outline">
+                <input class="form-control" onfocus="focused(this)" onfocusout="defocused(this)" readonly th:value="${member.phoneNo}">
+              </div>
+              <span class = "inputSpan">기존 비밀번호</span>
+              <div class="input-group input-group-outline">
+                <label class="form-label">기존 비밀번호를 입력하세요.</label>
+                <input id = "oldPassword" name="oldPassword" type="password" class="form-control" onfocus="focused(this)" onfocusout="defocused(this)">
+              </div>
+              <span class = "inputSpan">새 비밀번호</span>
+              <div class="input-group input-group-outline">
+                <label class="form-label">새 비밀번호를 입력하세요.</label>
+                <input id = "newPassword" name="newPassword" type="password" class="form-control" onfocus="focused(this)" onfocusout="defocused(this)">
+              </div>
+              <span class = "inputSpan">새 비밀번호 확인</span>
+              <div class="input-group input-group-outline">
+                <label class="form-label">새 비밀번호를 재입력하세요.</label>
+                <input id = "re_newPassword" name="re_newPassword" type="password" class="form-control" onfocus="focused(this)" onfocusout="defocused(this)">
+              </div>
+            </div>
+          </div>
+          <div class="card mt-4">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-lg-3 col-sm-6 col-12 mt-lg-0" id = "edit-profile-cancel">
+                  <button class="btn bg-gradient-danger w-100 mb-0 toast-btn" type="button" data-target="dangerToast">취 소</button>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-12" id = "edit-profile-ok">
+                  <button class="btn bg-gradient-success w-100 mb-0 toast-btn" type="button" data-target="successToast">수 정</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="position-fixed bottom-1 end-1 z-index-2">
+        <div class="toast fade hide p-2 bg-white" role="alert" aria-live="assertive" id="successToast" aria-atomic="true">
+          <div class="toast-header border-0">
+            <i class="material-icons text-success me-2">
+        check
+      </i>
+            <span class="me-auto font-weight-bold">Material Dashboard </span>
+            <small class="text-body">11 mins ago</small>
+            <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
+          </div>
+          <hr class="horizontal dark m-0">
+          <div class="toast-body">
+            Hello, world! This is a notification message.
+          </div>
+        </div>
+        <div class="toast fade hide p-2 mt-2 bg-gradient-info" role="alert" aria-live="assertive" id="infoToast" aria-atomic="true">
+          <div class="toast-header bg-transparent border-0">
+            <i class="material-icons text-white me-2">
+        notifications
+      </i>
+            <span class="me-auto text-white font-weight-bold">Material Dashboard </span>
+            <small class="text-white">11 mins ago</small>
+            <i class="fas fa-times text-md text-white ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
+          </div>
+          <hr class="horizontal light m-0">
+          <div class="toast-body text-white">
+            Hello, world! This is a notification message.
+          </div>
+        </div>
+        <div class="toast fade hide p-2 mt-2 bg-white" role="alert" aria-live="assertive" id="warningToast" aria-atomic="true">
+          <div class="toast-header border-0">
+            <i class="material-icons text-warning me-2">
+        travel_explore
+      </i>
+            <span class="me-auto font-weight-bold">Material Dashboard </span>
+            <small class="text-body">11 mins ago</small>
+            <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
+          </div>
+          <hr class="horizontal dark m-0">
+          <div class="toast-body">
+            Hello, world! This is a notification message.
+          </div>
+        </div>
+        <div class="toast fade hide p-2 mt-2 bg-white" role="alert" aria-live="assertive" id="dangerToast" aria-atomic="true">
+          <div class="toast-header border-0">
+            <i class="material-icons text-danger me-2">
+        campaign
+      </i>
+            <span class="me-auto text-gradient text-danger font-weight-bold">Material Dashboard </span>
+            <small class="text-body">11 mins ago</small>
+            <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
+          </div>
+          <hr class="horizontal dark m-0">
+          <div class="toast-body">
+            Hello, world! This is a notification message.
+          </div>
+        </div>
+      </div>
+      <div th:replace="~{fragment/bottom :: bottom}"></div>
+    </div>
+  </main>
+  <div th:replace="~{fragment/footer :: footer}"></div>
+  <!--   Core JS Files   -->
+  <script src="../assets/js/core/popper.min.js"></script>
+  <script src="../assets/js/core/bootstrap.min.js"></script>
+  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <!-- Github buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="../assets/js/material-dashboard.min.js?v=3.0.5"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script>
+  $(document).ready(function() {
+
+    function checkOldPassword() {
+      var oldPassword = $('#oldPassword').val();
+      if (oldPassword === "") {
+        alert("기존 비밀번호를 정확히 입력해주세요.")
+        $("#oldPassword").focus();
+        return false;
+      }
+      return true;
+    }
+
+    function checkNewPassword() {
+      var newPassword = $('#newPassword').val();
+      if (newPassword === "" || newPassword.length < 4) {
+        alert("새 비밀번호를 4자리 이상으로 정확히 입력해주세요.")
+        $("#newPassword").focus();
+        return false;
+      }
+      return true;
+    }
+
+    function checkReNewPassword() {
+      var newPassword = $('#newPassword').val();
+      var re_newPassword = $('#re_newPassword').val();
+      if (re_newPassword === "" || re_newPassword.length < 4) {
+        alert("재입력한 새 비밀번호를 4자리 이상으로 정확히 입력해주세요.");
+        $("#re_newPassword").focus();
+        return false;
+      } else if (newPassword.length !== re_newPassword.length) {
+        alert("새 비밀번호와 재입력한 새 비밀번호가 일치하지 않습니다.")
+        $("#re_newPassword").focus();
+        return false;
+      }
+      return true;
+    }
+
+    $('#edit-profile-ok').click(
+            function () {
+              if (checkOldPassword() && checkNewPassword() && checkReNewPassword()) {
+                $.ajax({
+                  type: "POST",
+                  url: "/edit-profile",
+                  dataType: 'json',
+                  contentType: "application/json",
+                  data: JSON.stringify({
+                    oldPassword: $('#oldPassword').val(),
+                    newPassword: $('#newPassword').val(),
+                    renewPassword: $('#re_newPassword').val(),
+                  }),
+                  success: function (response) {
+                    alert("회원정보 수정 성공")
+                    console.log(response)
+                    window.location.href = "/profile";
+                    console.log(response.message);
+                  },
+                  error: function (error) {
+                    console.log("회원정보 수정 실패")
+                  }
+                })
+              }
+            });
+
+    $('#signup-form-button').click(
+            function () {
+            });
+  });
+</script>
+</body>
+
+</html>

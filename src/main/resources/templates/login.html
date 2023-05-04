@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Font online-->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+    <!--        Animate.css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+
+
+    <link rel="stylesheet" href="/css/login.css">
+
+    <!-- Google JQuery CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script src="/js/login.js"></script>
+
+</head>
+<body>
+<div>
+    <div class="panel shadow1">
+        <form class="login-form">
+            <div class="panel-switch animated fadeIn">
+                <button type="button" id="sign_up" class="active-button">회원가입</button>
+                <button type="button" id="log_in" class="" disabled>로그인</button>
+            </div>
+            <h1 class="animated fadeInUp animate1" id="title-login">환영합니다</h1>
+            <h1 class="animated fadeInUp animate1 hidden" id="title-signup">환영합니다</h1>
+            <fieldset id="login-fieldset">
+                <input class="login animated fadeInUp animate2" id = "loginEmail" name="loginEmail" type="text" required
+                       placeholder="이메일을 입력하세요." value="">
+                <input class="login animated fadeInUp animate3" id = "loginPassword" name="loginPassword" type="password" required
+                       placeholder="비밀번호를 입력하세요." value="">
+            </fieldset>
+
+            <fieldset id="signup-fieldset" class="hidden">
+                <input class="login animated fadeInUp animate1" id = "username" name="username" type="text"
+                       placeholder="이름을 입력하세요." required value="">
+                <div class="login animated fadeInUp animate2">
+                    <select name="telCdSelectNm" id="telCdSelect" onchange="changeOption()">
+                        <option value="S" selected="selected" style="color: #fff">SKT</option>
+                        <option value="K" class="others">KT</option>
+                        <option value="L" class="others">LG U+</option>
+                    </select>
+                    <input id = "phoneNo" name="phoneNo" type="tel"
+                           placeholder="전화번호를 입력하세요." required value="">
+                </div>
+                <input class="login animated fadeInUp animate3" id = "email" name="email" type="text" required placeholder="이메일을 입력하세요."
+                       value="">
+                <input class="login animated fadeInUp animate4" id = "password" name="password" type="password"
+                       placeholder="비밀번호를 입력하세요." required value="">
+            </fieldset>
+            <input type="button" id="login-form-button" class="login_form button animated fadeInUp animate4"
+                   value="로그인">
+            <input type="button" id="signup-form-button" class="login_form button animated fadeInUp animate4 hidden"
+                   value="회원가입">
+            <p><a id="lost-password-link" href="" class="animated fadeIn animate5">비밀번호를 잊어버렸습니다.</a>
+            </p>
+        </form>
+    </div>
+</div>
+<script src="/js/login.js"></script>
+<script>
+    function changeOption() {
+        let val = document.getElementById("telCdSelect");
+        return val.options[val.selectedIndex].value;
+    }
+
+    $(document).ready(function() {
+        $('#telCdSelect').css('color','#fff');
+        $('#telCdSelect').change(function() {
+            var current = $('#telCdSelect').val();
+            if (current != 'null') {
+                $('#telCdSelect').css('color','#fff');
+            } else {
+                $('#telCdSelect').css('color', '#fff');
+            }
+        });
+
+        $('#login-form-button').click(
+            function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/login",
+                    dataType: 'json',
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        email: $('#loginEmail').val(),
+                        password: $('#loginPassword').val(),
+                    }),
+                    success: function (response) {
+                        alert("로그인 성공")
+                        console.log(response)
+                        window.location.href = "/main";
+                        console.log(response.message);
+                    },
+                    error: function (error) {
+                        console.log("로그인 실패")
+                    }
+                })
+            });
+
+        $('#signup-form-button').click(
+            function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/sign-up",
+                    dataType: 'json',
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        username: $('#username').val(),
+                        password: $('#password').val(),
+                        telcoTycd: $('#telCdSelect').val(),
+                        phoneNo: $('#phoneNo').val(),
+                        email: $('#email').val()
+                    }),
+                    success: function (response) {
+                        alert("회원가입 성공")
+                        window.location.href = "/login";
+                        console.log(response)
+                    },
+                    error: function (error) {
+                        console.log("회원가입 실패")
+                    }
+                })
+            });
+    });
+</script>
+</body>
+</html>

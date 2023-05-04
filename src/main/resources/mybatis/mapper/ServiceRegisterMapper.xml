@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.aton_final_project.model.dao.ServiceRegisterMapper">
+    <!--    단건 회원신청 서비스 저장-->
+    <insert id="saveServiceRegister">
+        INSERT INTO memberserviceregister(business_no, company_name, member_id, registerDate)
+        VALUES (#{memberServiceRegisterRequestDto.businessNo}, #{memberServiceRegisterRequestDto.companyName},
+                #{memberId}, #{memberServiceRegisterRequestDto.registerDate});
+    </insert>
+<!--    회원 서비스 신청 전체내역 조회-->
+    <select id="findServiceRegisterById" resultType="com.example.aton_final_project.model.dto.MemberServiceRegisterResponseDto">
+        SELECT service_id      AS serviceId,
+               company_name    AS companyName,
+               business_no     AS businessNo,
+               service_status  AS serviceStatus,
+               sr.registerDate AS registerDate,
+               m.username      AS username
+        FROM memberserviceregister sr
+                 JOIN member m on m.member_id = sr.member_id
+        where sr.member_id = #{memberId};
+    </select>
+<!--    회원 서비스 단건 ID 조회-->
+    <select id="findServiceIdByMemberId" resultType="Long">
+        SELECT service_id
+        FROM memberserviceregister
+        WHERE member_id = #{memberId}
+        ORDER BY service_id DESC
+        LIMIT 1;
+    </select>
+    <!--    회원 서비스 단건 조회-->
+    <select id="findServiceByServiceId" resultType="com.example.aton_final_project.model.dto.MemberServiceRegisterResponseDto">
+        SELECT s.service_id        AS serviceId,
+               m.member_id         AS memberId,
+               m.username          AS username,
+               m.email,
+               s.company_name      AS companyName,
+               s.business_no       AS businessNo,
+               f.filename,
+               f.original_filename AS originalFileName,
+               f.file_url          AS fileUrl,
+               s.registerDate
+        FROM memberserviceregister s
+                 JOIN member m on s.member_id = m.member_id
+                 JOIN files f on s.service_id = f.service_id
+        WHERE s.service_id = #{serviceId}
+        ORDER BY f.file_id DESC;
+    </select>
+    <!--    회원 서비스 신청 전체내역 조회-->
+    <select id="findAllServiceRegister" resultType="com.example.aton_final_project.model.dto.MemberServiceRegisterResponseDto">
+        SELECT service_id      AS serviceId,
+               company_name    AS companyName,
+               business_no     AS businessNo,
+               service_status  AS serviceStatus,
+               sr.registerDate AS registerDate,
+               m.username      AS username,
+               m.email         AS email,
+               m.member_id     AS memberId
+        FROM memberserviceregister sr
+                 JOIN member m on m.member_id = sr.member_id;
+    </select>
+    <select id="findMemberInfoByServiceId" resultType="com.example.aton_final_project.model.dto.AccessTokenDto">
+        SELECT m.username, a.encrypt_key AS 'encryptKey', a.authorization
+        FROM memberserviceregister sr
+                 JOIN member m on m.member_id = sr.member_id
+                 JOIN accesstoken a on m.member_id = a.member_id
+        WHERE service_id = #{serviceId};
+    </select>
+<!--    <select id="findFilesById" resultType="com.example.aton_final_project.model.dto.FilesDto">-->
+<!--        SELECT filename,-->
+<!--               file_url AS 'fileUrl',-->
+<!--               original_filename AS 'originalFileName'-->
+<!--        FROM files-->
+<!--        WHERE file_id = #{fileId}-->
+<!--    </select>-->
+    <select id="findAllFiles" resultType="com.example.aton_final_project.model.dto.FilesDto">
+        SELECT filename,
+               file_url          AS 'fileUrl',
+               original_filename AS 'originalFileName'
+        FROM files
+    </select>
+    <insert id="saveFile">
+        INSERT INTO files(file_url, filename, original_filename, service_id)
+        VALUES (#{filesDto.fileUrl}, #{filesDto.filename}, #{filesDto.originalFileName}, #{serviceId});
+    </insert>
+    <update id="updateApprovalReason">
+        UPDATE memberserviceregister
+        SET service_status = 1
+        WHERE service_id = #{memberRequestDto.serviceId};
+    </update>
+    <update id="updateDenyReason">
+        UPDATE memberserviceregister
+        SET deny_reason    = #{memberServiceRegisterResponseDto.denyReason},
+            service_status = 2
+        WHERE service_id = #{memberServiceRegisterResponseDto.serviceId};
+    </update>
+</mapper>
