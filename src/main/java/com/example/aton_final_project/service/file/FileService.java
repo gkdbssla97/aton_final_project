@@ -7,7 +7,6 @@ import java.util.List;
 public interface FileService {
     Long findServiceIdByMemberId(Long memberId);
     List<MemberServiceRegisterResponseDto> findServiceByServiceId(Long serviceId) throws Exception;
-
     void saveFile(FilesDto filesDto, Long serviceId);
     void saveServiceRegister(MemberServiceRegisterRequestDto memberServiceRegisterRequestDto, Long memberId);
     List<FilesDto> findFilesById(Long memberId);
