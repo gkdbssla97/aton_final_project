@@ -12,22 +12,13 @@ import java.util.List;
 public interface ServiceRegisterMapper {
     Long findServiceIdByMemberId(@Param("memberId") Long memberId);
     List<MemberServiceRegisterResponseDto> findServiceByServiceId(@Param("serviceId") Long serviceId);
-
     void saveServiceRegister(@Param("memberServiceRegisterRequestDto") MemberServiceRegisterRequestDto memberServiceRegisterRequestDto, @Param("memberId") Long memberId);
-
     void saveFile(@Param("filesDto") FilesDto filesDto, @Param("serviceId") Long serviceId);
-
     List<FilesDto> findFilesById(@Param("memberId") Long memberId);
-
     List<MemberServiceRegisterResponseDto> findServiceRegisterById(@Param("memberId") Long memberId);
-
     List<FilesDto> findAllFiles();
-
     List<MemberServiceRegisterResponseDto> findAllServiceRegister();
-
     AccessTokenDto findMemberInfoByServiceId(@Param("serviceId") Long serviceId);
-
     void updateApprovalReason(@Param("memberRequestDto") MemberRequestDto memberRequestDto);
-
     void updateDenyReason(@Param("memberServiceRegisterResponseDto") MemberServiceRegisterResponseDto memberServiceRegisterResponseDto);
 }
