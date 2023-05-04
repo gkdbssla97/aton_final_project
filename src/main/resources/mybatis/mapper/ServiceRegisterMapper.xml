@@ -49,7 +49,7 @@
         ORDER BY f.file_id DESC;
     </select>
     <!--    회원 서비스 신청 전체내역 조회-->
-    <select id="findAllServiceRegister" resultType="com.example.aton_final_project.model.dto.MemberServiceRegisterResponseDto">
+    <select id="findAllServiceRegister" resultType="com.example.aton_final_project.model.dto.InquiryRegisterResponseDto">
         SELECT service_id      AS serviceId,
                company_name    AS companyName,
                business_no     AS businessNo,
