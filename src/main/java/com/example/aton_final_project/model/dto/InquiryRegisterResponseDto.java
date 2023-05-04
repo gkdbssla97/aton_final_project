@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @Builder
 public class InquiryRegisterResponseDto {
     private Long inquiryId;
+    private Long memberId;
+    private String username;
     private String category;
     private String title;
     private String contents;
