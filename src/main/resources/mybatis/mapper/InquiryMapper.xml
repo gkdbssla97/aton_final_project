@@ -51,4 +51,26 @@
         INSERT INTO inquiryfiles(file_url, filename, original_filename, inquiry_id)
         VALUES (#{filesDto.fileUrl}, #{filesDto.filename}, #{filesDto.originalFileName}, #{inquiryId});
     </insert>
+    <!--    회원 문의 전체내역 조회-->
+    <select id="findAllInquiry" resultType="com.example.aton_final_project.model.dto.InquiryRegisterResponseDto">
+        SELECT i.inquiry_id          AS inquiryId,
+               i.member_id           AS memberId,
+               m.username,
+               category,
+               title,
+               contents,
+               i.inquiry_status      AS inquiryStatus,
+               i.registerDate
+        FROM inquiry i
+                 JOIN member m on m.member_id = i.member_id;
+
+    </select>
+<!--    문의 ID로 회원정보 조회 -->
+    <select id="findMemberInfoByInquiryId" resultType="com.example.aton_final_project.model.dto.AccessTokenDto">
+        SELECT m.username, a.encrypt_key AS 'encryptKey', a.authorization
+        FROM inquiry i
+                 JOIN member m on m.member_id = i.member_id
+                 JOIN accesstoken a on m.member_id = a.member_id
+        WHERE inquiry_id = #{inquiryId};
+    </select>
 </mapper>

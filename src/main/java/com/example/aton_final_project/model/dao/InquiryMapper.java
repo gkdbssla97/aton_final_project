@@ -16,4 +16,6 @@ public interface InquiryMapper {
     List<FilesDto> findFilesById(@Param("memberId") Long memberId);
     List<InquiryRegisterResponseDto> findInquiriesRegisterById(@Param("memberId") Long memberId);
     List<FilesDto> findAllFiles();
+    List<InquiryRegisterResponseDto> findAllInquiry() throws Exception;
+    AccessTokenDto findMemberInfoByInquiryId(@Param("inquiryId") Long inquiryId);
 }
