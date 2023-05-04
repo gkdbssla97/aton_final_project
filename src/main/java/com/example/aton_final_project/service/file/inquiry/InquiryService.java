@@ -1,8 +1,6 @@
 package com.example.aton_final_project.service.file.inquiry;
 
-import com.example.aton_final_project.model.dto.FilesDto;
-import com.example.aton_final_project.model.dto.InquiryRegisterRequestDto;
-import com.example.aton_final_project.model.dto.InquiryRegisterResponseDto;
+import com.example.aton_final_project.model.dto.*;
 
 import java.util.List;
 
@@ -13,4 +11,8 @@ public interface InquiryService {
     List<FilesDto> findFilesById(Long memberId);
     List<FilesDto> findAllFiles();
     List<InquiryRegisterResponseDto> findInquiriesRegisterById(Long memberId);
+    List<InquiryRegisterResponseDto> findAllInquiry() throws Exception;
+    AccessTokenDto findMemberInfoByInquiryId(Long inquiryId);
+
+
 }
