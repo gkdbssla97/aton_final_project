@@ -3,6 +3,7 @@ package com.example.aton_final_project.controller.user;
 import com.example.aton_final_project.model.dto.EditProfileDto;
 import com.example.aton_final_project.model.dto.MemberResponseDto;
 import com.example.aton_final_project.service.member.MemberService;
+import com.example.aton_final_project.util.constants.AccountStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -40,19 +41,20 @@ public class ProfileController {
         HttpSession session = request.getSession(true);
         MemberResponseDto loginMember = (MemberResponseDto) session.getAttribute(LOGIN_MEMBER);
 
-        MemberResponseDto memberById = memberService.findMemberById(loginMember.getId());
-        System.out.println("비밀번호 변경 전: " + memberById);
-
-        System.out.println("DB pwd: " + memberById.getPassword());
-        System.out.println("프론트 pwd: " + editProfileDto.getOldPassword());
+        MemberResponseDto memberById = memberService.findMemberById(loginMember.getMemberId());
         if (!memberById.getPassword().equals(editProfileDto.getOldPassword())) {
             throw new Exception("사용자의 비밀번호가 일치하지 않습니다..");
         }
 
-        memberService.editMemberInformation(memberById.getId(), editProfileDto.getNewPassword());
-        MemberResponseDto memberByIdAfter = memberService.findMemberById(loginMember.getId());
-        System.out.println("비밀번호 변경 후: " + memberByIdAfter);
 
+        memberService.editMemberInformation(memberById.getMemberId(), editProfileDto.getNewPassword());
+        MemberResponseDto memberByIdAfter = memberService.findMemberById(loginMember.getMemberId());
+
+        System.out.println("-> " + memberByIdAfter.getAccountStatus());
+        if(memberByIdAfter.getAccountStatus().equals(AccountStatus.LONG_TERM_NO_LOGIN.getValue())) {
+            System.out.println(memberByIdAfter.getUsername() + " 은 장기미접속자.");
+            memberService.activeLongTermMember(memberById.getMemberId(), AccountStatus.NORMAL);
+        }
         return new ResponseEntity<>(
                 memberService.maskingInformationByEdit(memberByIdAfter), HttpStatus.OK
         );

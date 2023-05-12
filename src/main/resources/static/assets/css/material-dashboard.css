@@ -6425,7 +6425,7 @@ fieldset:disabled .btn {
 .toast-header {
   display: flex;
   align-items: center;
-  padding: var(--bs-toast-padding-y) var(--bs-toast-padding-x);
+  /*padding: var(--bs-toast-padding-y) var(--bs-toast-padding-x);*/
   color: var(--bs-toast-header-color);
   background-color: var(--bs-toast-header-bg);
   background-clip: padding-box;
@@ -10600,6 +10600,10 @@ fieldset:disabled .btn {
 
 .text-danger {
   color: #F44335 !important;
+}
+
+.text-inquiry {
+  color: #0d6efd !important;
 }
 
 .text-light {
@@ -22612,6 +22616,10 @@ label,
   background-image: linear-gradient(87deg, #66bb6a 0%, #43a047 100%)
 }
 
+.bg-gradient-answer {
+  background-image: linear-gradient(87deg, #0f25c3 0%, #1a73e8 100%)
+}
+
 .bg-gradient-edit-profile {
   background-image: linear-gradient(87deg, #fff 0%, #ec407a 100%);
 }
@@ -22895,6 +22903,13 @@ svg.text-danger .color-foreground {
 
 svg.text-danger .color-background {
   fill: #E53935;
+}
+svg.text-inquiry .color-foreground {
+  fill: #3a4fec;
+}
+
+svg.text-inquiry .color-background {
+  fill: #1431ee;
 }
 
 svg.text-success .color-foreground {
@@ -26053,6 +26068,10 @@ p {
 
 .text-gradient.text-danger {
   background-image: linear-gradient(195deg, #EF5350, #E53935);
+}
+
+.text-gradient.text-inquiry {
+  background-image: linear-gradient(195deg, #1a73e8, #0d6efd);
 }
 
 .text-gradient.text-dark {
