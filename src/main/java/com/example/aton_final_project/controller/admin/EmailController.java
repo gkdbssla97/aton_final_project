@@ -110,6 +110,36 @@ public class EmailController {
         } catch (Exception e) {
             throw new Exception("download error");
         }
+    }
 
+    @GetMapping("/guide-file-download")
+    public void guideFileDownload(@RequestParam("serviceId") Long serviceId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        List<MemberServiceRegisterResponseDto> findService = fileService.findServiceByServiceId(serviceId);
+        String encodeName = "utf-8";
+        try {
+            String fileUrl, fileName;
+            if (findService.get(0).getServiceStatus() == 1) {
+                int read = 0;
+                System.out.println("GUIDE_PDF_FILE");
+                fileUrl = "C:/homework/aton_final_project/src/main/resources/static/guidefile/PASS인증서_서비스_가이드문서.pdf";
+                fileName = "PASS인증서_서비스_가이드문서.pdf";
+
+                String headerKey = "Content-Disposition";
+                String headerValue = "attachment; filename=" + URLEncoder.encode(fileName, encodeName);
+                response.setHeader(headerKey, headerValue);
+                response.setContentType("application/octet-stream"); //FileInputStream
+                FileInputStream fileInputStream = new FileInputStream(fileUrl);
+                OutputStream out = response.getOutputStream();
+
+                byte[] buffer = new byte[1024];
+                while ((read = fileInputStream.read(buffer)) != -1) {
+                    out.write(buffer, 0, read);
+                }
+                out.close();
+            }
+        } catch (Exception e) {
+            throw new Exception("download error");
+        }
     }
 }

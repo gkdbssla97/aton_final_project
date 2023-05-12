@@ -3,10 +3,12 @@ package com.example.aton_final_project.service.file;
 import com.example.aton_final_project.model.dao.MemberMapper;
 import com.example.aton_final_project.model.dao.ServiceRegisterMapper;
 import com.example.aton_final_project.model.dto.*;
+import com.example.aton_final_project.service.member.MemberService;
 import com.example.aton_final_project.util.AESCipher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -14,6 +16,7 @@ import java.util.List;
 public class FileUploadServiceImpl implements FileService{
     private final ServiceRegisterMapper serviceRegisterMapper;
     private final MemberMapper memberMapper;
+    private final MemberService memberService;
 
     @Override
     public Long findServiceIdByMemberId(Long memberId) {
@@ -22,13 +25,13 @@ public class FileUploadServiceImpl implements FileService{
 
     @Override
     public List<MemberServiceRegisterResponseDto> findServiceByServiceId(Long serviceId) throws Exception {
-        List<MemberServiceRegisterResponseDto> serviceByServiceId = serviceRegisterMapper.findServiceByServiceId(serviceId);
+        List<MemberServiceRegisterResponseDto> findServiceByServiceId = serviceRegisterMapper.findServiceByServiceId(serviceId);
 
-        AESCipher aesCipher = new AESCipher(memberMapper.findEncryptKeyByMemberId(serviceByServiceId.get(0).getMemberId()));
-        String encryptUsername = serviceByServiceId.get(0).getUsername();
-        serviceByServiceId.get(0).setUsername(aesCipher.decrypt(encryptUsername));
+        AESCipher aesCipher = new AESCipher(memberMapper.findEncryptKeyByMemberId(findServiceByServiceId.get(0).getMemberId()));
+        String encryptUsername = findServiceByServiceId.get(0).getUsername();
+        findServiceByServiceId.get(0).setUsername(aesCipher.decrypt(encryptUsername));
 
-        return serviceByServiceId;
+        return findServiceByServiceId;
     }
 
     @Override
@@ -37,20 +40,11 @@ public class FileUploadServiceImpl implements FileService{
     }
 
     @Override
-    public void saveServiceRegister(MemberServiceRegisterRequestDto memberServiceRegisterRequestDto, Long memberId) {
+    public void saveServiceRegister(MemberServiceRegisterRequestDto memberServiceRegisterRequestDto, Long memberId) throws Exception {
+        MemberResponseDto memberById = memberService.findMemberById(memberId);
+        memberServiceRegisterRequestDto.setUsername(memberById.getUsername());
         serviceRegisterMapper.saveServiceRegister(memberServiceRegisterRequestDto, memberId);
     }
-
-    @Override
-    public List<FilesDto> findFilesById(Long memberId) {
-        return serviceRegisterMapper.findFilesById(memberId);
-    }
-
-    @Override
-    public List<FilesDto> findAllFiles() {
-        return serviceRegisterMapper.findAllFiles();
-    }
-
     @Override
     public List<MemberServiceRegisterResponseDto> findServiceRegisterById(Long memberId) {
         return serviceRegisterMapper.findServiceRegisterById(memberId);
@@ -58,10 +52,12 @@ public class FileUploadServiceImpl implements FileService{
 
     @Override
     public List<MemberServiceRegisterResponseDto> findAllServiceRegister() throws Exception {
+        return decryptUsername(serviceRegisterMapper.findAllServiceRegister());
+    }
 
+    @Override
+    public List<MemberServiceRegisterResponseDto> decryptUsername(List<MemberServiceRegisterResponseDto> serviceRegisterList) throws Exception {
         AESCipher aesCipher;
-
-        List<MemberServiceRegisterResponseDto> serviceRegisterList = serviceRegisterMapper.findAllServiceRegister();
         for (MemberServiceRegisterResponseDto service : serviceRegisterList) {
             AccessTokenDto findMemberInfo = findMemberInfoByServiceId(service.getServiceId());
             aesCipher = new AESCipher(findMemberInfo.getEncryptKey());
@@ -78,7 +74,7 @@ public class FileUploadServiceImpl implements FileService{
 
     @Override
     public void updateApprovalReason(MemberRequestDto memberRequestDto) {
-        serviceRegisterMapper.updateApprovalReason(memberRequestDto);
+        serviceRegisterMapper.updateApprovalReason(memberRequestDto, LocalDateTime.now());
     }
 
     @Override

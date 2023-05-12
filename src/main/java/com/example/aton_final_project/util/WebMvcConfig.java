@@ -12,6 +12,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
         WebMvcConfigurer.super.addResourceHandlers(registry);
         registry
                 .addResourceHandler("/**")
-                .addResourceLocations("classpath:/static/", "classpath:/templates/", "classpath:/uploaded_files/");
+                .addResourceLocations("classpath:/static/", "classpath:/templates/"
+//                        , "classpath:/uploaded_files/"
+//                        , "file:///C:/homework/aton_final_project/src/main/resources/uploaded_files/"
+                        , "file:src/main/resources/uploaded_files/"
+                );
     }
 }
