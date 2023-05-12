@@ -54,7 +54,7 @@
 .toast-header {
   display: flex;
   align-items: center;
-  padding: var(--#{$prefix}toast-padding-y) var(--#{$prefix}toast-padding-x);
+  //padding: var(--#{$prefix}toast-padding-y) var(--#{$prefix}toast-padding-x);
   color: var(--#{$prefix}toast-header-color);
   background-color: var(--#{$prefix}toast-header-bg);
   background-clip: padding-box;
