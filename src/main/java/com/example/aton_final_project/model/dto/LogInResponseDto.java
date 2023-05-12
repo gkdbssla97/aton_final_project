@@ -10,5 +10,7 @@ import lombok.*;
 public class LogInResponseDto {
     private String username;
     private String phoneNo;
+    private Long member_authorities_code_id;
+    private Long member_authorities_mapping_id;
 
 }

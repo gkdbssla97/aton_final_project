@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.HttpServletRequest;
@@ -74,12 +75,32 @@ public class MainController {
         if (loginMember == null) {
             return "redirect:/login";
         }
-        List<MemberServiceRegisterResponseDto> serviceRegisterList = fileService.findServiceRegisterById(loginMember.getId());
+        List<MemberServiceRegisterResponseDto> serviceRegisterList = fileService.findServiceRegisterById(loginMember.getMemberId());
         System.out.println("size; " + serviceRegisterList.size());
         model.addAttribute("member", loginMember);
         model.addAttribute("serviceRegisterList", serviceRegisterList);
 
         return "pages/service-details";
+    }
+
+    /**
+     *  서비스 신청 상세 정보
+     * @return
+     */
+    @GetMapping("/answer-service-page")
+    public String memberAnswerServicePage(@RequestParam("serviceId") Long serviceId, HttpServletRequest request, Model model) throws Exception {
+        HttpSession session = request.getSession(true);
+        System.out.println("serviceId: " + serviceId);
+        MemberResponseDto loginMember = (MemberResponseDto) session.getAttribute(LOGIN_MEMBER);
+
+        List<MemberServiceRegisterResponseDto> findService = fileService.findServiceByServiceId(serviceId);
+        model.addAttribute("member", loginMember);
+        model.addAttribute("serviceList", findService);
+        System.out.println(findService);
+        String fileUrl = findService.get(0).getFileUrl();
+        System.out.println(fileUrl.split("uploaded_files")[1]);
+
+        return "pages/answer-service-page";
     }
 
     /**
@@ -111,12 +132,31 @@ public class MainController {
         if (loginMember == null) {
             return "redirect:/login";
         }
-        List<InquiryRegisterResponseDto> inquiryList = inquiryService.findInquiriesRegisterById(loginMember.getId());
+        List<InquiryRegisterResponseDto> inquiryList = inquiryService.findInquiriesRegisterById(loginMember.getMemberId());
         System.out.println("size; " + inquiryList.size());
         model.addAttribute("member", loginMember);
         model.addAttribute("inquiryList", inquiryList);
 
         return "pages/inquiry-details";
+    }
+
+    /**
+     *  문의 답변 상세 정보
+     * @return
+     */
+    @GetMapping("/answer-inquiry-page")
+    public String memberAnswerInquiryPage(@RequestParam("inquiryId") Long inquiryId, HttpServletRequest request, Model model) throws Exception {
+        HttpSession session = request.getSession(true);
+        System.out.println("InquiryId: " + inquiryId);
+        MemberResponseDto loginMember = (MemberResponseDto) session.getAttribute(LOGIN_MEMBER);
+
+        List<InquiryRegisterResponseDto> findInquiry = inquiryService.findInquiryByInquiryId(inquiryId);
+        model.addAttribute("member", loginMember);
+        model.addAttribute("inquiry", findInquiry);
+        System.out.println(findInquiry);
+        String fileUrl = findInquiry.get(0).getFileUrl();
+
+        return "pages/answer-inquiry-page";
     }
 
     /**

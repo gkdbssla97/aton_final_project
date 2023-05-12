@@ -4,6 +4,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.aton_final_project.model.dao.MemberMapper">
+    <!--    회원가입 수 카운팅-->
+    <select id="count" parameterType="java.util.Map" resultType="int">
+        SELECT count(*)
+        FROM member m
+    </select>
     <!--    회원가입-->
     <insert id="joinAdmin" parameterType="com.example.aton_final_project.model.dto.MemberRequestDto" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO member(email, username, password, phoneNo, telcoTycd, registerDate)
@@ -14,9 +19,10 @@
         INSERT INTO memberauthoritiesmapping(member_id, member_authorities_code_id)
         VALUES (#{memberId}, 1);
     </insert>
-    <insert id="joinMember">
+    <insert id="joinMember" parameterType="com.example.aton_final_project.model.dto.MemberRequestDto" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO member(email, username, password, phoneNo, telcoTycd, registerDate)
-        VALUES (#{email}, #{username}, #{password}, #{phoneNo}, #{telcoTycd}, #{registerDate});
+        VALUES (#{memberRequestDto.email}, #{memberRequestDto.username}, #{memberRequestDto.password},
+                #{memberRequestDto.phoneNo}, #{memberRequestDto.telcoTycd}, #{memberRequestDto.registerDate});
     </insert>
     <insert id="authorizeMember">
         INSERT INTO memberauthoritiesmapping(member_id, member_authorities_code_id)
@@ -27,18 +33,79 @@
         VALUES (#{memberId}, #{authorization}, #{encryptKey}, #{email});
     </insert>
 
-    <!--    회원 정보 가져오기-->
-<!--    <select id="findMemberByEmailAndPassword" resultType="com.example.aton_final_project.model.dto.MemberResponseDto">-->
-<!--        SELECT member_id AS 'id',-->
-<!--               username,-->
-<!--               email,-->
-<!--               password,-->
-<!--               phoneNo,-->
-<!--               telcoTycd,-->
-<!--               registerDate-->
-<!--        FROM member-->
-<!--        WHERE email = #{email} AND password = #{password}-->
-<!--    </select>-->
+<!--        회원 정보 가져오기-->
+    <select id="findMemberByEmail" resultType="com.example.aton_final_project.model.dto.MemberResponseDto">
+        SELECT member_id AS 'id',
+               username,
+               email,
+               password,
+               phoneNo,
+               telcoTycd,
+               registerDate,
+               lockDate,
+               lastLoginDate,
+               member_status AS memberStatus,
+               account_status AS accountStatus
+        FROM member
+        WHERE email = #{email}
+    </select>
+
+    <!--    모든 회원 조회-->
+    <select id="findAllMember" resultType="com.example.aton_final_project.model.dto.MemberResponseDto">
+        SELECT m.member_id     AS memberId,
+               m.username,
+               m.email,
+               m.password,
+               m.phoneNo,
+               m.telcoTycd,
+               m.member_status AS memberStatus,
+               m.account_status AS accountStatus,
+               m.registerDate,
+               m.approvalDate,
+               CASE c.authority
+                   WHEN 'ROLE_ADMIN' THEN '관리자'
+                   WHEN 'ROLE_MEMBER' THEN '일반회원'
+                   END         AS authority,
+               t.encrypt_key AS encryptKey,
+               m.approvalDate
+        FROM memberauthoritiesmapping a
+                 JOIN member m ON m.member_id = a.member_id
+                 JOIN memberauthoritiescode c ON a.member_authorities_code_id = c.member_authorities_code_id
+                 JOIN accesstoken t ON m.member_id = t.member_id
+    </select>
+    <!--    회원 문의 신청 페이징 조회-->
+    <select id="getListWithPaging" parameterType="java.util.Map" resultType="com.example.aton_final_project.model.dto.MemberResponseDto">
+        SELECT m.member_id     AS memberId,
+        m.username,
+        m.email,
+        m.password,
+        m.phoneNo,
+        m.telcoTycd,
+        m.member_status AS memberStatus,
+        m.account_status AS accountStatus,
+        m.registerDate,
+        m.approvalDate,
+        CASE c.authority
+        WHEN 'ROLE_ADMIN' THEN '관리자'
+        WHEN 'ROLE_MEMBER' THEN '일반회원'
+        END         AS authority,
+        t.encrypt_key AS encryptKey,
+        m.approvalDate
+        FROM memberauthoritiesmapping a
+        JOIN member m ON m.member_id = a.member_id
+        JOIN memberauthoritiescode c ON a.member_authorities_code_id = c.member_authorities_code_id
+        JOIN accesstoken t ON m.member_id = t.member_id
+        <!-- 메서드 오버로딩으로 다른 메서드를 호출하기 위해 개인적으로 걸어놓은 조건문 -->
+        <if test="serviceId neq null and serviceId neq ''.toString()">
+            AND m.member_id = #{memberId}
+        </if>
+
+        <!--        &lt;!&ndash; 다른 메서드 호출시 반영되지 않기위해 걸어놓은 조건문 &ndash;&gt;-->
+        <if test="startRow != lastPage">
+            ORDER BY m.member_id DESC
+            LIMIT #{startRow}, #{rowPerPage}
+        </if>
+    </select>
     <!--    회원과 연관된 암호화키 가져오기-->
     <select id="findEncryptKeyByMemberId" resultType="string">
         SELECT encrypt_key
@@ -53,11 +120,32 @@
         WHERE email = #{email}
     </select>
     <select id="findMemberById" resultType="com.example.aton_final_project.model.dto.MemberResponseDto">
-        select email, password, username, phoneNo
-        from member
-        where member_id = #{memberId}
+        SELECT m.member_id     AS memberId,
+               m.username,
+               m.email,
+               m.password,
+               m.phoneNo,
+               CASE m.telcoTycd
+                   WHEN 'S' THEN 'SKT'
+                   WHEN 'K' THEN 'KT'
+                   WHEN 'L' THEN 'LGU+'
+                   END         AS telcoTycd,
+               m.member_status AS memberStatus,
+               m.account_status AS accountStatus,
+               m.registerDate,
+               m.approvalDate,
+               CASE c.authority
+                   WHEN 'ROLE_ADMIN' THEN '관리자'
+                   WHEN 'ROLE_MEMBER' THEN '일반회원'
+                   END         AS authority,
+               t.encrypt_key AS encryptKey
+        FROM memberauthoritiesmapping a
+                 JOIN member m ON m.member_id = a.member_id
+                 JOIN memberauthoritiescode c ON a.member_authorities_code_id = c.member_authorities_code_id
+                 JOIN accesstoken t ON m.member_id = t.member_id
+        where m.member_id = #{memberId}
     </select>
-<!--    회원의 권한정보 가져오기-->
+<!--    회원의 권한정보 가져오기 V1-->
     <select id="findMemberAuthorityByMemberId" resultType="Long">
         SELECT c.member_authorities_code_id
         FROM memberauthoritiesmapping a
@@ -67,6 +155,34 @@
         ORDER BY c.member_authorities_code_id
         LIMIT 1;
     </select>
+    <!--    회원의 권한정보 가져오기 V2-->
+    <select id="findMemberAuthorityInfoByMemberId" resultType="com.example.aton_final_project.model.dto.LogInResponseDto">
+        SELECT c.member_authorities_code_id,
+               a.member_authorities_mapping_id
+        FROM memberauthoritiesmapping a
+                 JOIN member m ON m.member_id = a.member_id
+                 JOIN memberauthoritiescode c ON a.member_authorities_code_id = c.member_authorities_code_id
+        WHERE m.member_id = #{memberId}
+        ORDER BY c.member_authorities_code_id
+    </select>
+    <!--    로그인 실패 횟수 초기화-->
+    <update id="resetLoginFailCount">
+        UPDATE member
+        SET login_fail_count = 0
+        WHERE member_id = #{memberId};
+    </update>
+<!--    로그인 실패 횟수 증가-->
+    <update id="updateLoginFailCount">
+        UPDATE member
+        SET login_fail_count = #{failCount}
+        WHERE member_id = #{memberId};
+    </update>
+    <!--    최근 로그인 시간-->
+    <update id="updateLastLoginDate">
+        UPDATE member
+        SET lastLoginDate = #{lastLoginDate}
+        WHERE member_id = #{memberId};
+    </update>
 <!--    회원 정보 수정-->
     <update id="editMemberInformation">
         UPDATE member
@@ -74,13 +190,63 @@
             updateDate = #{updateDate}
         WHERE member_id = #{memberId}
     </update>
-<!--    &lt;!&ndash;    회원정보 수정&ndash;&gt;-->
-<!--    &lt;!&ndash;탈퇴&ndash;&gt;-->
-<!--    <delete id="deleteMember">-->
-<!--        delete-->
-<!--        from member-->
-<!--        where userId = #{userId} and phoneNo = #{phoneNo}-->
-<!--    </delete>-->
+    <!--    회원 계정 승인-->
+    <update id="updateMemberApproval">
+        UPDATE member
+        SET member_status = 1,
+            approvalDate = #{approvalDate}
+        WHERE member_id = #{memberId}
+    </update>
+    <!--    회원 관리자로 등록-->
+    <update id="updateMemberToAdmin">
+        UPDATE memberauthoritiesmapping
+        SET member_authorities_code_id = 1
+        WHERE member_authorities_mapping_id = #{member_authorities_mapping_id}
+    </update>
+    <!--장기 미접속자 해제 -->
+    <update id="activeLongTermMember">
+        UPDATE member
+        SET member_status = 1,
+            lockDate = NULL,
+            account_status = #{accountStatus}
+        WHERE member_id = #{memberId};
+    </update>
+    <!--장기 미접속자 적용 -->
+    <update id="inactiveLongTermMember">
+        UPDATE member
+        SET member_status = 0,
+            lockDate = #{lockDate},
+            account_status = #{accountStatus}
+        WHERE member_id = #{memberId};
+    </update>
+<!--계정 중지 -->
+    <update id="pauseMember">
+        UPDATE member
+        SET member_status = 0,
+            lockDate = #{lockDate},
+            account_status = #{accountStatus}
+        WHERE member_id = #{memberId};
+    </update>
+<!--계정 잠금 -->
+    <update id="lockMember">
+        UPDATE member
+        SET member_status = 0,
+            lockDate = #{lockDate},
+            account_status = #{accountStatus}
+        WHERE member_id = #{memberId};
+    </update>
+<!--    회원 탈퇴 -->
+    <delete id="deleteMember">
+        DELETE
+        FROM memberauthoritiesmapping
+        WHERE member_id = #{memberId};
+        DELETE
+        FROM accesstoken
+        WHERE member_id = #{memberId};
+        DELETE
+        FROM member
+        WHERE member_id = #{memberId};
+    </delete>
 <!--    <select id="findAuthoritiesMappingByUserId" resultType="com.example.miniProj3.domain.dto.MemberAuthoritiesMappingDto">-->
 <!--        SELECT member_authorities_mapping_id as 'memberAuthoritiesMappingId',-->
 <!--               member_authorities_code_id as 'memberAuthoritiesCodeId',-->
