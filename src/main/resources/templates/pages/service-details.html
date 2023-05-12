@@ -59,8 +59,8 @@
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary font-weight-bolder">회사명</th>
-                      <th class="text-uppercase text-secondary font-weight-bolder" style="position: relative;">사업자번호</th>
+                      <th class="text-uppercase text-secondary font-weight-bolder" style="position: relative; left: 20px">회사명</th>
+                      <th class="text-uppercase text-secondary font-weight-bolder" style="position: relative;">사업자 번호</th>
                       <th class="text-center text-uppercase text-secondary font-weight-bolder">서비스 상태</th>
                       <th class="text-center text-uppercase text-secondary font-weight-bolder">등록일</th>
                       <th class="text-secondary opacity-7"></th>
@@ -71,7 +71,7 @@
                       <td>
                         <div class="d-flex px-2 py-1">
                           <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm" th:text="${service.companyName}"></h6>
+                            <h6 class="mb-0 text-sm" th:text="${service.companyName}" style="position: relative; left:10px;"></h6>
                           </div>
                         </div>
                       </td>
@@ -91,8 +91,8 @@
                         <span class="text-secondary text-xl font-weight-bold" th:text="${#temporals.format(service.registerDate, 'yy/MM/dd')}">23/04/18</span>
                       </td>
                       <td class="align-middle">
-                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                          수정
+                        <a href="javascript:;" style="text-decoration: underline" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user" th:onclick="|location.href='/answer-service-page?serviceId=${service.serviceId}'|">
+                          보기
                         </a>
                       </td>
                     </tr>
