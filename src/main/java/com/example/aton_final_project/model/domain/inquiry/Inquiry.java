@@ -20,6 +20,8 @@ public class Inquiry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "inquiry_id", nullable = false)
     private Long id;
+    @Column(name = "username", nullable = false)
+    private String username;
     @Column(name ="category", nullable = false, length = 4)
     private String category;
     @Column(name = "title", nullable = false)
@@ -28,9 +30,14 @@ public class Inquiry {
     private String contents;
     @Column(name = "inquiry_status", nullable = false, length = 1, columnDefinition = "integer default 0")
     private InquiryStatus inquiryStatus;
+    @Column(name = "answer_inquiry", nullable = true, columnDefinition = "VARCHAR(1000)")
+    private String answerInquiry;
     @Column
     @CreationTimestamp
     private LocalDateTime registerDate;
+    @Column
+    @CreationTimestamp
+    private LocalDateTime answerDate;
     @Column
     @CreationTimestamp
     private LocalDateTime completionDate;
@@ -38,6 +45,6 @@ public class Inquiry {
     @OneToOne
     @JoinColumn(name = "member_id")
     private Member member;
-    @OneToMany(mappedBy = "inquiry")
+    @OneToMany(mappedBy = "inquiry", cascade = CascadeType.ALL)
     private List<InquiryFiles> files;
 }
