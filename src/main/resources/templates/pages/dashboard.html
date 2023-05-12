@@ -41,6 +41,160 @@
 </head>
 
 <body class="g-sidenav-show  bg-gray-200">
+<style>
+    #ofBar {
+        background: #fff;
+        z-index: 999999999;
+        font-size: 16px;
+        color: #333;
+        padding: 16px 40px;
+        font-weight: 400;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        top: 40px;
+        width: 80%;
+        border-radius: 8px;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25), 0 8px 16px -8px rgba(0, 0, 0, 0.3), 0 -6px 16px -6px rgba(0, 0, 0, 0.025);
+    }
+
+    #ofBar-logo img {
+        height: 50px;
+    }
+
+    #ofBar-content {
+        display: inline;
+        padding: 0 15px;
+    }
+
+    #ofBar-right {
+        display: flex;
+        align-items: center;
+    }
+
+    #ofBar b {
+        font-size: 15px !important;
+    }
+
+    #count-down {
+        display: initial;
+        padding-left: 10px;
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+    #close-bar {
+        font-size: 17px;
+        opacity: 0.5;
+        cursor: pointer;
+        color: #808080;
+        font-weight: bold;
+    }
+
+    #close-bar:hover {
+        opacity: 1;
+    }
+
+    #btn-bar {
+        background-image: linear-gradient(310deg, #141727 0%, #3A416F 100%);
+        color: #fff;
+        border-radius: 4px;
+        padding: 10px 20px;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-align: center;
+        font-size: 12px;
+        opacity: .95;
+        margin-right: 20px;
+        box-shadow: 0 5px 10px -3px rgba(0, 0, 0, .23), 0 6px 10px -5px rgba(0, 0, 0, .25);
+    }
+
+    #btn-bar, #btn-bar:hover, #btn-bar:focus, #btn-bar:active {
+        text-decoration: none !important;
+        color: #fff !important;
+    }
+
+    #btn-bar:hover {
+        opacity: 1;
+    }
+
+    #btn-bar span, #ofBar-content span {
+        color: red;
+        font-weight: 700;
+    }
+
+    #oldPriceBar {
+        text-decoration: line-through;
+        font-size: 16px;
+        color: #fff;
+        font-weight: 400;
+        top: 2px;
+        position: relative;
+    }
+
+    #newPrice {
+        color: #fff;
+        font-size: 19px;
+        font-weight: 700;
+        top: 2px;
+        position: relative;
+        margin-left: 7px;
+    }
+
+    #fromText {
+        font-size: 15px;
+        color: #fff;
+        font-weight: 400;
+        margin-right: 3px;
+        top: 0px;
+        position: relative;
+    }
+
+    @media (max-width: 991px) {
+
+    }
+
+    @media (max-width: 768px) {
+        #count-down {
+            display: block;
+            margin-top: 15px;
+        }
+
+        #ofBar {
+            flex-direction: column;
+            align-items: normal;
+        }
+
+        #ofBar-content {
+            margin: 15px 0;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        #ofBar-right {
+            justify-content: flex-end;
+        }
+    }
+</style>
+<th:block th:if="${#strings.equals(member.accountStatus, '0001')}">
+    <div id="ofBar">
+        <div id="ofBar-logo">
+            <img alt="creative-tim-logo" src="https://s3.amazonaws.com/creativetim_bucket/static-assets/logo-ct-black.png">
+        </div>
+        <div id="ofBar-content"> ⏰ 하윤 님은 90일 이상 접속기록이 없습니다.
+            <b>비밀번호 변경이 필요합니다.</b>
+        </div>
+        <div id="ofBar-right">
+            <a href="/edit-profile" target="_blank" id="btn-bar">비밀번호 변경하기</a>
+            <a id="close-bar">×</a>
+        </div>
+    </div>
+</th:block>
 <div th:replace="~{fragment/sidebar :: sidebar(${member})}"></div>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
@@ -842,6 +996,13 @@
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
 <script src="../assets/js/material-dashboard.min.js?v=3.0.5"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script type="text/javascript">
+    $("#close-bar").click(
+        function () {
+            document.getElementById('ofBar').style.display = "none";
+        })
+</script>
 </body>
 
 </html>

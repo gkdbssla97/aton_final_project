@@ -99,6 +99,8 @@
                         console.log(response.message);
                     },
                     error: function (error) {
+                        console.log(error)
+                        alert("미승인 회원입니다.")
                         console.log("로그인 실패")
                     }
                 })

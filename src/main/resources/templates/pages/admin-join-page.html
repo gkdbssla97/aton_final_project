@@ -1,0 +1,238 @@
+<!--
+=========================================================
+* Material Dashboard 2 - v3.0.5
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/material-dashboard
+* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+    <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+    <title>
+        회원 상세정보
+    </title>
+    <!--     Fonts and icons     -->
+    <link rel="stylesheet" type="text/css"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700"/>
+    <!-- Nucleo Icons -->
+    <link href="../assets/css/nucleo-icons.css" rel="stylesheet"/>
+    <link href="../assets/css/nucleo-svg.css" rel="stylesheet"/>
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- CSS Files -->
+    <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.0.5" rel="stylesheet"/>
+    <!-- Nepcha Analytics (nepcha.com) -->
+    <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
+    <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+</head>
+
+<body class="g-sidenav-show  bg-gray-200">
+<style>
+    div > .inputSpan {
+        font-weight: 600;
+        color: #344767;
+    }
+
+    #serviceInput {
+        line-height: 2.5;
+    }
+</style>
+<div th:replace="~{fragment/admin-sidebar :: admin_sidebar(${member})}"></div>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <div th:replace="~{fragment/header :: header}"></div>
+    <!-- End Navbar -->
+    <!--    서비스 신청 작성란-->
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="card mt-4">
+                    <div class="card-header p-3">
+                        <h5 class="mb-0" style="text-align: center">회원 정보 상세 내역</h5>
+                    </div>
+                    <div id="serviceInput" class="card-body p-3 pb-0">
+                        <form id="form" class="form-horizontal" role="form" method="post" enctype="multipart/form-data"
+                              action="/service-page">
+                            <span class="inputSpan">가입 신청일</span>
+                            <div class="input-group input-group-outline">
+                                <div id="registerDate" class="form-control" th:text="${#temporals.format(memberInfo.registerDate, 'yyyy/MM/dd HH:mm:ss')}"></div>
+                            </div>
+                            <span class="inputSpan">권한</span>
+                            <div class="input-group input-group-outline">
+                                <div id="authority" class="form-control" th:text="${memberInfo.authority}"></div>
+                            </div>
+                            <span class="inputSpan">사용자명</span>
+                            <div class="input-group input-group-outline">
+                                <div id="userName" class="form-control" th:text="${memberInfo.username}"></div>
+                            </div>
+                            <span class="inputSpan">이메일</span>
+                            <div class="input-group input-group-outline">
+                                <div id="email" class="form-control" th:text="${memberInfo.email}"></div>
+                            </div>
+                            <span class="inputSpan">통신사</span>
+                            <div class="input-group input-group-outline">
+                                <div id="telco" class="form-control" th:text="${memberInfo.telcoTycd}"></div>
+                            </div>
+                            <span class="inputSpan">전화번호</span>
+                            <div class="input-group input-group-outline">
+                                <div id="phoneNo" class="form-control" th:text="${memberInfo.phoneNo}"></div>
+                            </div>
+<!--                            회원 정보 관리-->
+                            <div class="card mt-4" style="border: 1px solid #d2d6da;">
+                                <div class="card-header p-3">
+                                    <h5 class="mb-0" style="text-align: center;">회원 권한 변경</h5>
+<!--                                    <p class="text-sm mb-0">-->
+<!--                                        로그인 90일 경과 후 장기미접속 처리<br>-->
+<!--                                        비밀번호 5회 실패 시 계정 잠금<br>-->
+<!--                                        계정 중지 시 중지일 기준 30일간 불가<br>-->
+<!--                                        계정 탈퇴 시 재가입 불가<br>-->
+<!--                                    </p>-->
+                                </div>
+                                <div class="card-body p-3">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-sm-6 col-12">
+                                            <button th:onclick="|click_member_setting(${memberInfo.memberId}, '0001')|" class="btn bg-gradient-success w-100 mb-0 toast-btn" type="button" data-target="successToast">계정 장기미접속 해제</button>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6 col-12 mt-sm-0 mt-2">
+                                            <button th:onclick="|click_member_setting(${memberInfo.memberId}, '0002')|" class="btn bg-gradient-info w-100 mb-0 toast-btn" type="button" data-target="infoToast">계정 잠금</button>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6 col-12 mt-lg-0 mt-2">
+                                            <button th:onclick="|click_member_setting(${memberInfo.memberId}, '0003')|" class="btn bg-gradient-warning w-100 mb-0 toast-btn" type="button" data-target="warningToast">계정 중지</button>
+                                        </div>
+                                        <div class="col-lg-3 col-sm-6 col-12 mt-lg-0 mt-2">
+                                            <button th:onclick="|click_member_setting(${memberInfo.memberId}, '0004')|" class="btn bg-gradient-danger w-100 mb-0 toast-btn" type="button" data-target="dangerToast">계정 탈퇴</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="position-fixed bottom-1 end-1 z-index-2">
+            <div class="toast fade hide p-2 bg-white" role="alert" aria-live="assertive" id="successToast"
+                 aria-atomic="true" style="position: relative; bottom:80px;">
+                <div class="toast-header border-0">
+                    <i class="material-icons text-success me-2">
+                        check
+                    </i>
+                    <span id="one_div" class="me-auto font-weight-bold">Material Dashboard </span>
+                    <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
+                </div>
+            </div>
+            <div class="toast fade p-2 mt-2 bg-white hide" role="alert" aria-live="assertive" id="infoToast"
+                 aria-atomic="true" style="position: relative; bottom:80px;">
+                <div class="toast-header border-0">
+                    <i class="material-icons text-info me-2">
+                        notifications
+                    </i>
+                    <span id="two_div" class="me-auto font-weight-bold">Material Dashboard </span>
+                    <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div class="toast fade hide p-2 mt-2 bg-white" role="alert" aria-live="assertive" id="warningToast"
+                 aria-atomic="true" style="position: relative; bottom:80px;">
+                <div class="toast-header border-0">
+                    <i class="material-icons text-warning me-2">
+                        travel_explore
+                    </i>
+                    <span id="three_div" class="me-auto font-weight-bold">Material Dashboard </span>
+                    <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
+                </div>
+            </div>
+            <div class="toast fade hide p-2 mt-2 bg-white" role="alert" aria-live="assertive" id="dangerToast"
+                 aria-atomic="true" style="position: relative; bottom:80px;">
+                <div class="toast-header border-0">
+                    <i class="material-icons text-danger me-2">
+                        campaign
+                    </i>
+                    <span id="four_div" class="me-auto text-gradient text-danger font-weight-bold">Material Dashboard </span>
+                    <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
+                </div>
+            </div>
+        </div>
+        <div th:replace="~{fragment/bottom :: bottom}"></div>
+    </div>
+</main>
+<div th:replace="~{fragment/footer :: footer}"></div>
+<!--   Core JS Files   -->
+<script src="../assets/js/core/popper.min.js"></script>
+<script src="../assets/js/core/bootstrap.min.js"></script>
+<script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+<script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+            damping: '0.5'
+        }
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+</script>
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="../assets/js/material-dashboard.min.js?v=3.0.5"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script th:inline="javascript">
+    var username = [[${memberInfo.username}]];
+    var memberIds = [[${memberInfo.memberId}]];
+    console.log(username);
+    console.log(memberIds);
+    function authoritySetting(memberId, authorityType) {
+        $.ajax({
+            type: "POST",
+            url: "/admin/member-authority-setting",
+            contentType: 'application/json',
+            data: JSON.stringify({
+                memberId: memberIds,
+                accountStatus: authorityType
+            }),
+            success: function (result, txtStatus, xhr) {
+                if (result === "0004") {
+                    setTimeout(() => location.href ="/admin/join-details-page", 2000);
+                }
+                console.log(xhr);
+
+            },
+            error: function (request, error) {
+                console.log(request.status + " " + error)
+                console.log("설정 변경 실패")
+            },
+        })
+    }
+
+    function click_member_setting(memberId, authorityType) {
+        console.log("clicked: " + authorityType);
+        if(authorityType === '0001') {
+            $('#one_div').text(username + ' 님, 장기미접속 해제되었습니다.');
+        } else if(authorityType === '0002') {
+            $('#two_div').text(username + ' 님, 계정 잠금되었습니다.');
+        } else if(authorityType === '0003') {
+            $('#three_div').text(username + ' 님, 계정 중지되었습니다.');
+        } else if(authorityType === '0004') {
+            $('#four_div').text(username + ' 님, 계정 탈퇴되었습니다.');
+        }
+        authoritySetting(memberId, authorityType);
+    }
+
+</script>
+</body>
+
+</html>
