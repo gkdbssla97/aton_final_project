@@ -68,6 +68,13 @@
                     <div id="serviceInput" class="card-body p-3 pb-0">
                         <form id="form" class="form-horizontal" role="form" method="post" enctype="multipart/form-data"
                               action="/service-page">
+                            <span class="inputSpan" style="font-weight: bold">서비스 상태</span>
+                            <div class="input-group input-group-outline">
+                                <!--                                <div id="businessNumber" class="form-control" th:text="${inquiry[0].title}"></div>-->
+                                <span th:if="${service[0].serviceStatus == 0}" class="badge badge-sm bg-gradient-secondary">대기</span>
+                                <span th:if="${service[0].serviceStatus == 1}" class="badge badge-sm bg-gradient-success">승인</span>
+                                <span th:if="${service[0].serviceStatus == 2}" class="badge badge-sm bg-gradient-thirdly">반려</span>
+                            </div>
                             <span class="inputSpan">등록일자</span>
                             <div class="input-group input-group-outline">
                                 <div id="registerDate" class="form-control" th:text="${#temporals.format(service[0].registerDate, 'yyyy/MM/dd HH:mm:ss')}"></div>
@@ -87,12 +94,13 @@
                             <span class="inputSpan">이미지</span>
                             <div class="input-group input-group-outline">
                                 <span style="display: flex;">
-                                <i th:class="deco_img" th:each="index : ${#numbers.sequence(1, service.size() - 1)}">
-<!--                                    <img th:src="${service.get(index).fileUrl}" alt="이미지">-->
-                                    <img th:src="|/${#strings.substring(service.get(index).fileUrl, 65)}|" alt="이미지" style="max-width: 100%;">
-<!--                                    <img th:src="@{//btn_}" alt="이미지">-->
-                                </i>
-                                    </span>
+                                    <i th:class="deco_img" th:each="index : ${#numbers.sequence(1, service.size() - 1)}">
+    <!--                                    <img th:src="${service.get(index).fileUrl}" alt="이미지">-->
+                                        <img th:src="|/${#strings.substring(service.get(index).fileUrl, 65)}|" alt="이미지" style="max-width: 100%;">
+<!--                                        <div style="text-align: center;" th:text="${service[index].originalFileName}" />-->
+                                        <div th:text="${service[index].originalFileName}" />
+                                    </i>
+                                </span>
                             </div>
                             <span class="inputSpan">사업자등록증</span>
                             <div class="input-group input-group-outline">
