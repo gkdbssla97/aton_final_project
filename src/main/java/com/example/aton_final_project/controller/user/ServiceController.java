@@ -53,7 +53,7 @@ public class ServiceController {
         HttpSession session = request.getSession(true);
         MemberResponseDto loginMember = (MemberResponseDto) session.getAttribute(LOGIN_MEMBER);
 
-        fileService.saveServiceRegister(memberServiceRegisterDto, loginMember.getId());
+        fileService.saveServiceRegister(memberServiceRegisterDto, loginMember.getMemberId());
         return new ResponseEntity<>(
                 "text uploaded success", HttpStatus.OK
         );
@@ -87,7 +87,7 @@ public class ServiceController {
             Path savePath = Paths.get(saveFileName);
 
 //            // DB에 파일 저장
-            fileService.saveFile(new FilesDto(saveFileName, fileName, savePath.toString()), fileService.findServiceIdByMemberId(loginMember.getId()));
+            fileService.saveFile(new FilesDto(saveFileName, fileName, savePath.toString()), fileService.findServiceIdByMemberId(loginMember.getMemberId()));
 
             try {
                 //uploadFile에 파일을 업로드 하는 메서드 transferTo(file)

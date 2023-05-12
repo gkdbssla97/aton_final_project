@@ -4,18 +4,55 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.aton_final_project.model.dao.ServiceRegisterMapper">
+<!--서비스건 검색-->
+    <sql id="searchService">
+        <!--검색 키워드 있을 때-->
+        <if test="keyword != null and keyword != ''">
+            <choose>
+                <when test="searchType != null and searchType != ''">
+                    <choose>
+                        <!--검색 유형 있을 때-->
+                        <when test="'username'.equals(searchType)">
+                            AND sr.username LIKE CONCAT('%', #{keyword}, '%')
+                        </when>
+                        <when test="'companyName'.equals(searchType)">
+                            AND company_name LIKE CONCAT('%', #{keyword}, '%')
+                        </when>
+                        <when test="'businessNo'.equals(searchType)">
+                            AND business_no LIKE CONCAT('%', #{keyword}, '%')
+                        </when>
+                    </choose>
+                </when>
+                <!--전체 검색일 떄-->
+                <otherwise>
+                    AND (
+                    sr.username LIKE CONCAT('%', #{keyword}, '%')
+                    OR company_name LIKE CONCAT('%', #{keyword}, '%')
+                    OR business_no LIKE CONCAT('%', #{keyword}, '%')
+                    )
+                </otherwise>
+            </choose>
+        </if>
+    </sql>
+<!--    게시글 수 카운팅-->
+    <select id="count" parameterType="java.util.Map" resultType="int">
+        SELECT count(*)
+        FROM memberserviceregister ms
+#         WHERE <include refid="searchService" />
+    </select>
     <!--    단건 회원신청 서비스 저장-->
     <insert id="saveServiceRegister">
-        INSERT INTO memberserviceregister(business_no, company_name, member_id, registerDate)
-        VALUES (#{memberServiceRegisterRequestDto.businessNo}, #{memberServiceRegisterRequestDto.companyName},
+        INSERT INTO memberserviceregister(username, business_no, company_name, member_id, registerDate)
+        VALUES (#{memberServiceRegisterRequestDto.username}, #{memberServiceRegisterRequestDto.businessNo},
+                #{memberServiceRegisterRequestDto.companyName},
                 #{memberId}, #{memberServiceRegisterRequestDto.registerDate});
     </insert>
 <!--    회원 서비스 신청 전체내역 조회-->
     <select id="findServiceRegisterById" resultType="com.example.aton_final_project.model.dto.MemberServiceRegisterResponseDto">
-        SELECT service_id      AS serviceId,
-               company_name    AS companyName,
-               business_no     AS businessNo,
-               service_status  AS serviceStatus,
+        SELECT sr.service_id      AS serviceId,
+               sr.company_name    AS companyName,
+               sr.business_no     AS businessNo,
+               sr.service_status  AS serviceStatus,
                sr.registerDate AS registerDate,
                m.username      AS username
         FROM memberserviceregister sr
@@ -41,7 +78,10 @@
                f.filename,
                f.original_filename AS originalFileName,
                f.file_url          AS fileUrl,
-               s.registerDate
+               s.registerDate,
+               s.completionDate,
+               s.service_status AS serviceStatus,
+               s.deny_reason AS denyReason
         FROM memberserviceregister s
                  JOIN member m on s.member_id = m.member_id
                  JOIN files f on s.service_id = f.service_id
@@ -49,24 +89,49 @@
         ORDER BY f.file_id DESC;
     </select>
     <!--    회원 서비스 신청 전체내역 조회-->
-    <select id="findAllServiceRegister" resultType="com.example.aton_final_project.model.dto.InquiryRegisterResponseDto">
-        SELECT service_id      AS serviceId,
-               company_name    AS companyName,
-               business_no     AS businessNo,
-               service_status  AS serviceStatus,
+    <select id="findAllServiceRegister" resultType="com.example.aton_final_project.model.dto.MemberServiceRegisterResponseDto">
+        SELECT sr.service_id      AS serviceId,
+               sr.company_name    AS companyName,
+               sr.business_no     AS businessNo,
+               sr.service_status  AS serviceStatus,
                sr.registerDate AS registerDate,
                m.username      AS username,
                m.email         AS email,
                m.member_id     AS memberId
         FROM memberserviceregister sr
-                 JOIN member m on m.member_id = sr.member_id;
+                 JOIN member m on m.member_id = sr.member_id
+        ORDER BY sr.service_id DESC
+    </select>
+    <!--    회원 서비스 신청 페이징 조회-->
+    <select id="getListWithPaging" parameterType="java.util.Map" resultType="com.example.aton_final_project.model.dto.MemberServiceRegisterResponseDto">
+        SELECT sr.service_id      AS serviceId,
+               sr.company_name    AS companyName,
+               sr.business_no     AS businessNo,
+               sr.service_status  AS serviceStatus,
+               sr.registerDate AS registerDate,
+               m.username      AS username,
+               m.email         AS email,
+               m.member_id     AS memberId
+        FROM memberserviceregister sr
+                 JOIN member m on m.member_id = sr.member_id
+        <include refid="searchService" />
+        <!-- 메서드 오버로딩으로 다른 메서드를 호출하기 위해 개인적으로 걸어놓은 조건문 -->
+        <if test="serviceId neq null and serviceId neq ''.toString()">
+            AND sr.service_id = #{serviceId}
+        </if>
+
+<!--        &lt;!&ndash; 다른 메서드 호출시 반영되지 않기위해 걸어놓은 조건문 &ndash;&gt;-->
+        <if test="startRow != lastPage">
+            ORDER BY sr.service_id DESC
+            LIMIT #{startRow}, #{rowPerPage}
+        </if>
     </select>
     <select id="findMemberInfoByServiceId" resultType="com.example.aton_final_project.model.dto.AccessTokenDto">
         SELECT m.username, a.encrypt_key AS 'encryptKey', a.authorization
         FROM memberserviceregister sr
                  JOIN member m on m.member_id = sr.member_id
                  JOIN accesstoken a on m.member_id = a.member_id
-        WHERE service_id = #{serviceId};
+        WHERE sr.service_id = #{serviceId};
     </select>
 <!--    <select id="findFilesById" resultType="com.example.aton_final_project.model.dto.FilesDto">-->
 <!--        SELECT filename,-->
@@ -87,7 +152,8 @@
     </insert>
     <update id="updateApprovalReason">
         UPDATE memberserviceregister
-        SET service_status = 1
+        SET service_status = 1,
+            completionDate = #{completionDate}
         WHERE service_id = #{memberRequestDto.serviceId};
     </update>
     <update id="updateDenyReason">

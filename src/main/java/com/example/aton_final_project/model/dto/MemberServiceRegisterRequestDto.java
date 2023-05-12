@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @ToString
 @Builder
 public class MemberServiceRegisterRequestDto {
+    private String username;
     private String companyName;
     private String businessNo;
     private ServiceStatus serviceStatus;

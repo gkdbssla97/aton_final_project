@@ -22,4 +22,5 @@ public class MemberServiceRegisterResponseDto {
     private String originalFileName;
     private String fileUrl;
     private LocalDateTime registerDate;
+    private LocalDateTime completionDate;
 }

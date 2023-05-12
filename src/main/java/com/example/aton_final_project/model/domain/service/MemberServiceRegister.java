@@ -20,6 +20,8 @@ public class MemberServiceRegister {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "service_id", nullable = false)
     private Long id;
+    @Column(name = "username", nullable = false)
+    private String username;
     @Column(name = "company_name", nullable = false)
     private String companyName;
     @Column(name = "business_no", nullable = false)
@@ -37,6 +39,6 @@ public class MemberServiceRegister {
     @OneToOne
     @JoinColumn(name = "member_id")
     private Member member;
-    @OneToMany(mappedBy = "memberServiceRegister")
+    @OneToMany(mappedBy = "memberServiceRegister", cascade = CascadeType.ALL)
     private List<Files> file;
 }
