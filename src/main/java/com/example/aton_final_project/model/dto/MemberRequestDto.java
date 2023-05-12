@@ -18,7 +18,9 @@ public class MemberRequestDto {
     private String password;
     private String phoneNo;
     private String telcoTycd; //통신사 구분 코드
+    private Boolean memberStatus;
     private LocalDateTime registerDate;
+    private LocalDateTime approvalDate;
 
     public Member toEntity() {
         return Member.builder()

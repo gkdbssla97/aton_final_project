@@ -31,6 +31,12 @@ public class Member {
     private String phoneNo;
     @Column(name = "telcoTycd", length = 1, nullable = false)
     private String telcoTycd; //통신사 구분 코드
+    @Column(name = "member_status", length = 1, nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean memberStatus;
+    @Column(name = "account_status", length = 4, nullable = false, columnDefinition = "VARCHAR(4) DEFAULT '0000'")
+    private String accountStatus;
+    @Column(name = "login_fail_count", nullable = false, columnDefinition = "int(4) DEFAULT 0")
+    private int loginFailCount;
     @Column
     @CreationTimestamp
     private LocalDateTime registerDate;
@@ -38,11 +44,18 @@ public class Member {
     @CreationTimestamp
     private LocalDateTime updateDate;
     @Column
-    private LocalDateTime deleteDate;
+    @CreationTimestamp
+    private LocalDateTime approvalDate;
+    @Column
+    @CreationTimestamp
+    private LocalDateTime lockDate;
+    @Column
+    @CreationTimestamp
+    private LocalDateTime lastLoginDate;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<MemberAuthoritiesMapping> memberAuthoritiesMappingList;
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private AccessToken accessToken;
     @OneToOne(mappedBy = "member")
     private MemberServiceRegister memberServiceRegister;
