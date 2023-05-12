@@ -1,7 +1,9 @@
 package com.example.aton_final_project.service.file.inquiry;
 
 import com.example.aton_final_project.model.dao.InquiryMapper;
+import com.example.aton_final_project.model.dao.MemberMapper;
 import com.example.aton_final_project.model.dto.*;
+import com.example.aton_final_project.service.member.MemberService;
 import com.example.aton_final_project.util.AESCipher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InquiryServiceImpl implements InquiryService {
     private final InquiryMapper inquiryMapper;
+    private final MemberMapper memberMapper;
+    private final MemberService memberService;
 
     @Override
     public Long findInquiryIdByMemberId(Long memberId) {
@@ -24,7 +28,9 @@ public class InquiryServiceImpl implements InquiryService {
     }
 
     @Override
-    public void saveInquiry(InquiryRegisterRequestDto inquiryRegisterRequestDto, Long memberId) {
+    public void saveInquiry(InquiryRegisterRequestDto inquiryRegisterRequestDto, Long memberId) throws Exception {
+        MemberResponseDto memberById = memberService.findMemberById(memberId);
+        inquiryRegisterRequestDto.setUsername(memberById.getUsername());
         inquiryMapper.saveInquiry(inquiryRegisterRequestDto, memberId);
     }
 
@@ -62,5 +68,33 @@ public class InquiryServiceImpl implements InquiryService {
     @Override
     public AccessTokenDto findMemberInfoByInquiryId(Long inquiryId) {
         return inquiryMapper.findMemberInfoByInquiryId(inquiryId);
+    }
+
+    @Override
+    public List<InquiryRegisterResponseDto> decryptUsername(List<InquiryRegisterResponseDto> inquiryList) throws Exception {
+        AESCipher aesCipher;
+        for (InquiryRegisterResponseDto inquiry : inquiryList) {
+            AccessTokenDto findMemberInfo = findMemberInfoByInquiryId(inquiry.getInquiryId());
+            aesCipher = new AESCipher(findMemberInfo.getEncryptKey());
+            System.out.println("암호키: " + findMemberInfo.getEncryptKey());
+            inquiry.setUsername(aesCipher.decrypt(findMemberInfo.getUsername()));
+        }
+        return inquiryList;
+    }
+
+    @Override
+    public void updateInquiryAnswer(InquiryRegisterRequestDto inquiryRegisterRequestDto) {
+        inquiryMapper.updateInquiryAnswer(inquiryRegisterRequestDto);
+    }
+
+    @Override
+    public List<InquiryRegisterResponseDto> findInquiryByInquiryId(Long inquiryId) throws Exception {
+        List<InquiryRegisterResponseDto> findInquiryByInquiryId = inquiryMapper.findInquiryByInquiryId(inquiryId);
+
+        AESCipher aesCipher = new AESCipher(memberMapper.findEncryptKeyByMemberId(findInquiryByInquiryId.get(0).getMemberId()));
+        String encryptUsername = findInquiryByInquiryId.get(0).getUsername();
+        findInquiryByInquiryId.get(0).setUsername(aesCipher.decrypt(encryptUsername));
+
+        return findInquiryByInquiryId;
     }
 }

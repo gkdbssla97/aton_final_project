@@ -11,9 +11,14 @@ import java.time.LocalDateTime;
 @ToString
 @Builder
 public class InquiryRegisterRequestDto {
+    private Long inquiryId;
+    private Long memberId;
+    private String username;
+    private String answerInquiry;
     private String category;
     private String title;
     private String contents;
     private InquiryStatus inquiryStatus;
     private LocalDateTime registerDate = LocalDateTime.now();
+    private LocalDateTime answerDate = LocalDateTime.now();
 }

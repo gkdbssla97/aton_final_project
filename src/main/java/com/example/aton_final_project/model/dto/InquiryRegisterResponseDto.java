@@ -17,8 +17,10 @@ public class InquiryRegisterResponseDto {
     private String title;
     private String contents;
     private int inquiryStatus;
+    private String answerInquiry;
     private String filename;
     private String originalFileName;
     private String fileUrl;
     private LocalDateTime registerDate;
+    private LocalDateTime answerDate;
 }

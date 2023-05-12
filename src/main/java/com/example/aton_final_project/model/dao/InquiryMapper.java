@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Mapper
@@ -18,4 +19,8 @@ public interface InquiryMapper {
     List<FilesDto> findAllFiles();
     List<InquiryRegisterResponseDto> findAllInquiry() throws Exception;
     AccessTokenDto findMemberInfoByInquiryId(@Param("inquiryId") Long inquiryId);
+    void updateInquiryAnswer(@Param("inquiryRegisterRequestDto") InquiryRegisterRequestDto inquiryRegisterRequestDto);
+    List<InquiryRegisterResponseDto> findInquiryByInquiryId(@Param("inquiryId") Long inquiryId);
+    int count();
+    List<InquiryRegisterResponseDto> getListWithPaging(Map<String, Object> params);
 }

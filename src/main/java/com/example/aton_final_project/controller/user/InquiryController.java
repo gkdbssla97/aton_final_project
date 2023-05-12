@@ -51,8 +51,8 @@ public class InquiryController {
         System.out.println("inquiry String: " + inquiryRegisterDto);
         HttpSession session = request.getSession(true);
         MemberResponseDto loginMember = (MemberResponseDto) session.getAttribute(LOGIN_MEMBER);
-        System.out.println("<Inquiry> memberId: " + loginMember.getId());
-        inquiryService.saveInquiry(inquiryRegisterDto, loginMember.getId());
+        System.out.println("<Inquiry> memberId: " + loginMember.getMemberId());
+        inquiryService.saveInquiry(inquiryRegisterDto, loginMember.getMemberId());
         return new ResponseEntity<>(
                 "text uploaded success", HttpStatus.OK
         );
@@ -86,7 +86,7 @@ public class InquiryController {
             Path savePath = Paths.get(saveFileName);
 
 //            // DB에 파일 저장
-            inquiryService.saveInquiryFile(new FilesDto(saveFileName, fileName, savePath.toString()), inquiryService.findInquiryIdByMemberId(loginMember.getId()));
+            inquiryService.saveInquiryFile(new FilesDto(saveFileName, fileName, savePath.toString()), inquiryService.findInquiryIdByMemberId(loginMember.getMemberId()));
 
             try {
                 //uploadFile에 파일을 업로드 하는 메서드 transferTo(file)

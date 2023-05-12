@@ -4,35 +4,115 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.aton_final_project.model.dao.InquiryMapper">
+    <sql id="searchInquiry">
+        <!--검색 키워드 있을 때-->
+        <if test="keyword != null and keyword != ''">
+            <choose>
+                <when test="searchType != null and searchType != ''">
+                    <choose>
+                        <!--검색 유형 있을 때-->
+                        <when test="'username'.equals(searchType)">
+                            AND i.username LIKE CONCAT('%', #{keyword}, '%')
+                        </when>
+<!--                        <when test="'category'.equals(searchType)">-->
+<!--                            AND-->
+<!--                            CASE i.category-->
+<!--                            WHEN #{keyword} LIKE '일반문의' THEN '0001'-->
+<!--                            WHEN #{keyword} LIKE '계정문의' THEN '0002'-->
+<!--                            WHEN #{keyword} LIKE '탈퇴문의' THEN '0003'-->
+<!--                            WHEN #{keyword} LIKE '신고/이용제한' THEN '0004'-->
+<!--                            END-->
+<!--                        </when>-->
+                        <when test="'title'.equals(searchType)">
+                            AND title LIKE CONCAT('%', #{keyword}, '%')
+                        </when>
+                        <when test="'status'.equals(searchType)">
+                            AND status LIKE CONCAT('%', #{keyword}, '%')
+                        </when>
+                    </choose>
+                </when>
+                <!--전체 검색일 떄-->
+                <otherwise>
+                    AND (
+                    i.username LIKE CONCAT('%', #{keyword}, '%')
+                    OR category LIKE CONCAT('%', #{keyword}, '%')
+                    OR title LIKE CONCAT('%', #{keyword}, '%')
+                    )
+                </otherwise>
+            </choose>
+        </if>
+    </sql>
+    <!--    문의글 수 카운팅-->
+    <select id="count" parameterType="java.util.Map" resultType="int">
+        SELECT count(*)
+        FROM inquiry ms
+        #         WHERE <include refid="searchInquiry" />
+    </select>
     <!--    단건 회원문의 서비스 저장-->
     <insert id="saveInquiry">
-        INSERT INTO inquiry(category, title, contents, registerDate, member_id)
-        VALUES (#{inquiryRegisterRequestDto.category}, #{inquiryRegisterRequestDto.title},
-                #{inquiryRegisterRequestDto.contents}, #{inquiryRegisterRequestDto.registerDate}, #{memberId});
+        INSERT INTO inquiry(username, category, title, contents, registerDate, member_id)
+        VALUES (#{inquiryRegisterRequestDto.username}, #{inquiryRegisterRequestDto.category},
+                #{inquiryRegisterRequestDto.title}, #{inquiryRegisterRequestDto.contents},
+                #{inquiryRegisterRequestDto.registerDate}, #{memberId});
     </insert>
-<!--    회원 문의 전체 내역 조회-->
+<!--    특정 회원 문의 전체 내역 조회-->
     <select id="findInquiriesRegisterById" resultType="com.example.aton_final_project.model.dto.InquiryRegisterResponseDto">
-        SELECT inquiry_id     AS id,
-               CASE category
+        SELECT i.inquiry_id        AS inquiryId,
+               m.member_id         AS memberId,
+               m.username          AS username,
+               CASE i.category
                    WHEN '0001' THEN '일반문의'
                    WHEN '0002' THEN '계정문의'
                    WHEN '0003' THEN '탈퇴문의'
                    WHEN '0004' THEN '신고/이용제한'
-                   END        AS category,
-               title,
-               contents,
-               inquiry_status AS inquiryStatus,
-               registerDate   AS registerDate
+                   END             AS category,
+               i.title,
+               i.contents,
+               f.filename,
+               f.original_filename AS originalFileName,
+               f.file_url          AS fileUrl,
+               i.registerDate,
+               i.inquiry_status    AS inquiryStatus,
+               i.answerDate
         FROM inquiry i
-        where member_id = #{memberId};
+                 LEFT JOIN inquiryfiles f on f.inquiry_id = i.inquiry_id
+                 LEFT JOIN member m on m.member_id = i.member_id
+        where m.member_id = #{memberId};
     </select>
-<!--    회원 문의 단건 ID 조회-->
+<!--    회원 단건 문의 ID 조회-->
     <select id="findInquiryIdByMemberId" resultType="Long">
         SELECT inquiry_id
         FROM inquiry
         WHERE member_id = #{memberId}
         ORDER BY inquiry_id DESC
         LIMIT 1;
+    </select>
+<!--    회원 문의 단건 조회-->
+    <select id="findInquiryByInquiryId" resultType="com.example.aton_final_project.model.dto.InquiryRegisterResponseDto">
+        SELECT i.inquiry_id        AS inquiryId,
+               m.member_id         AS memberId,
+               m.username          AS username,
+               CASE i.category
+                   WHEN '0001' THEN '일반문의'
+                   WHEN '0002' THEN '계정문의'
+                   WHEN '0003' THEN '탈퇴문의'
+                   WHEN '0004' THEN '신고/이용제한'
+                   END        AS category,
+               i.title,
+               i.contents,
+               f.filename,
+               f.original_filename AS originalFileName,
+               f.file_url          AS fileUrl,
+               i.registerDate,
+               i.inquiry_status    AS inquiryStatus,
+               i.answer_inquiry AS answerInquiry,
+               i.answerDate,
+               i.contents
+        FROM inquiry i
+                 LEFT JOIN member m on i.member_id = m.member_id
+                 LEFT JOIN inquiryfiles f on i.inquiry_id = f.inquiry_id
+        WHERE i.inquiry_id = #{inquiryId}
+        ORDER BY i.registerDate, f.file_id;
     </select>
 <!--    <select id="findFilesById" resultType="com.example.aton_final_project.model.dto.FilesDto">-->
 <!--        SELECT filename,-->
@@ -56,7 +136,12 @@
         SELECT i.inquiry_id          AS inquiryId,
                i.member_id           AS memberId,
                m.username,
-               category,
+               CASE category
+                   WHEN '0001' THEN '일반문의'
+                   WHEN '0002' THEN '계정문의'
+                   WHEN '0003' THEN '탈퇴문의'
+                   WHEN '0004' THEN '신고/이용제한'
+                   END        AS category,
                title,
                contents,
                i.inquiry_status      AS inquiryStatus,
@@ -64,6 +149,35 @@
         FROM inquiry i
                  JOIN member m on m.member_id = i.member_id;
 
+    </select>
+    <!--    회원 문의 신청 페이징 조회-->
+    <select id="getListWithPaging" parameterType="java.util.Map" resultType="com.example.aton_final_project.model.dto.InquiryRegisterResponseDto">
+        SELECT i.inquiry_id AS inquiryId,
+        i.member_id AS memberId,
+        i.username,
+        CASE category
+        WHEN '0001' THEN '일반문의'
+        WHEN '0002' THEN '계정문의'
+        WHEN '0003' THEN '탈퇴문의'
+        WHEN '0004' THEN '신고/이용제한'
+        END AS category,
+        title,
+        contents,
+        i.inquiry_status AS inquiryStatus,
+        i.registerDate
+        FROM inquiry i
+        JOIN member m on m.member_id = i.member_id
+        <include refid="searchInquiry"/>
+        <!-- 메서드 오버로딩으로 다른 메서드를 호출하기 위해 개인적으로 걸어놓은 조건문 -->
+        <if test="serviceId neq null and serviceId neq ''.toString()">
+            AND i.inquiry_id = #{inquiryId}
+        </if>
+
+        <!--        &lt;!&ndash; 다른 메서드 호출시 반영되지 않기위해 걸어놓은 조건문 &ndash;&gt;-->
+        <if test="startRow != lastPage">
+            ORDER BY i.inquiry_id DESC
+            LIMIT #{startRow}, #{rowPerPage}
+        </if>
     </select>
 <!--    문의 ID로 회원정보 조회 -->
     <select id="findMemberInfoByInquiryId" resultType="com.example.aton_final_project.model.dto.AccessTokenDto">
@@ -73,4 +187,12 @@
                  JOIN accesstoken a on m.member_id = a.member_id
         WHERE inquiry_id = #{inquiryId};
     </select>
+<!--    문의 답변 등록-->
+    <update id="updateInquiryAnswer">
+        UPDATE inquiry
+        SET answer_inquiry    = #{inquiryRegisterRequestDto.answerInquiry},
+            answerDate = #{inquiryRegisterRequestDto.answerDate},
+            inquiry_status = 1
+        WHERE inquiry_id = #{inquiryRegisterRequestDto.inquiryId};
+    </update>
 </mapper>
