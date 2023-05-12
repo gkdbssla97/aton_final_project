@@ -37,6 +37,9 @@ spring:
     url: jdbc:mariadb://localhost:3306/aton_final_project?allowMultiQueries=true&characterEncoding=UTF-8&serverTimezone=UTC
     username: root
     password: root
+    hikari:
+      connection-test-query: SELECT NOW() FROM dual
+      driver-class-name: net.sf.log4jdbc.sql.jdbacapi.DriverSpy
 
   jpa:
     hibernate:
