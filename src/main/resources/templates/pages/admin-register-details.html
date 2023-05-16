@@ -211,7 +211,6 @@
         }),
         success: function (result) {
           if (result) {
-            alert("계정 승인 성공")
             console.log(result)
           } else {
             console.log(result.message);
@@ -229,6 +228,7 @@
       $('#after_register').text(username + ' 님이 관리자로 등록되었습니다.');
       console.log("check");
       submitRegister(username, memberId);
+      setTimeout(() => location.reload(), 3000);
     }
   </script>
 </body>

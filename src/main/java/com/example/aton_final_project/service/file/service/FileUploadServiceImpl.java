@@ -1,19 +1,27 @@
-package com.example.aton_final_project.service.file;
+package com.example.aton_final_project.service.file.service;
 
 import com.example.aton_final_project.model.dao.MemberMapper;
 import com.example.aton_final_project.model.dao.ServiceRegisterMapper;
 import com.example.aton_final_project.model.dto.*;
 import com.example.aton_final_project.service.member.MemberService;
 import com.example.aton_final_project.util.AESCipher;
+import com.example.aton_final_project.util.error.code.ServiceRegisterError;
+import com.example.aton_final_project.util.error.customexception.ServiceCustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.example.aton_final_project.util.constants.DownloadTypeConstants.IMAGE;
+import static com.example.aton_final_project.util.constants.DownloadTypeConstants.PDF;
+import static com.example.aton_final_project.util.constants.ServiceConstants.*;
+
 @Service
 @RequiredArgsConstructor
-public class FileUploadServiceImpl implements FileService{
+public class FileUploadServiceImpl implements FileService {
     private final ServiceRegisterMapper serviceRegisterMapper;
     private final MemberMapper memberMapper;
     private final MemberService memberService;
@@ -43,8 +51,17 @@ public class FileUploadServiceImpl implements FileService{
     public void saveServiceRegister(MemberServiceRegisterRequestDto memberServiceRegisterRequestDto, Long memberId) throws Exception {
         MemberResponseDto memberById = memberService.findMemberById(memberId);
         memberServiceRegisterRequestDto.setUsername(memberById.getUsername());
+        if (!StringUtils.hasText(memberServiceRegisterRequestDto.getCompanyName())) {
+            throw new ServiceCustomException(ServiceRegisterError.MISSING_REQUIRED_ITEM, COMPANY_NAME.getValue());
+        } else if (!StringUtils.hasText(memberServiceRegisterRequestDto.getBusinessNo())) {
+            throw new ServiceCustomException(ServiceRegisterError.MISSING_REQUIRED_ITEM, BUSINESS_NO.getValue());
+        }
+        if (memberServiceRegisterRequestDto.getFileSize() != 3) {
+            throw new ServiceCustomException(ServiceRegisterError.MISSING_REQUIRED_ITEM, IMG_FILE.getValue() + " 또는 " + PDF_FILE.getValue());
+        }
         serviceRegisterMapper.saveServiceRegister(memberServiceRegisterRequestDto, memberId);
     }
+
     @Override
     public List<MemberServiceRegisterResponseDto> findServiceRegisterById(Long memberId) {
         return serviceRegisterMapper.findServiceRegisterById(memberId);
@@ -79,6 +96,16 @@ public class FileUploadServiceImpl implements FileService{
 
     @Override
     public void updateDenyReason(MemberServiceRegisterResponseDto memberServiceRegisterResponseDto) {
+        if (memberServiceRegisterResponseDto.getDenyReason().equals("")) {
+            throw new ServiceCustomException(ServiceRegisterError.MISSING_REQUIRED_ITEM, DENY_REASON.getValue());
+        }
         serviceRegisterMapper.updateDenyReason(memberServiceRegisterResponseDto);
+    }
+
+    @Override
+    public void confirmUploadedFileDataType(MultipartFile uploadFile) {
+        if (!(uploadFile.getContentType().startsWith(IMAGE.getValue()) || uploadFile.getContentType().endsWith(PDF.getValue()))) {
+            throw new ServiceCustomException(ServiceRegisterError.INVALID_VALUE, IMG_FILE.getValue() + " 또는 " + PDF_FILE.getValue());
+        }
     }
 }

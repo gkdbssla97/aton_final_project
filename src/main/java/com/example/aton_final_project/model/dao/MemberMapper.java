@@ -1,5 +1,6 @@
 package com.example.aton_final_project.model.dao;
 
+import com.example.aton_final_project.model.domain.member.MemberAuthoritiesCode;
 import com.example.aton_final_project.model.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -28,6 +29,7 @@ public interface MemberMapper {
     MemberResponseDto findMemberByEmail(@Param("email") String email);
 
     String findEncryptKeyByMemberId(@Param("memberId") Long memberId);
+    int findLoginFailureCountByMemberId(@Param("memberId") Long memberId);
     AccessTokenDto findMemberKeyByEmail(@Param("email") String email);
     Long findMemberAuthorityByMemberId(@Param("memberId") Long memberId);
     LogInResponseDto findMemberAuthorityInfoByMemberId(@Param("memberId") Long memberId);
@@ -45,4 +47,6 @@ public interface MemberMapper {
     void deleteMember(@Param("memberId") Long memberId);
     int count();
     List<MemberResponseDto> getListWithPaging(Map<String, Object> params);
+    List<MemberAuthoritiesMappingDto> findAuthoritiesMappingByUserId(String userId);
+    MemberAuthoritiesCode findAuthoritiesCodeByCodeId(Long memberAuthoritiesMappingId);
 }

@@ -1,7 +1,6 @@
 package com.example.aton_final_project.controller.admin;
 
 import com.example.aton_final_project.model.dto.InquiryRegisterRequestDto;
-import com.example.aton_final_project.service.file.FileService;
 import com.example.aton_final_project.service.file.inquiry.InquiryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class InquiryAnswerController {
 
-    private final FileService fileService;
     private final InquiryService inquiryService;
 
     /**
@@ -30,8 +28,7 @@ public class InquiryAnswerController {
     @PostMapping("/answer-inquiry")
     @ResponseBody
     public void adminInquiryAnswerPage(@RequestBody InquiryRegisterRequestDto inquiryRegisterRequestDto, HttpServletRequest request, Model model) throws Exception {
-        System.out.println("ajax-send");
-        System.out.println(inquiryRegisterRequestDto);
+
         inquiryService.updateInquiryAnswer(inquiryRegisterRequestDto);
     }
 }

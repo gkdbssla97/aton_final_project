@@ -1,5 +1,6 @@
 package com.example.aton_final_project.model.dto;
 
+import com.example.aton_final_project.model.domain.member.Member;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,22 @@ public class MemberResponseDto {
     private LocalDateTime lockDate;
     private String authority; // 관리자 / 일반회원
     private String encryptKey;
-    private String newPassword; // 새 비밀번호 변경
+    private String _newPassword; // 새 비밀번호
+    private String newPassword; // 재입력 새 비밀번호
     private int loginFailCount;
+
+    public Member toEntity() {
+        return Member.builder()
+                .id(memberId)
+                .email(email)
+                .username(username)
+                .password(password)
+                .phoneNo(phoneNo)
+                .telcoTycd(telcoTycd)
+                .registerDate(registerDate)
+                .memberStatus(memberStatus)
+                .accountStatus(accountStatus)
+                .loginFailCount(loginFailCount)
+                .build();
+    }
 }

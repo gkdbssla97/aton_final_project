@@ -16,4 +16,5 @@ public class MemberServiceRegisterRequestDto {
     private String businessNo;
     private ServiceStatus serviceStatus;
     private LocalDateTime registerDate = LocalDateTime.now();
+    private int fileSize;
 }

@@ -21,9 +21,11 @@ public interface ServiceRegisterMapper {
     List<FilesDto> findAllFiles();
     List<MemberServiceRegisterResponseDto> findAllServiceRegister();
     int count();
+    int count_private(Map<String, Object> params);
     AccessTokenDto findMemberInfoByServiceId(@Param("serviceId") Long serviceId);
     void updateApprovalReason(@Param("memberRequestDto") MemberRequestDto memberRequestDto, @Param("completionDate") LocalDateTime localDateTime);
     void updateDenyReason(@Param("memberServiceRegisterResponseDto") MemberServiceRegisterResponseDto memberServiceRegisterResponseDto);
 
     List<MemberServiceRegisterResponseDto> getListWithPaging(Map<String, Object> params);
+    List<MemberServiceRegisterResponseDto> getListWithPagingForPrivate(Map<String, Object> params);
 }

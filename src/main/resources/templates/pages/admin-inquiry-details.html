@@ -63,12 +63,12 @@
             <div class="search_box" style="margin-left: auto; margin-right: 17px; margin-top: 20px;">
               <form id="searchForm" onsubmit="return false;" autocomplete="off">
                 <div class="sch_group fl">
-                  <select id ="searchType" name = "serachType" title="검색 유형 선택">
+                  <select id ="searchType" name = "searchType" title="검색 유형 선택">
                     <option value="">전체 검색</option>
                     <option value="username">사용자명</option>
 <!--                    <option value="category">문의 분류</option>-->
                     <option value="title">문의 제목</option>
-                    <option value="status">문의 상태</option>
+<!--                    <option value="status">문의 상태</option>-->
                   </select>
                   <input type="text" id= "keyword" name = "keyword" placeholder="키워드를 입력해 주세요." title="키워드 입력"/>
                   <button type="button" class="bt_search" onclick="movePage(1);"><i class="fas fa-search"></i><span class="skip_info">검색</span></button>
@@ -139,6 +139,7 @@
                     </tr>
                   </tbody>
                 </table>
+                <!--/* 페이지네이션 */-->
                 <div class="text-center">
                   <span><a th:href="@{/admin/inquiry-details-page(currentPage=1)}">&lt;&lt;</a></span>
 
@@ -210,13 +211,6 @@
   <script>
     $(document).ready(function () {
       /** 문의답변 절차 **/
-      $('#inquiry_btn').click(
-        function () {
-          $('#before_inquiry').hide();  //display :block 일떄
-          $('#after_inquiry').show(); //display :none 일떄
-          $('#inquiry_btn').hide();
-          $('#inquiry_body').hide();
-        })
       $('#inquiry_close').click(
           function () {
             history.go(0);
@@ -258,16 +252,20 @@
           answerInquiry: $('#inquiry_reason').val()
         }),
         success: function (result) {
-          if (result) {
-            alert("문의 답변 성공")
-            console.log(result)
-          } else {
-            console.log(result.message);
-          }
+          $('#after_inquiry').text(username + ' 님의 문의를 답변 처리하였습니다.');
+          $('#before_inquiry').hide();  //display :block 일떄
+          $('#after_inquiry').show(); //display :none 일떄
+          $('#inquiry_btn').hide();
+          $('#inquiry_body').hide();
         },
-        error: function (request, error) {
-          console.log(request.status + " " + error)
-          console.log("문의 답변 실패")
+        error: function (error) {
+          console.log(error.responseJSON)
+          console.log(error.responseJSON.errorCode);
+          console.log(error.responseJSON.message);
+          console.log(error.responseJSON.httpStatus);
+          alert(error.responseJSON.errorCode + '\n' +
+                  error.responseJSON.message + '\n' +
+                  error.responseJSON.httpStatus);
         },
       })
     }
@@ -277,7 +275,6 @@
       $('#inquiry_btn').click(
         function () {
           submitInquiry(username, memberId, inquiryId);
-          $('#after_inquiry').text(username + ' 님의 문의를 답변 처리하였습니다.');
         });
     }
   </script>

@@ -22,5 +22,7 @@ public interface InquiryMapper {
     void updateInquiryAnswer(@Param("inquiryRegisterRequestDto") InquiryRegisterRequestDto inquiryRegisterRequestDto);
     List<InquiryRegisterResponseDto> findInquiryByInquiryId(@Param("inquiryId") Long inquiryId);
     int count();
+    int count_private(Map<String, Object> params);
     List<InquiryRegisterResponseDto> getListWithPaging(Map<String, Object> params);
+    List<InquiryRegisterResponseDto> getListWithPagingForPrivate(Map<String, Object> params);
 }

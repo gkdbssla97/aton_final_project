@@ -1,4 +1,4 @@
-package com.example.aton_final_project.util;
+package com.example.aton_final_project.util.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;

@@ -35,7 +35,7 @@
 
 <!--        회원 정보 가져오기-->
     <select id="findMemberByEmail" resultType="com.example.aton_final_project.model.dto.MemberResponseDto">
-        SELECT member_id AS 'id',
+        SELECT member_id AS memberId,
                username,
                email,
                password,
@@ -44,6 +44,7 @@
                registerDate,
                lockDate,
                lastLoginDate,
+               login_fail_count AS loginFailCount,
                member_status AS memberStatus,
                account_status AS accountStatus
         FROM member
@@ -100,11 +101,17 @@
             AND m.member_id = #{memberId}
         </if>
 
-        <!--        &lt;!&ndash; 다른 메서드 호출시 반영되지 않기위해 걸어놓은 조건문 &ndash;&gt;-->
+        <!--        다른 메서드 호출시 반영되지 않기위해 걸어놓은 조건문 -->
         <if test="startRow != lastPage">
             ORDER BY m.member_id DESC
             LIMIT #{startRow}, #{rowPerPage}
         </if>
+    </select>
+    <!--    회원 로그인 실패 횟수 조회-->
+    <select id="findLoginFailureCountByMemberId" resultType="int">
+        SELECT login_fail_count
+        FROM member
+        WHERE member_id = #{memberId}
     </select>
     <!--    회원과 연관된 암호화키 가져오기-->
     <select id="findEncryptKeyByMemberId" resultType="string">
@@ -208,7 +215,8 @@
         UPDATE member
         SET member_status = 1,
             lockDate = NULL,
-            account_status = #{accountStatus}
+            account_status = #{accountStatus},
+            login_fail_count = 0
         WHERE member_id = #{memberId};
     </update>
     <!--장기 미접속자 적용 -->
@@ -247,20 +255,20 @@
         FROM member
         WHERE member_id = #{memberId};
     </delete>
-<!--    <select id="findAuthoritiesMappingByUserId" resultType="com.example.miniProj3.domain.dto.MemberAuthoritiesMappingDto">-->
-<!--        SELECT member_authorities_mapping_id as 'memberAuthoritiesMappingId',-->
-<!--               member_authorities_code_id as 'memberAuthoritiesCodeId',-->
-<!--               member_id as'memberId'-->
-<!--        FROM memberauthoritiesmapping mp-->
-<!--        where mp.member_id-->
-<!--                  in (select member_id from member m where m.userId = #{userId});-->
-<!--    </select>-->
-<!--    <select id="findAuthoritiesCodeByCodeId" resultType="com.example.miniProj3.domain.member.MemberAuthoritiesCode">-->
-<!--        SELECT member_authorities_code_id as 'memberAuthoritiesCodeId',-->
-<!--               authority,-->
-<!--               registerDate-->
-<!--        FROM memberAuthoritiesCode mp-->
-<!--        where member_authorities_code_id = #{memberAuthoritiesCodeId}-->
-<!--    </select>-->
-
+<!--    회원 권한 조회-->
+    <select id="findAuthoritiesMappingByUserId" resultType="com.example.aton_final_project.model.dto.MemberAuthoritiesMappingDto">
+        SELECT member_authorities_mapping_id as 'memberAuthoritiesMappingId',
+               member_authorities_code_id as 'memberAuthoritiesCodeId',
+               member_id as'memberId'
+        FROM memberauthoritiesmapping mp
+        where mp.member_id
+                  in (select member_id from member m where m.member_id = #{memberId});
+    </select>
+    <select id="findAuthoritiesCodeByCodeId" resultType="com.example.aton_final_project.model.domain.member.MemberAuthoritiesCode">
+        SELECT member_authorities_code_id as 'memberAuthoritiesCodeId',
+               authority,
+               registerDate
+        FROM memberAuthoritiesCode mp
+        where member_authorities_code_id = #{memberAuthoritiesCodeId}
+    </select>
 </mapper>

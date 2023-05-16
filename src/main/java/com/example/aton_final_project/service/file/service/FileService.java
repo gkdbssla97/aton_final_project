@@ -1,6 +1,7 @@
-package com.example.aton_final_project.service.file;
+package com.example.aton_final_project.service.file.service;
 
 import com.example.aton_final_project.model.dto.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -15,4 +16,5 @@ public interface FileService {
     void updateApprovalReason(MemberRequestDto memberRequestDto);
     List<MemberServiceRegisterResponseDto> decryptUsername(List<MemberServiceRegisterResponseDto> serviceRegisterList) throws Exception;
     void updateDenyReason(MemberServiceRegisterResponseDto memberServiceRegisterResponseDto);
+    void confirmUploadedFileDataType(MultipartFile uploadFile);
 }

@@ -1,7 +1,7 @@
 package com.example.aton_final_project.controller.admin;
 
 import com.example.aton_final_project.model.dto.*;
-import com.example.aton_final_project.service.file.FileService;
+import com.example.aton_final_project.service.file.service.FileService;
 import com.example.aton_final_project.service.mail.MailService;
 import com.example.aton_final_project.service.member.MemberService;
 import com.example.aton_final_project.util.constants.DownloadTypeConstants;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static com.example.aton_final_project.util.constants.DownloadTypeConstants.IMG;
+import static com.example.aton_final_project.util.constants.DownloadTypeConstants.IMAGE;
 import static com.example.aton_final_project.util.constants.DownloadTypeConstants.PDF;
 import static com.example.aton_final_project.util.parse.Parsing.parsingFileName;
 
@@ -77,7 +77,7 @@ public class EmailController {
                     out.write(buffer, 0, read);
                 }
                 out.close();
-            } else if (type.equals(IMG)) {
+            } else if (type.equals(IMAGE)) {
                 response.setContentType("application/octet-stream"); //FileInputStream
                 String[] filesList = new String[findService.size() - 1];
 
@@ -97,7 +97,7 @@ public class EmailController {
 
                             byte[] buffer = new byte[1024];
                             int length;
-                            while((length = fileInputStream.read(buffer)) > 0) {
+                            while ((length = fileInputStream.read(buffer)) > 0) {
                                 zipOutputStream.write(buffer, 0, length);
                             }
                             zipOutputStream.closeEntry();

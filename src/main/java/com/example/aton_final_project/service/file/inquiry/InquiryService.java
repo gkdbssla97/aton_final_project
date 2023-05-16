@@ -1,9 +1,7 @@
 package com.example.aton_final_project.service.file.inquiry;
 
-import com.example.aton_final_project.model.dto.AccessTokenDto;
-import com.example.aton_final_project.model.dto.FilesDto;
-import com.example.aton_final_project.model.dto.InquiryRegisterRequestDto;
-import com.example.aton_final_project.model.dto.InquiryRegisterResponseDto;
+import com.example.aton_final_project.model.dto.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -29,4 +27,5 @@ public interface InquiryService {
     List<InquiryRegisterResponseDto> findInquiryByInquiryId(Long inquiryId) throws Exception;
 
     List<InquiryRegisterResponseDto> decryptUsername(List<InquiryRegisterResponseDto> inquiryList) throws Exception;
+    void confirmUploadedFileDataType(MultipartFile uploadFile);
 }

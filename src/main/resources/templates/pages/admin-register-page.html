@@ -125,10 +125,10 @@
                 <hr class="horizontal dark m-0">
                 <div id = "changePwd_body" class="toast-body">
                     <div>
-                        <label for="first_changePwd">새 비밀번호 입력: &nbsp;</label><input type="text" id ="first_changePwd" placeholder="새 비밀번호를 입력해주세요." style="width: 200px; float:right; position: relative; right: 15px;">
+                        <label for="first_changePwd">새 비밀번호 입력: &nbsp;</label><input type="password" id ="first_changePwd" placeholder="새 비밀번호를 입력해주세요." style="width: 200px; float:right; position: relative;" />
                     </div>
                     <div>
-                        <label for="check_changePwd">새 비밀번호 재입력: &nbsp;</label><input type="password" id ="check_changePwd" placeholder="새 비밀번호를 재입력해주세요." style="width: 200px; float:right; position: relative; right: 15px;" />
+                        <label for="check_changePwd">새 비밀번호 재입력: &nbsp;</label><input type="password" id ="check_changePwd" placeholder="새 비밀번호를 재입력해주세요." style="width: 200px; float:right; position: relative;" />
 
                     </div>
                 </div>
@@ -144,9 +144,6 @@
 <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
 <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
 <script>
-    $(document).ready(function () {
-        /** 비밀번호 변경절차 **/
-    });
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
         var options = {
@@ -168,17 +165,6 @@
     console.log(username);
     console.log(memberIds);
 
-    $('#changePwd_btn').click(
-        function () {
-            console.log('hi');
-            changePwd(memberIds);
-            console.log('bye');
-            $('#after_changePwd').text(username + ' 님의 비밀번호가 변경되었습니다. ');
-            $('#before_changePwd').hide();  //display :block 일떄
-            $('#after_changePwd').show(); //display :none 일떄
-            $('#changePwd_btn').hide();
-            $('#changePwd_body').hide();
-        })
     $('#changePwd_close').click(
         function () {
             history.go(0);
@@ -187,25 +173,45 @@
                 $('#before_changePwd').show(), 3000);  //display :block 일떄
         })
 
-    function changePwd(memberId) {
-        $.ajax({
-            type: "POST",
-            url: "/admin/change-password-setting",
-            contentType: 'application/json',
-            data: JSON.stringify({
-                memberId: memberIds,
-                newPassword: $('#check_changePwd').val()
-            }),
-            success: function (result, txtStatus, xhr) {
-                setTimeout(() => location.href ="/admin/admin-details-page", 1500);
-                console.log(xhr);
-            },
-            error: function (request, error) {
-                console.log(request.status + " " + error)
-                console.log("비밀번호 변경 실패")
-            },
-        })
-    }
+    $('#changePwd_btn').click(
+        function () {
+            if ($('#first_changePwd').val() === "") {
+                alert('새 비밀번호를 입력해주십시오.');
+            } else if ($('#check_changePwd').val() === "") {
+                alert('새 비밀번호를 재 입력해주십시오.');
+            } else if ($('#check_changePwd').val() !== $('#first_changePwd').val()) {
+                alert('입력한 새 비밀번호와 재입력한 새 비밀번호가 일치하지 않습니다.');
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/change-password-setting",
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        memberId: memberIds,
+                        _newPassword: $('#first_changePwd').val(),
+                        newPassword: $('#check_changePwd').val(),
+                    }),
+                    success: function (result, txtStatus, xhr) {
+                        $('#after_changePwd').text(username + ' 님의 비밀번호가 변경되었습니다. ');
+                        $('#before_changePwd').hide();  //display :block 일떄
+                        $('#after_changePwd').show(); //display :none 일떄
+                        $('#changePwd_btn').hide();
+                        $('#changePwd_body').hide();
+                        setTimeout(() => location.href = "/admin/admin-details-page", 1500);
+                        console.log(xhr);
+                    },
+                    error: function (error) {
+                        console.log(error.responseJSON)
+                        console.log(error.responseJSON.errorCode);
+                        console.log(error.responseJSON.message);
+                        console.log(error.responseJSON.httpStatus);
+                        alert(error.responseJSON.errorCode + '\n' +
+                            error.responseJSON.message + '\n' +
+                            error.responseJSON.httpStatus);
+                    },
+                })
+            }
+        });
     function changePwd_setting(username, memberId) {
         // alert(username + " " + memberId + " " + inquiryId);
         $('#infoToast').toast('show');

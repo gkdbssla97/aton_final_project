@@ -14,20 +14,20 @@
                         <when test="'username'.equals(searchType)">
                             AND i.username LIKE CONCAT('%', #{keyword}, '%')
                         </when>
-<!--                        <when test="'category'.equals(searchType)">-->
-<!--                            AND-->
-<!--                            CASE i.category-->
-<!--                            WHEN #{keyword} LIKE '일반문의' THEN '0001'-->
-<!--                            WHEN #{keyword} LIKE '계정문의' THEN '0002'-->
-<!--                            WHEN #{keyword} LIKE '탈퇴문의' THEN '0003'-->
-<!--                            WHEN #{keyword} LIKE '신고/이용제한' THEN '0004'-->
-<!--                            END-->
-<!--                        </when>-->
+                        <when test="'category'.equals(searchType)">
+                            AND
+                            CASE i.category
+                            WHEN '일반문의' LIKE CONCAT('%', #{keyword}, '%')  THEN '0001'
+                            WHEN '계정문의' LIKE CONCAT('%', #{keyword}, '%')  THEN '0002'
+                            WHEN '탈퇴문의' LIKE CONCAT('%', #{keyword}, '%')  THEN '0003'
+                            WHEN '신고/이용제한' LIKE CONCAT('%', #{keyword}, '%') THEN '0004'
+                            END
+                        </when>
                         <when test="'title'.equals(searchType)">
-                            AND title LIKE CONCAT('%', #{keyword}, '%')
+                            AND i.title LIKE CONCAT('%', #{keyword}, '%')
                         </when>
                         <when test="'status'.equals(searchType)">
-                            AND status LIKE CONCAT('%', #{keyword}, '%')
+                            AND i.inquiry_status LIKE CONCAT('%', #{keyword}, '%')
                         </when>
                     </choose>
                 </when>
@@ -35,7 +35,7 @@
                 <otherwise>
                     AND (
                     i.username LIKE CONCAT('%', #{keyword}, '%')
-                    OR category LIKE CONCAT('%', #{keyword}, '%')
+                    OR i.inquiry_status LIKE CONCAT('%', #{keyword}, '%')
                     OR title LIKE CONCAT('%', #{keyword}, '%')
                     )
                 </otherwise>
@@ -47,6 +47,12 @@
         SELECT count(*)
         FROM inquiry ms
         #         WHERE <include refid="searchInquiry" />
+    </select>
+    <!--    개인 게시글 수 카운팅-->
+    <select id="count_private" parameterType="java.util.Map" resultType="int">
+        SELECT count(*)
+        FROM inquiry i
+        WHERE member_id = #{memberId} <include refid="searchInquiry" />
     </select>
     <!--    단건 회원문의 서비스 저장-->
     <insert id="saveInquiry">
@@ -79,6 +85,40 @@
                  LEFT JOIN member m on m.member_id = i.member_id
         where m.member_id = #{memberId};
     </select>
+<!--    특정 회원 문의 전체 내역 조회-->
+    <select id="getListWithPagingForPrivate" parameterType="java.util.Map" resultType="com.example.aton_final_project.model.dto.InquiryRegisterResponseDto">
+        SELECT i.inquiry_id        AS inquiryId,
+               m.member_id         AS memberId,
+               m.username          AS username,
+               CASE i.category
+                   WHEN '0001' THEN '일반문의'
+                   WHEN '0002' THEN '계정문의'
+                   WHEN '0003' THEN '탈퇴문의'
+                   WHEN '0004' THEN '신고/이용제한'
+                   END             AS category,
+               i.title,
+               i.contents,
+               f.filename,
+               f.original_filename AS originalFileName,
+               f.file_url          AS fileUrl,
+               i.registerDate,
+               i.inquiry_status    AS inquiryStatus,
+               i.answerDate
+        FROM inquiry i
+                 LEFT JOIN inquiryfiles f on f.inquiry_id = i.inquiry_id
+                 LEFT JOIN member m on m.member_id = i.member_id
+        where m.member_id = #{memberId}
+
+    <!-- 메서드 오버로딩으로 다른 메서드를 호출하기 위해 개인적으로 걸어놓은 조건문 -->
+        <if test="serviceId neq null and serviceId neq ''.toString()">
+            AND i.inquiry_id = #{inquiryId}
+        </if>
+
+        <if test="startRow != lastPage">
+            ORDER BY i.inquiry_id DESC
+            LIMIT #{startRow}, #{rowPerPage}
+        </if>
+    </select>
 <!--    회원 단건 문의 ID 조회-->
     <select id="findInquiryIdByMemberId" resultType="Long">
         SELECT inquiry_id
@@ -87,7 +127,7 @@
         ORDER BY inquiry_id DESC
         LIMIT 1;
     </select>
-<!--    회원 문의 단건 조회-->
+    <!--    회원 문의 단건 조회-->
     <select id="findInquiryByInquiryId" resultType="com.example.aton_final_project.model.dto.InquiryRegisterResponseDto">
         SELECT i.inquiry_id        AS inquiryId,
                m.member_id         AS memberId,

@@ -251,6 +251,10 @@
     $(document).ready(function () {
         $('#inquiry-page-ok').click(
             function () {
+                var formData = new FormData();
+                var inputImages = $("input[name ='uploadImages']");
+                var imgFiles = inputImages[0].files;
+
                 if (isCheckedAgreeBox()) {
                     $.ajax({
                         type: "POST",
@@ -262,45 +266,60 @@
                             contents: $('#inquiryContent').val()
                         }),
                         success: function (result) {
-                            if (result) {
-                                alert("문의 신청 성공")
-                                console.log(result)
-                                window.location.href = "/inquiry-details-page";
-                            } else {
-                                console.log(result.message);
+                            if (imgFiles.length === 0) {
+                                if (result) {
+                                    alert("문의 신청 성공")
+                                    console.log(result)
+                                    window.location.href = "/inquiry-details-page";
+                                } else {
+                                    console.log(result.message);
+                                }
                             }
                         },
-                        error: function (request, error) {
-                            console.log(request.status + " " + error)
-                            console.log("문의 신청 실패")
+                        error: function (error) {
+                            console.log(error.responseJSON)
+                            console.log(error.responseJSON.errorCode);
+                            console.log(error.responseJSON.message);
+                            console.log(error.responseJSON.httpStatus);
+                            alert(error.responseJSON.errorCode + '\n' +
+                                error.responseJSON.message + '\n' +
+                                error.responseJSON.httpStatus);
                         },
                     })
-
-                var formData = new FormData();
-                var inputImages = $("input[name ='uploadImages']");
-                var imgFiles = inputImages[0].files;
-                if (imgFiles.length > 0) {
-                    for (var i = 0; i < imgFiles.length; i++) {
-                        console.log(imgFiles[i]);
-                        formData.append("uploadFiles", imgFiles[i]);
+                    if (imgFiles.length > 0) {
+                        for (var i = 0; i < imgFiles.length; i++) {
+                            console.log(imgFiles[i]);
+                            formData.append("uploadFiles", imgFiles[i]);
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: "/inquiry-page-image",
+                            data: formData,
+                            // dataType: 'json',
+                            success: function (result) {
+                                if (result) {
+                                    alert("문의 신청 성공")
+                                    console.log(result)
+                                    window.location.href = "/inquiry-details-page";
+                                } else {
+                                    console.log(result.message);
+                                }
+                            },
+                            error: function (error) {
+                                console.log(error.responseJSON)
+                                console.log(error.responseJSON.errorCode);
+                                console.log(error.responseJSON.message);
+                                console.log(error.responseJSON.httpStatus);
+                                alert(error.responseJSON.errorCode + '\n' +
+                                    error.responseJSON.message + '\n' +
+                                    error.responseJSON.httpStatus);
+                            },
+                            cache: false,
+                            contentType: false,
+                            processData: false
+                        })
                     }
-                    $.ajax({
-                        type: "POST",
-                        url: "/inquiry-page-image",
-                        data: formData,
-                        // dataType: 'json',
-                        success: function (result) {
-                        },
-                        error: function (request, error) {
-                            console.log(request.status + " " + error)
-                            console.log("문의 이미지 업로드 실패")
-                        },
-                        cache: false,
-                        contentType: false,
-                        processData: false
-                    })
                 }
-            }
                 else {
                     alert("개인정보 동의란에 체크해주세요.");
                 }

@@ -47,7 +47,7 @@
                         <option value="L" class="others">LG U+</option>
                     </select>
                     <input id = "phoneNo" name="phoneNo" type="tel"
-                           placeholder="전화번호를 입력하세요." required value="">
+                           placeholder="전화번호를 입력하세요. ( ' - ' 제외입력)" required value="">
                 </div>
                 <input class="login animated fadeInUp animate3" id = "email" name="email" type="text" required placeholder="이메일을 입력하세요."
                        value="">
@@ -99,9 +99,21 @@
                         console.log(response.message);
                     },
                     error: function (error) {
-                        console.log(error)
-                        alert("미승인 회원입니다.")
-                        console.log("로그인 실패")
+                        console.log(error.responseJSON)
+                        console.log(error.responseJSON.errorCode);
+                        console.log(error.responseJSON.message);
+                        console.log(error.responseJSON.loginFailureCount);
+                        console.log(error.responseJSON.httpStatus);
+                        if (error.responseJSON.errorCode === 4102) {
+                            alert(error.responseJSON.errorCode + '\n' +
+                                error.responseJSON.message + '\n' +
+                                error.responseJSON.loginFailureCount + '\n' +
+                                error.responseJSON.httpStatus);
+                        } else {
+                            alert(error.responseJSON.errorCode + '\n' +
+                                error.responseJSON.message + '\n' +
+                                error.responseJSON.httpStatus);
+                        }
                     }
                 })
             });
@@ -125,8 +137,17 @@
                         window.location.href = "/login";
                         console.log(response)
                     },
-                    error: function (error) {
-                        console.log("회원가입 실패")
+                    error: function (error, txtStatus, xhr) {
+                        console.log(xhr);
+                        console.log(error.responseJSON)
+                        console.log(error.responseJSON.errorCode);
+                        console.log(error.responseJSON.message);
+                        console.log(error.responseJSON.loginFailureCount);
+                        console.log(error.responseJSON.httpStatus);
+                        alert(error.responseJSON.errorCode + '\n' +
+                            error.responseJSON.message + '\n' +
+                            error.responseJSON.loginFailureCount + '\n' +
+                            error.responseJSON.httpStatus);
                     }
                 })
             });

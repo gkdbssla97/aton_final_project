@@ -6,7 +6,7 @@ import com.example.aton_final_project.model.dao.ServiceRegisterMapper;
 import com.example.aton_final_project.model.dto.InquiryRegisterResponseDto;
 import com.example.aton_final_project.model.dto.MemberResponseDto;
 import com.example.aton_final_project.model.dto.MemberServiceRegisterResponseDto;
-import com.example.aton_final_project.service.file.FileService;
+import com.example.aton_final_project.service.file.service.FileService;
 import com.example.aton_final_project.service.file.inquiry.InquiryService;
 import com.example.aton_final_project.service.member.MemberService;
 import com.example.aton_final_project.util.constants.DataTypeConstants;
@@ -32,7 +32,7 @@ public class BoardService {
     @Autowired private InquiryService inquiryService;
 
     // paging
-    public Map<String, Object> boardList(int currentPage, String searchType, String keyword, DataTypeConstants type) throws Exception {
+    public Map<String, Object> boardList(int currentPage, String searchType, String keyword, DataTypeConstants type, Long memberId) throws Exception {
 
         // 페이지에 보여줄 행의 개수 ROW_PER_PAGE = 5으로 고정
         final int ROW_PER_PAGE = 5;
@@ -78,14 +78,34 @@ public class BoardService {
          */
         double boardCount = 0;
         if(type.equals(SERVICE)) {
-            List<MemberServiceRegisterResponseDto> list = fileService.decryptUsername(serviceRegisterMapper.getListWithPaging(map));
-            // DB 행의 총 개수를 구하는 getBoardAllCount() 메서드를 호출하여 double Date Type의 boardCount 변수에 대입
-            boardCount = serviceRegisterMapper.count();
+            List<MemberServiceRegisterResponseDto> list;
+            if(memberId == 0) {
+                list = fileService.decryptUsername(serviceRegisterMapper.getListWithPaging(map));
+                // DB 행의 총 개수를 구하는 getBoardAllCount() 메서드를 호출하여 double Date Type의 boardCount 변수에 대입
+                boardCount = serviceRegisterMapper.count();
+            } else {
+                map.put("memberId", memberId);
+                list = serviceRegisterMapper.getListWithPagingForPrivate(map);
+                List<MemberServiceRegisterResponseDto> totalList = serviceRegisterMapper.findServiceRegisterById(memberId);
+                resultMap.put("totalList", totalList);
+                // DB 행의 총 개수를 구하는 getBoardAllCount() 메서드를 호출하여 double Date Type의 boardCount 변수에 대입
+                boardCount = serviceRegisterMapper.count_private(map);
+            }
             resultMap.put("list", list);
         } else if(type.equals(INQUIRY)) {
-            List<InquiryRegisterResponseDto> list = inquiryService.decryptUsername(inquiryMapper.getListWithPaging(map));
-            // DB 행의 총 개수를 구하는 getBoardAllCount() 메서드를 호출하여 double Date Type의 boardCount 변수에 대입
-            boardCount = inquiryMapper.count();
+            List<InquiryRegisterResponseDto> list;
+            if(memberId == 0) {
+                list = inquiryService.decryptUsername(inquiryMapper.getListWithPaging(map));
+                // DB 행의 총 개수를 구하는 getBoardAllCount() 메서드를 호출하여 double Date Type의 boardCount 변수에 대입
+                boardCount = inquiryMapper.count();
+            } else {
+                map.put("memberId", memberId);
+                list = inquiryMapper.getListWithPagingForPrivate(map);
+                List<InquiryRegisterResponseDto> totalList = inquiryMapper.findInquiriesRegisterById(memberId);
+                resultMap.put("totalList", totalList);
+                // DB 행의 총 개수를 구하는 getBoardAllCount() 메서드를 호출하여 double Date Type의 boardCount 변수에 대입
+                boardCount = inquiryMapper.count_private(map);
+            }
             resultMap.put("list", list);
         } else if(type.equals(MEMBER_APPROVAL) || type.equals(ADMIN_REGISTER)) {
             List<MemberResponseDto> list = memberService.getListWithPaging(map);

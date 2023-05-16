@@ -1,11 +1,18 @@
 package com.example.aton_final_project.service.member;
 
 import com.example.aton_final_project.model.dao.MemberMapper;
+import com.example.aton_final_project.model.domain.member.MemberAuthoritiesCode;
 import com.example.aton_final_project.model.dto.*;
 import com.example.aton_final_project.util.AESCipher;
 import com.example.aton_final_project.util.constants.AccountStatus;
+import com.example.aton_final_project.util.constants.LoginConstants;
+import com.example.aton_final_project.util.error.code.AuthenticationLoginError;
+import com.example.aton_final_project.util.error.code.AuthenticationRegistrationError;
+import com.example.aton_final_project.util.error.customexception.LoginCustomException;
+import com.example.aton_final_project.util.error.customexception.RegisterCustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,6 +22,7 @@ import java.util.Random;
 
 import static com.example.aton_final_project.util.constants.AccessConstants.ACCESS_TOKEN;
 import static com.example.aton_final_project.util.constants.AccessConstants.ENCRYPT_KEY;
+import static com.example.aton_final_project.util.constants.AccountStatus.*;
 import static com.example.aton_final_project.util.constants.AdminConstant.SUPER_ADMIN_EMAIL;
 import static com.example.aton_final_project.util.constants.AdminConstant.SUPER_ADMIN_USERNAME;
 import static com.example.aton_final_project.util.constants.AuthoritiesConstants.ROLE_ADMIN;
@@ -47,6 +55,15 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void joinMember(MemberRequestDto memberRequestDto) throws Exception {
+        if (!StringUtils.hasText(memberRequestDto.getUsername())) {
+            throw new RegisterCustomException(AuthenticationRegistrationError.MISSING_REQUIRED_ITEM, USERNAME.getValue());
+        } else if (!StringUtils.hasText(memberRequestDto.getPhoneNo())) {
+            throw new RegisterCustomException(AuthenticationRegistrationError.MISSING_REQUIRED_ITEM, PHONE_NO.getValue());
+        } else if (!StringUtils.hasText(memberRequestDto.getEmail())) {
+            throw new RegisterCustomException(AuthenticationRegistrationError.MISSING_REQUIRED_ITEM, EMAIL.getValue());
+        } else if (!StringUtils.hasText(memberRequestDto.getPassword())) {
+            throw new RegisterCustomException(AuthenticationRegistrationError.MISSING_REQUIRED_ITEM, PASSWORD.getValue());
+        }
         String accessToken = initializeAccessKey(ACCESS_TOKEN.getValue());
         String encryptKey = initializeAccessKey(ENCRYPT_KEY.getValue());
 
@@ -85,6 +102,9 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponseDto findMemberById(Long id) throws Exception {
 
         String encryptKeyByMemberId = memberMapper.findEncryptKeyByMemberId(id);
+        if (!StringUtils.hasText(encryptKeyByMemberId)) {
+            throw new LoginCustomException(AuthenticationLoginError.USER_NOT_FOUND);
+        }
         AESCipher aesCipher = new AESCipher(encryptKeyByMemberId);
 
         MemberResponseDto memberById = memberMapper.findMemberById(id);
@@ -113,7 +133,11 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberResponseDto findMemberByEmail(String email) throws Exception {
-        return memberMapper.findMemberByEmail(email);
+        MemberResponseDto findMember = memberMapper.findMemberByEmail(email);
+        if (findMember != null) {
+            return findMember;
+        }
+        throw new LoginCustomException(AuthenticationLoginError.USER_NOT_FOUND);
     }
 
     private String parsingPhoneNo(String phoneNo) {
@@ -122,12 +146,30 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public String findEncryptKeyByMemberId(Long memberId) {
-        return memberMapper.findEncryptKeyByMemberId(memberId);
+        String encryptKeyByMemberId = memberMapper.findEncryptKeyByMemberId(memberId);
+        if (StringUtils.hasText(encryptKeyByMemberId)) {
+            return encryptKeyByMemberId;
+        }
+        throw new LoginCustomException(AuthenticationLoginError.USER_NOT_FOUND);
+    }
+
+    @Override
+    public int findLoginFailureCountByMemberId(Long memberId) {
+        return memberMapper.findLoginFailureCountByMemberId(memberId);
     }
 
     @Override
     public AccessTokenDto findMemberKeyByEmail(String email) {
-        return memberMapper.findMemberKeyByEmail(email);
+        try {
+            AccessTokenDto memberKeyByEmail = memberMapper.findMemberKeyByEmail(email);
+
+            if (memberKeyByEmail != null) {
+                return memberKeyByEmail;
+            }
+        } catch (NullPointerException e) {
+            System.out.println(e.getMessage());
+        }
+        throw new LoginCustomException(AuthenticationLoginError.USER_NOT_FOUND);
     }
 
     @Override
@@ -161,9 +203,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void editMemberInformation(Long memberId, String newPassword) throws Exception {
         String encryptKeyByMemberId = findEncryptKeyByMemberId(memberId);
+        if (!StringUtils.hasText(encryptKeyByMemberId)) {
+            throw new LoginCustomException(AuthenticationLoginError.USER_NOT_FOUND);
+        }
         AESCipher aesCipher = new AESCipher(encryptKeyByMemberId);
 
-        System.out.println("EDIT -> memberId, newPWD: " + memberId + " " + newPassword);
         memberMapper.editMemberInformation(memberId, aesCipher.encrypt(newPassword), LocalDateTime.now());
     }
 
@@ -187,11 +231,10 @@ public class MemberServiceImpl implements MemberService {
                     .authority(member.getAuthority())
                     .build()
             );
-
-            System.out.println("parsing:member: " + member);
         }
         return memberList;
     }
+
     @Override
     public void resetLoginFailCount(Long memberId) {
         memberMapper.resetLoginFailCount(memberId);
@@ -199,6 +242,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void updateLoginFailCount(int failCount, Long memberId) {
+        System.out.println("addLoginFailCount: " + memberId + " " + failCount);
         memberMapper.updateLoginFailCount(failCount, memberId);
     }
 
@@ -309,13 +353,15 @@ public class MemberServiceImpl implements MemberService {
         System.out.println("memberId:" + memberId);
         MemberResponseDto findMemberById = findMemberById(memberId);
         System.out.println(findMemberById);
-        if(!findMemberById.getEmail().equals(email) &&
+        if (!findMemberById.getEmail().equals(email) &&
                 !findMemberById.getPassword().equals(password)) {
             return NO_ACCOUNT.getValue(); // 존재하지 않는 회원입니다.
-        } else if(!findMemberById.getEmail().equals(email) ||
-                !findMemberById.getPassword().equals(password)) {
-            return NO_MATCH_INFO.getValue(); // 로그인 정보가 일치하지 않습니다.
-        } return LOGIN_SUCCESS.getValue(); // 로그인 성공
+        } else if (!findMemberById.getEmail().equals(email)) {
+            return NO_MATCH_INFO_ID.getValue(); // ID 정보가 일치하지 않습니다.
+        } else if (!findMemberById.getPassword().equals(password)) {
+            return NO_MATCH_INFO_PWD.getValue(); // PWD 정보가 일치하지 않습니다.
+        }
+        return LOGIN_SUCCESS.getValue(); // 로그인 성공
     }
 
     @Override
@@ -331,5 +377,68 @@ public class MemberServiceImpl implements MemberService {
     private boolean isSuperAdmin(String username, String email) {
         return username.equals(SUPER_ADMIN_USERNAME.getValue())
                 && email.equals(SUPER_ADMIN_EMAIL.getValue());
+    }
+
+    @Override
+    public void verificationMemberAccessAuthority(MemberRequestDto memberRequestDto, AccessTokenDto findAccessToken, MemberResponseDto findMember) throws Exception {
+        String verifiedMember = isVerifiedMember(memberRequestDto.getEmail(), memberRequestDto.getPassword(),
+                findAccessToken.getMemberId());
+        if (verifiedMember.equals(LoginConstants.NO_ACCOUNT.getValue())) {
+            throw new LoginCustomException(AuthenticationLoginError.USER_NOT_FOUND);
+        } else if (verifiedMember.equals(LoginConstants.NO_MATCH_INFO_PWD.getValue())) {
+            if(findMember.getAccountStatus().equals(MEMBER_LOCK.getValue())) {
+                System.out.println("check point");
+                throw new LoginCustomException(AuthenticationLoginError.LOCK_ACCOUNT);
+            }
+            increaseLoginFailureCount(findMember);
+            throw new LoginCustomException(AuthenticationLoginError.INVALID_VALUE, PASSWORD.getValue(), findMember.getLoginFailCount() + 1);
+        } else if (!findMember.getMemberStatus()) {
+            if (findMember.getAccountStatus().equals(MEMBER_LOCK.getValue())) {
+                throw new LoginCustomException(AuthenticationLoginError.LOCK_ACCOUNT);
+            } else if (findMember.getAccountStatus().equals(MEMBER_PAUSE.getValue())) {
+                throw new LoginCustomException(AuthenticationLoginError.PAUSE_ACCOUNT);
+            } else throw new LoginCustomException(AuthenticationLoginError.UNAPPROVED);
+        }
+    }
+
+    @Override
+    public void confirmLongTermInactiveMember(AccessTokenDto findAccessToken, MemberResponseDto findMember) {
+        if (findMember.getLastLoginDate() != null) {
+//            LocalDateTime compareDate = LocalDateTime.now().minusDays(90);
+            LocalDateTime compareDate = LocalDateTime.now().minusDays(90);
+            LocalDateTime lastLoginDate = findMember.getLastLoginDate();
+            if (compareDate.isAfter(lastLoginDate)) {
+                inactiveLongTermMember(findAccessToken.getMemberId(), LocalDateTime.now(), LONG_TERM_NO_LOGIN);
+                System.out.println(findMember);
+            }
+        }
+    }
+
+    private void increaseLoginFailureCount(MemberResponseDto findMember) {
+        int loginFailCount = findLoginFailureCountByMemberId(findMember.getMemberId()) + 1;
+        updateLoginFailCount(loginFailCount, findMember.getMemberId());
+        if (loginFailCount >= 5) {
+            lockMember(findMember.getMemberId(), LocalDateTime.now(), MEMBER_LOCK);
+        }
+    }
+
+    @Override
+    public void validationLoginInfo(MemberRequestDto memberRequestDto) {
+        if(memberRequestDto.getEmail() == null || memberRequestDto.getEmail().equals("")) {
+            throw new LoginCustomException(AuthenticationLoginError.MISSING_REQUIRED_ITEM, LoginConstants.EMAIL.getValue());
+        }
+        if(memberRequestDto.getPassword() == null || memberRequestDto.getPassword().equals("")) {
+            throw new LoginCustomException(AuthenticationLoginError.MISSING_REQUIRED_ITEM, LoginConstants.PASSWORD.getValue());
+        }
+    }
+
+    @Override
+    public List<MemberAuthoritiesMappingDto> findAuthoritiesMappingByUserId(String userId) {
+        return memberMapper.findAuthoritiesMappingByUserId(userId);
+    }
+
+    @Override
+    public MemberAuthoritiesCode findAuthoritiesCodeByCodeId(Long memberAuthoritiesMappingId) {
+        return memberMapper.findAuthoritiesCodeByCodeId(memberAuthoritiesMappingId);
     }
 }

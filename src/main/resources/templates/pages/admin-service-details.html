@@ -150,78 +150,24 @@
                 </table>
 
                 <!--/* 페이지네이션 */-->
-<!--                <div class="text-center" style="justify-content: center;">-->
-<!--                  <ul id="pagination-demo" class="pagination-sm pagination" style="justify-content: center;">-->
-<!--                    <li class="page-item first disabled">-->
-<!--                      <a href="#" class="page-link">&lt;&lt;</a>-->
-<!--                    </li>-->
-<!--                    <li class="page-item prev disabled">-->
-<!--                      <a href="#" class="page-link">&lt;</a>-->
-<!--                    </li>-->
-<!--                    <li class="page-item">-->
-<!--                      <a href="#" class="page-link">1</a>-->
-<!--                    </li>-->
-<!--                    <li class="page-item">-->
-<!--                      <a href="#" class="page-link">2</a>-->
-<!--                    </li>-->
-<!--                    <li class="page-item">-->
-<!--                      <a href="#" class="page-link">3</a>-->
-<!--                    </li>-->
-<!--                    <li class="page-item">-->
-<!--                      <a href="#" class="page-link">4</a>-->
-<!--                    </li>-->
-<!--                    <li class="page-item">-->
-<!--                      <a href="#" class="page-link">5</a>-->
-<!--                    </li>-->
-<!--                    <li class="page-item next">-->
-<!--                      <a href="#" class="page-link">&gt;</a>-->
-<!--                    </li>-->
-<!--                    <li class="page-item last">-->
-<!--                      <a href="#" class="page-link">&gt;&gt;</a>-->
-<!--                    </li>-->
-<!--                  </ul>-->
-<!--                </div>-->
-<!--                <div class="text-center">-->
-<!--                  <span><a th:href="@{/admin/service-details-page(currentPage=1)}">&lt;&lt;</a></span>-->
-
-<!--                  &lt;!&ndash; 현재 페이지가 1보다 클 경우 이전 href, 1보다 작은 경우 이전 text &ndash;&gt;-->
-<!--                  <span th:if="${currentPage > 1}"><a href="/admin/service-details-page?currentPage=2">&lt;</a></span>-->
-<!--                  <span th:unless="${currentPage > 1}" th:text="|&lt|"></span>-->
-
-<!--                  &lt;!&ndash; #number.sequence 인수로 지정한 2개의 수 범위에서 배열을 생성 &ndash;&gt;-->
-<!--                  <th:block th:each="num : ${#numbers.sequence(startPageNum,lastPageNum)}">-->
-<!--                    <span th:if="${currentPage == num}" th:text="${'['+ num + ']'}"></span>-->
-<!--                    <a th:unless="${currentPage == num}" th:text="${'['+ num + ']'}" th:href="@{/admin/service-details-page(currentPage=${num})}"></a>-->
-<!--                  </th:block>-->
-
-<!--                  &lt;!&ndash; 현재 페이지가 마지막페이지와 같지 않을 경우 다음 href, 같을 경우 다음 text &ndash;&gt;-->
-<!--                  <span th:if="${currentPage != lastPage}"><a th:href="@{/admin/service-details-page(currentPage=(${currentPage}+1))}">&gt;</a></span>-->
-<!--                  <span th:unless="${currentPage != lastPage}" th:text="|&gt|"></span>-->
-<!--                  <span>-->
-<!--                    <a href="/admin/service-details-page?currentPage=3">&gt;&gt;</a></span>-->
-<!--                </div>-->
                 <div class="text-center">
-                  <nav aria-label="Page navigation example">
-                  <ul id="pagination-demo" class="pagination-sm pagination" style="justify-content: center;">
-                  <li class="page-item"><a class="page-link" th:href="@{/admin/service-details-page(currentPage=1)}">&lt;&lt;</a></li>
+                  <span><a th:href="@{/admin/service-details-page(currentPage=1)}">&lt;&lt;</a></span>
 
                   <!-- 현재 페이지가 1보다 클 경우 이전 href, 1보다 작은 경우 이전 text -->
-                  <li class="page-item" th:if="${currentPage > 1}"><a class="page-link" href="/admin/service-details-page?currentPage=1">&lt;</a></li>
-                  <li class="page-item" th:unless="${currentPage > 1}" th:text="|&lt|"></li>
+                  <span th:if="${currentPage > 1}"><a href="/admin/service-details-page?currentPage=2">&lt;</a></span>
+                  <span th:unless="${currentPage > 1}" th:text="|&lt|"></span>
 
                   <!-- #number.sequence 인수로 지정한 2개의 수 범위에서 배열을 생성 -->
                   <th:block th:each="num : ${#numbers.sequence(startPageNum,lastPageNum)}">
-                    <li class="page-item" th:if="${currentPage == num}" th:text="${num}"></li>
-                    <a class="page-link" th:unless="${currentPage == num}" th:text="${num}" th:href="@{/admin/service-details-page(currentPage=${num})}"></a>
+                    <span th:if="${currentPage == num}" th:text="${'['+ num + ']'}"></span>
+                    <a th:unless="${currentPage == num}" th:text="${'['+ num + ']'}" th:href="@{/admin/service-details-page(currentPage=${num})}"></a>
                   </th:block>
 
                   <!-- 현재 페이지가 마지막페이지와 같지 않을 경우 다음 href, 같을 경우 다음 text -->
-                  <li class="page-item" th:if="${currentPage != lastPage}"><a class="page-link" th:href="@{/admin/service-details-page(currentPage=(${currentPage}+1))}">&gt;</a></li>
-                  <li class="page-item" th:unless="${currentPage != lastPage}" th:text="|&gt|"></li>
-                  <li class="page-item">
-                    <a class="page-link" href="/admin/service-details-page?currentPage=3">&gt;&gt;</a></li>
-                  </ul>
-                  </nav>
+                  <span th:if="${currentPage != lastPage}"><a th:href="@{/admin/service-details-page(currentPage=(${currentPage}+1))}">&gt;</a></span>
+                  <span th:unless="${currentPage != lastPage}" th:text="|&gt|"></span>
+                  <span>
+                    <a href="/admin/service-details-page?currentPage=3">&gt;&gt;</a></span>
                 </div>
                 <br/>
               </div>
@@ -304,13 +250,6 @@
           $('#one_div').show(), 3000);  //display :block 일떄
         })
       /** 반려 절차 **/
-      $('#deny_btn').click(
-        function () {
-          $('#before_deny').hide();  //display :block 일떄
-          $('#after_deny').show(); //display :none 일떄
-          $('#deny_btn').hide();
-          $('#deny_body').hide();
-        })
       $('#deny_close').click(
           function () {
             history.go(0);
@@ -373,16 +312,21 @@
           denyReason: $('#deny_reason').val()
         }),
         success: function (result) {
-          if (result) {
-            alert("반려 제출 성공")
-            console.log(result)
-          } else {
-            console.log(result.message);
-          }
+          $('#after_deny').text(username + ' 님의 서비스가 반려 처리되었습니다.');
+          $('#before_deny').hide();  //display :block 일떄
+          $('#after_deny').show(); //display :none 일떄
+          $('#deny_btn').hide();
+          $('#deny_body').hide();
+          console.log(result)
         },
-        error: function (request, error) {
-          console.log(request.status + " " + error)
-          console.log("반려 제출 실패")
+        error: function (error) {
+          console.log(error.responseJSON)
+          console.log(error.responseJSON.errorCode);
+          console.log(error.responseJSON.message);
+          console.log(error.responseJSON.httpStatus);
+          alert(error.responseJSON.errorCode + '\n' +
+                  error.responseJSON.message + '\n' +
+                  error.responseJSON.httpStatus);
         },
       })
     }
@@ -401,7 +345,6 @@
       $('#deny_btn').click(
         function () {
           submitDeny(username, memberId, serviceId);
-          $('#after_deny').text(username + ' 님의 서비스가 반려 처리되었습니다.');
         });
     }
   </script>

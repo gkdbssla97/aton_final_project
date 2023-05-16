@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -45,7 +45,8 @@
                         <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="material-icons opacity-10">dashboard</i>
                         </div>
-                        <span class="nav-link-text ms-1">대시보드</span>
+<!--                        <span class="nav-link-text ms-1">대시보드</span>-->
+                        <span class="nav-link-text ms-1" th:text="${session['findMemberById'].authority}"></span>
                     </a>
                 </li>
                 <!--            서비스 신청-->
@@ -81,7 +82,7 @@
                         <span class="nav-link-text ms-1">문의 내역</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <li th:if="${session['findMemberById'].authority == '관리자'}" class="nav-item">
                     <a class="nav-link text-white " th:onclick="|location.href='/admin/main'|">
                         <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="material-icons opacity-10">view_in_ar</i>

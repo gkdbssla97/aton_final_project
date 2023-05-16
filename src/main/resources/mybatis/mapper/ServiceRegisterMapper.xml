@@ -40,6 +40,12 @@
         FROM memberserviceregister ms
 #         WHERE <include refid="searchService" />
     </select>
+<!--    개인 게시글 수 카운팅-->
+    <select id="count_private" parameterType="java.util.Map" resultType="int">
+        SELECT count(*)
+        FROM memberserviceregister ms
+        WHERE member_id = #{memberId} <include refid="searchService" />
+    </select>
     <!--    단건 회원신청 서비스 저장-->
     <insert id="saveServiceRegister">
         INSERT INTO memberserviceregister(username, business_no, company_name, member_id, registerDate)
@@ -58,6 +64,28 @@
         FROM memberserviceregister sr
                  JOIN member m on m.member_id = sr.member_id
         where sr.member_id = #{memberId};
+    </select>
+    <!--    개인 서비스 신청 페이징 조회-->
+    <select id="getListWithPagingForPrivate" parameterType="java.util.Map" resultType="com.example.aton_final_project.model.dto.MemberServiceRegisterResponseDto">
+        SELECT sr.service_id      AS serviceId,
+               sr.company_name    AS companyName,
+               sr.business_no     AS businessNo,
+               sr.service_status  AS serviceStatus,
+               sr.registerDate AS registerDate,
+               m.username      AS username
+        FROM memberserviceregister sr
+                 JOIN member m on m.member_id = sr.member_id
+        where sr.member_id = #{memberId}
+
+      <!-- 메서드 오버로딩으로 다른 메서드를 호출하기 위해 개인적으로 걸어놓은 조건문 -->
+        <if test="serviceId neq null and serviceId neq ''.toString()">
+            AND sr.service_id = #{serviceId}
+        </if>
+
+        <if test="startRow != lastPage">
+            ORDER BY sr.service_id DESC
+            LIMIT #{startRow}, #{rowPerPage}
+        </if>
     </select>
 <!--    회원 서비스 단건 ID 조회-->
     <select id="findServiceIdByMemberId" resultType="Long">

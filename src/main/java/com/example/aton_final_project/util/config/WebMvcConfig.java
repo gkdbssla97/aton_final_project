@@ -1,4 +1,4 @@
-package com.example.aton_final_project.util;
+package com.example.aton_final_project.util.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

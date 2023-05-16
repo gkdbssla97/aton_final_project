@@ -5,10 +5,16 @@ import com.example.aton_final_project.model.dao.MemberMapper;
 import com.example.aton_final_project.model.dto.*;
 import com.example.aton_final_project.service.member.MemberService;
 import com.example.aton_final_project.util.AESCipher;
+import com.example.aton_final_project.util.error.code.InquiryError;
+import com.example.aton_final_project.util.error.customexception.InquiryCustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+import static com.example.aton_final_project.util.constants.InquiryConstants.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,15 +29,20 @@ public class InquiryServiceImpl implements InquiryService {
     }
 
     @Override
-    public void saveInquiryFile(FilesDto filesDto, Long inquiryId) {
-        inquiryMapper.saveInquiryFile(filesDto, inquiryId);
-    }
-
-    @Override
     public void saveInquiry(InquiryRegisterRequestDto inquiryRegisterRequestDto, Long memberId) throws Exception {
         MemberResponseDto memberById = memberService.findMemberById(memberId);
         inquiryRegisterRequestDto.setUsername(memberById.getUsername());
+        if (!StringUtils.hasText(inquiryRegisterRequestDto.getTitle())) {
+            throw new InquiryCustomException(InquiryError.MISSING_REQUIRED_ITEM, INQUIRY_TITLE.getValue());
+        } else if (!StringUtils.hasText(inquiryRegisterRequestDto.getContents())) {
+            throw new InquiryCustomException(InquiryError.MISSING_REQUIRED_ITEM, INQUIRY_CONTENTS.getValue());
+        }
         inquiryMapper.saveInquiry(inquiryRegisterRequestDto, memberId);
+    }
+
+    @Override
+    public void saveInquiryFile(FilesDto filesDto, Long inquiryId) {
+        inquiryMapper.saveInquiryFile(filesDto, inquiryId);
     }
 
     @Override
@@ -83,7 +94,17 @@ public class InquiryServiceImpl implements InquiryService {
     }
 
     @Override
+    public void confirmUploadedFileDataType(MultipartFile uploadFile) {
+        if(!uploadFile.getContentType().startsWith("image")) {
+            throw new InquiryCustomException(InquiryError.INVALID_VALUE, IMG.getValue());
+        }
+    }
+
+    @Override
     public void updateInquiryAnswer(InquiryRegisterRequestDto inquiryRegisterRequestDto) {
+        if(inquiryRegisterRequestDto.getAnswerInquiry().equals("")) {
+            throw new InquiryCustomException(InquiryError.MISSING_REQUIRED_ITEM, INQUIRY_ANSWER.getValue());
+        }
         inquiryMapper.updateInquiryAnswer(inquiryRegisterRequestDto);
     }
 
