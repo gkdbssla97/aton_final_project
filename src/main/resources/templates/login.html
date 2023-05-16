@@ -64,7 +64,60 @@
     </div>
 </div>
 <script src="/js/login.js"></script>
+<script src="http://code.jquery.com/jquery-3.1.1.js"></script>
 <script>
+    $('#username').keyup(function (e) {
+        let content = $(this).val();
+
+        regexp = /[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g;
+        v = $(this).val();
+        if (regexp.test(v)) {
+            alert("한글만 입력가능 합니다.");
+            $(this).val(v.replace(regexp, ''));
+        }
+        if (content.length > 10) {
+            $(this).val($(this).val().substring(0, 10));
+            alert('글자수는 10자까지 입력 가능합니다.');
+        }
+    });
+
+    $('#phoneNo').keyup(function (e) {
+        var phoneNum = $(this).val();
+        regexp = /^[0-9]*$/g;
+        console.log(phoneNum, $("#phoneNo").val().length);
+        v = $(this).val();
+        if (!regexp.test(v)) {
+            alert("숫자만 입력가능 합니다.");
+            $(this).val(v.replace(regexp, ''));
+        }
+        if (phoneNum.length > 11) {
+            $(this).val($(this).val().substring(0, 11));
+            alert("휴대폰 번호는 ' - ' 를 빼고 입력하십시오.");
+        }
+    });
+
+   function checkEmailFormat() {
+        var regexp = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+        var email =  $('#email').val();
+        if (!regexp.test(email)) {
+            alert("이메일 형식에 맞게 기입하십시오.");
+            $("#email").focus();
+            return false;
+        }
+        return true;
+    }
+
+    function checkPhoneNo() {
+        var phoneNum = $('#phoneNo').val();
+        console.log(phoneNum)
+        if (phoneNum === "" || phoneNum.length !== 11) {
+            alert("휴대폰 번호를 정확히 입력해주세요.")
+            $("#phoneNo").focus();
+            return false;
+        }
+        return true;
+    };
+
     function changeOption() {
         let val = document.getElementById("telCdSelect");
         return val.options[val.selectedIndex].value;
@@ -120,36 +173,38 @@
 
         $('#signup-form-button').click(
             function () {
-                $.ajax({
-                    type: "POST",
-                    url: "/sign-up",
-                    dataType: 'json',
-                    contentType: "application/json",
-                    data: JSON.stringify({
-                        username: $('#username').val(),
-                        password: $('#password').val(),
-                        telcoTycd: $('#telCdSelect').val(),
-                        phoneNo: $('#phoneNo').val(),
-                        email: $('#email').val()
-                    }),
-                    success: function (response) {
-                        alert("회원가입 성공")
-                        window.location.href = "/login";
-                        console.log(response)
-                    },
-                    error: function (error, txtStatus, xhr) {
-                        console.log(xhr);
-                        console.log(error.responseJSON)
-                        console.log(error.responseJSON.errorCode);
-                        console.log(error.responseJSON.message);
-                        console.log(error.responseJSON.loginFailureCount);
-                        console.log(error.responseJSON.httpStatus);
-                        alert(error.responseJSON.errorCode + '\n' +
-                            error.responseJSON.message + '\n' +
-                            error.responseJSON.loginFailureCount + '\n' +
-                            error.responseJSON.httpStatus);
-                    }
-                })
+                if(checkEmailFormat() && checkPhoneNo()) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/sign-up",
+                        dataType: 'json',
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            username: $('#username').val(),
+                            password: $('#password').val(),
+                            telcoTycd: $('#telCdSelect').val(),
+                            phoneNo: $('#phoneNo').val(),
+                            email: $('#email').val()
+                        }),
+                        success: function (response) {
+                            alert("회원가입 성공")
+                            window.location.href = "/login";
+                            console.log(response)
+                        },
+                        error: function (error, txtStatus, xhr) {
+                            console.log(xhr);
+                            console.log(error.responseJSON)
+                            console.log(error.responseJSON.errorCode);
+                            console.log(error.responseJSON.message);
+                            console.log(error.responseJSON.loginFailureCount);
+                            console.log(error.responseJSON.httpStatus);
+                            alert(error.responseJSON.errorCode + '\n' +
+                                error.responseJSON.message + '\n' +
+                                error.responseJSON.loginFailureCount + '\n' +
+                                error.responseJSON.httpStatus);
+                        }
+                    })
+                }
             });
     });
 </script>
