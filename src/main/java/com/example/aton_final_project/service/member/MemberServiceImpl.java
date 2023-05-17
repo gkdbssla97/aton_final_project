@@ -3,6 +3,7 @@ package com.example.aton_final_project.service.member;
 import com.example.aton_final_project.model.dao.MemberMapper;
 import com.example.aton_final_project.model.domain.member.MemberAuthoritiesCode;
 import com.example.aton_final_project.model.dto.*;
+import com.example.aton_final_project.model.dto.statistics.MembershipGrowthDto;
 import com.example.aton_final_project.util.AESCipher;
 import com.example.aton_final_project.util.constants.AccountStatus;
 import com.example.aton_final_project.util.constants.LoginConstants;
@@ -82,7 +83,7 @@ public class MemberServiceImpl implements MemberService {
 
     private MemberRequestDto encryptMemberInfo(MemberRequestDto memberRequestDto, String encryptKey) throws Exception {
         AESCipher aesCipher = new AESCipher(encryptKey);
-        System.out.println("Member: " + memberRequestDto);
+//        System.out.println("Member: " + memberRequestDto);
         return MemberRequestDto.builder()
                 .email(aesCipher.encrypt(memberRequestDto.getEmail()))
                 .password(aesCipher.encrypt(memberRequestDto.getPassword()))
@@ -108,7 +109,7 @@ public class MemberServiceImpl implements MemberService {
         AESCipher aesCipher = new AESCipher(encryptKeyByMemberId);
 
         MemberResponseDto memberById = memberMapper.findMemberById(id);
-        System.out.println("findMemberByID-Test: " + memberById);
+//        System.out.println("findMemberByID-Test: " + memberById);
         Long authority = findMemberAuthorityByMemberId(id);
         if (authority == 1) {
             memberById.setAuthority(ROLE_ADMIN.getValue());
@@ -173,16 +174,17 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public LogInResponseDto maskingInformationByLogIn(String username, String phoneNo) throws Exception {
+    public LogInResponseDto maskingInformationByLogIn(MemberResponseDto memberResponseDto) throws Exception {
 
         return LogInResponseDto.builder()
-                .username(maskingUsername(username))
-                .phoneNo(maskingPhoneNumber(phoneNo))
+                .username(maskingUsername(memberResponseDto.getUsername()))
+                .phoneNo(maskingPhoneNumber(memberResponseDto.getPhoneNo()))
                 .build();
     }
 
     @Override
     public SignUpResponseDto maskingInformationBySignUp(MemberRequestDto memberRequestDto) {
+
         return SignUpResponseDto.builder()
                 .username(maskingUsername(memberRequestDto.getUsername()))
                 .phoneNo(maskingPhoneNumber(memberRequestDto.getPhoneNo()))
@@ -242,7 +244,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void updateLoginFailCount(int failCount, Long memberId) {
-        System.out.println("addLoginFailCount: " + memberId + " " + failCount);
+//        System.out.println("addLoginFailCount: " + memberId + " " + failCount);
         memberMapper.updateLoginFailCount(failCount, memberId);
     }
 
@@ -254,7 +256,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void updateMemberToAdmin(Long memberId) {
         LogInResponseDto memberAuthorityInfo = findMemberAuthorityInfoByMemberId(memberId);
-        System.out.println("Login: " + memberAuthorityInfo);
+//        System.out.println("Login: " + memberAuthorityInfo);
         memberMapper.updateMemberToAdmin(memberAuthorityInfo.getMember_authorities_mapping_id());
     }
 
@@ -296,7 +298,7 @@ public class MemberServiceImpl implements MemberService {
                 maskedName.setCharAt(i, '*');
             }
         }
-        System.out.println("이름: " + maskedName);
+//        System.out.println("이름: " + maskedName);
         return maskedName.toString();
     }
 
@@ -307,7 +309,7 @@ public class MemberServiceImpl implements MemberService {
                     + phoneNo.substring(phoneNo.length() - 4, phoneNo.length());
         }
 
-        System.out.println("전화번호: " + phoneNo);
+//        System.out.println("전화번호: " + phoneNo);
         return phoneNo;
     }
 
@@ -320,7 +322,7 @@ public class MemberServiceImpl implements MemberService {
      */
     private String maskingEmail(String email) {
         String maskingEmail = email.replaceAll("(?<=.{3}).(?=.*@)", "*");
-        System.out.println("이메일: " + maskingEmail);
+//        System.out.println("이메일: " + maskingEmail);
 
         return maskingEmail;
     }
@@ -350,9 +352,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     public String isVerifiedMember(String email, String password, Long memberId) throws Exception {
-        System.out.println("memberId:" + memberId);
+//        System.out.println("memberId:" + memberId);
         MemberResponseDto findMemberById = findMemberById(memberId);
-        System.out.println(findMemberById);
+//        System.out.println(findMemberById);
         if (!findMemberById.getEmail().equals(email) &&
                 !findMemberById.getPassword().equals(password)) {
             return NO_ACCOUNT.getValue(); // 존재하지 않는 회원입니다.
@@ -387,7 +389,6 @@ public class MemberServiceImpl implements MemberService {
             throw new LoginCustomException(AuthenticationLoginError.USER_NOT_FOUND);
         } else if (verifiedMember.equals(LoginConstants.NO_MATCH_INFO_PWD.getValue())) {
             if(findMember.getAccountStatus().equals(MEMBER_LOCK.getValue())) {
-                System.out.println("check point");
                 throw new LoginCustomException(AuthenticationLoginError.LOCK_ACCOUNT);
             }
             increaseLoginFailureCount(findMember);
@@ -440,5 +441,25 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberAuthoritiesCode findAuthoritiesCodeByCodeId(Long memberAuthoritiesMappingId) {
         return memberMapper.findAuthoritiesCodeByCodeId(memberAuthoritiesMappingId);
+    }
+
+    @Override
+    public int countAllMember() {
+        return memberMapper.count();
+    }
+
+    @Override
+    public int countTodayMember() {
+        return memberMapper.countTodayMember();
+    }
+
+    @Override
+    public MembershipGrowthDto countMemberGrowth() {
+        return memberMapper.countMemberGrowth();
+    }
+
+    @Override
+    public MembershipGrowthDto countMemberLogin() {
+        return memberMapper.countMemberLogin();
     }
 }

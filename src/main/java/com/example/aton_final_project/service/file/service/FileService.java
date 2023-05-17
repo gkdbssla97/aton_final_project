@@ -1,6 +1,7 @@
 package com.example.aton_final_project.service.file.service;
 
 import com.example.aton_final_project.model.dto.*;
+import com.example.aton_final_project.model.dto.statistics.ServiceGrowthDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -17,4 +18,7 @@ public interface FileService {
     List<MemberServiceRegisterResponseDto> decryptUsername(List<MemberServiceRegisterResponseDto> serviceRegisterList) throws Exception;
     void updateDenyReason(MemberServiceRegisterResponseDto memberServiceRegisterResponseDto);
     void confirmUploadedFileDataType(MultipartFile uploadFile);
+    int countAllService();
+    ServiceGrowthDto countServiceRequest();
+    List<MemberServiceRegisterResponseDto> findLastServiceRegister(Long memberId);
 }

@@ -3,6 +3,7 @@ package com.example.aton_final_project.service.file.inquiry;
 import com.example.aton_final_project.model.dao.InquiryMapper;
 import com.example.aton_final_project.model.dao.MemberMapper;
 import com.example.aton_final_project.model.dto.*;
+import com.example.aton_final_project.model.dto.statistics.InquiryGrowthDto;
 import com.example.aton_final_project.service.member.MemberService;
 import com.example.aton_final_project.util.AESCipher;
 import com.example.aton_final_project.util.error.code.InquiryError;
@@ -98,6 +99,21 @@ public class InquiryServiceImpl implements InquiryService {
         if(!uploadFile.getContentType().startsWith("image")) {
             throw new InquiryCustomException(InquiryError.INVALID_VALUE, IMG.getValue());
         }
+    }
+
+    @Override
+    public int countAllInquiry() {
+        return inquiryMapper.count();
+    }
+
+    @Override
+    public InquiryGrowthDto countInquiryRequest() {
+        return inquiryMapper.countInquiryRequest();
+    }
+
+    @Override
+    public List<InquiryRegisterResponseDto> findLastInquiry(Long memberId) {
+        return inquiryMapper.findLastInquiry(memberId);
     }
 
     @Override

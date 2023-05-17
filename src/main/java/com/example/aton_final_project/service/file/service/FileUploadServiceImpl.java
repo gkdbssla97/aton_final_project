@@ -3,6 +3,7 @@ package com.example.aton_final_project.service.file.service;
 import com.example.aton_final_project.model.dao.MemberMapper;
 import com.example.aton_final_project.model.dao.ServiceRegisterMapper;
 import com.example.aton_final_project.model.dto.*;
+import com.example.aton_final_project.model.dto.statistics.ServiceGrowthDto;
 import com.example.aton_final_project.service.member.MemberService;
 import com.example.aton_final_project.util.AESCipher;
 import com.example.aton_final_project.util.error.code.ServiceRegisterError;
@@ -107,5 +108,20 @@ public class FileUploadServiceImpl implements FileService {
         if (!(uploadFile.getContentType().startsWith(IMAGE.getValue()) || uploadFile.getContentType().endsWith(PDF.getValue()))) {
             throw new ServiceCustomException(ServiceRegisterError.INVALID_VALUE, IMG_FILE.getValue() + " 또는 " + PDF_FILE.getValue());
         }
+    }
+
+    @Override
+    public int countAllService() {
+        return serviceRegisterMapper.count();
+    }
+
+    @Override
+    public ServiceGrowthDto countServiceRequest() {
+        return serviceRegisterMapper.countServiceRequest();
+    }
+
+    @Override
+    public List<MemberServiceRegisterResponseDto> findLastServiceRegister(Long memberId) {
+        return serviceRegisterMapper.findLastServiceRegister(memberId);
     }
 }

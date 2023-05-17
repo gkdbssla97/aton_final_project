@@ -248,6 +248,24 @@
         return !!checked;
     }
 
+    $('#inquiryTitle').keyup(function (e) {
+        let inquiryTitle = $(this).val();
+
+        if (inquiryTitle.length > 20) {
+            $(this).val($(this).val().substring(0, 20));
+            alert('제목은 20자까지 입력 가능합니다.');
+        }
+    });
+
+    $('#inquiryContent').keyup(function (e) {
+        let inquiryContent = $(this).val();
+
+        if (inquiryContent.length > 300) {
+            $(this).val($(this).val().substring(0, 300));
+            alert('문의 내용은 300자까지 입력 가능합니다.');
+        }
+    });
+
     $(document).ready(function () {
         $('#inquiry-page-ok').click(
             function () {

@@ -1,6 +1,7 @@
 package com.example.aton_final_project.service.file.inquiry;
 
 import com.example.aton_final_project.model.dto.*;
+import com.example.aton_final_project.model.dto.statistics.InquiryGrowthDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -28,4 +29,7 @@ public interface InquiryService {
 
     List<InquiryRegisterResponseDto> decryptUsername(List<InquiryRegisterResponseDto> inquiryList) throws Exception;
     void confirmUploadedFileDataType(MultipartFile uploadFile);
+    int countAllInquiry();
+    InquiryGrowthDto countInquiryRequest();
+    List<InquiryRegisterResponseDto>findLastInquiry(Long memberId);
 }

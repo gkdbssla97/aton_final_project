@@ -4,6 +4,19 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.aton_final_project.model.dao.InquiryMapper">
+    <!--전일대비 문의 신청 증감률 -->
+    <select id="countInquiryRequest" resultType="com.example.aton_final_project.model.dto.statistics.InquiryGrowthDto">
+        SELECT @a := COUNT(*) AS allInquiry,
+               @b := (SELECT COUNT(*)
+                      FROM inquiry
+                      WHERE 1 > TIMESTAMPDIFF(DAY, registerDate, NOW())) AS todayInquiry,
+               @c := (SELECT COUNT(*)
+                      FROM inquiry
+                      WHERE
+                          2 >= TIMESTAMPDIFF(DAY, registerDate, NOW()) AND TIMESTAMPDIFF(DAY, registerDate, NOW()) >= 1) AS yesterdayInquiry,
+               @d :=	CAST((ROUND(((@b - @c) / @a), 2) * 100) AS DOUBLE(4,2)) AS growth_inquiry
+        FROM inquiry
+    </select>
     <sql id="searchInquiry">
         <!--검색 키워드 있을 때-->
         <if test="keyword != null and keyword != ''">
@@ -235,4 +248,23 @@
             inquiry_status = 1
         WHERE inquiry_id = #{inquiryRegisterRequestDto.inquiryId};
     </update>
+    <select id="findLastInquiry" resultType="com.example.aton_final_project.model.dto.InquiryRegisterResponseDto">
+        SELECT i.inquiry_id AS inquiryId,
+               i.member_id AS memberId,
+               i.username,
+               CASE category
+                   WHEN '0001' THEN '일반문의'
+                   WHEN '0002' THEN '계정문의'
+                   WHEN '0003' THEN '탈퇴문의'
+                   WHEN '0004' THEN '신고/이용제한'
+                   END AS category,
+               title,
+               contents,
+               i.inquiry_status AS inquiryStatus,
+               i.registerDate
+        FROM inquiry i
+                 JOIN member m on m.member_id = i.member_id
+        WHERE i.member_id = #{memberId}
+        ORDER BY i.inquiry_id DESC;
+    </select>
 </mapper>

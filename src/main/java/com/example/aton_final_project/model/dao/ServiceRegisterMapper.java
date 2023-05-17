@@ -1,6 +1,7 @@
 package com.example.aton_final_project.model.dao;
 
 import com.example.aton_final_project.model.dto.*;
+import com.example.aton_final_project.model.dto.statistics.ServiceGrowthDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -28,4 +29,6 @@ public interface ServiceRegisterMapper {
 
     List<MemberServiceRegisterResponseDto> getListWithPaging(Map<String, Object> params);
     List<MemberServiceRegisterResponseDto> getListWithPagingForPrivate(Map<String, Object> params);
+    ServiceGrowthDto countServiceRequest();
+    List<MemberServiceRegisterResponseDto> findLastServiceRegister(@Param("memberId") Long memberId);
 }

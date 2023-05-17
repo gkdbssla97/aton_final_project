@@ -281,6 +281,15 @@
     }
   </script>
   <script th:inline="javascript">
+    $('#deny_reason').keyup(function (e) {
+      let deny_reason = $(this).val();
+
+      if (deny_reason.length > 100) {
+        $(this).val($(this).val().substring(0, 100));
+        alert('글자수는 100자까지 입력 가능합니다.');
+      }
+    });
+
     function sendMail(username, memberId, serviceId) {
       $.ajax({
         type: "POST",

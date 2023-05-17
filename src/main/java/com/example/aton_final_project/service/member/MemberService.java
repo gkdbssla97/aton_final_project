@@ -2,6 +2,7 @@ package com.example.aton_final_project.service.member;
 
 import com.example.aton_final_project.model.domain.member.MemberAuthoritiesCode;
 import com.example.aton_final_project.model.dto.*;
+import com.example.aton_final_project.model.dto.statistics.MembershipGrowthDto;
 import com.example.aton_final_project.util.constants.AccountStatus;
 
 import java.time.LocalDateTime;
@@ -28,7 +29,7 @@ public interface MemberService {
 
     AccessTokenDto findMemberKeyByEmail(String email);
 
-    LogInResponseDto maskingInformationByLogIn(String username, String phoneNo) throws Exception;
+    LogInResponseDto maskingInformationByLogIn(MemberResponseDto memberResponseDto) throws Exception;
 
     SignUpResponseDto maskingInformationBySignUp(MemberRequestDto memberRequestDto);
 
@@ -70,4 +71,8 @@ public interface MemberService {
     void validationLoginInfo(MemberRequestDto memberRequestDto);
     List<MemberAuthoritiesMappingDto> findAuthoritiesMappingByUserId(String userId);
     MemberAuthoritiesCode findAuthoritiesCodeByCodeId(Long memberAuthoritiesMappingId);
+    int countAllMember();
+    int countTodayMember();
+    MembershipGrowthDto countMemberGrowth();
+    MembershipGrowthDto countMemberLogin();
 }

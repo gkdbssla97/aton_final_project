@@ -1,6 +1,7 @@
 package com.example.aton_final_project.model.dao;
 
 import com.example.aton_final_project.model.dto.*;
+import com.example.aton_final_project.model.dto.statistics.InquiryGrowthDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -25,4 +26,6 @@ public interface InquiryMapper {
     int count_private(Map<String, Object> params);
     List<InquiryRegisterResponseDto> getListWithPaging(Map<String, Object> params);
     List<InquiryRegisterResponseDto> getListWithPagingForPrivate(Map<String, Object> params);
+    InquiryGrowthDto countInquiryRequest();
+    List<InquiryRegisterResponseDto>findLastInquiry(@Param("memberId") Long memberId);
 }

@@ -4,6 +4,46 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.aton_final_project.model.dao.MemberMapper">
+<!--전일대비 가입자 증감률 -->
+    <select id="countMemberGrowth" resultType="com.example.aton_final_project.model.dto.statistics.MembershipGrowthDto">
+        SELECT @a := COUNT(*) AS allMember,
+               @b := (SELECT COUNT(*)
+                      FROM member
+                      WHERE 1 > TIMESTAMPDIFF(DAY, registerDate, NOW())) AS todayMember,
+               @c := (SELECT COUNT(*)
+                      FROM member
+                      WHERE
+                          2 >= TIMESTAMPDIFF(DAY, registerDate, NOW()) AND TIMESTAMPDIFF(DAY, registerDate, NOW()) >= 1) AS yesterdayMember,
+               @d :=	CAST((ROUND(((@b - @c) / @a), 2) * 100) AS DOUBLE(4,2)) AS growth_member
+        FROM member
+    </select>
+    <!--전일대비 접속자 증감률 -->
+    <select id="countMemberLogin" resultType="com.example.aton_final_project.model.dto.statistics.MembershipGrowthDto">
+        SELECT @a := COUNT(*) AS allMember,
+               @b := (SELECT COUNT(*)
+                      FROM member
+                      WHERE 1 > TIMESTAMPDIFF(DAY, lastLoginDate, NOW())) AS todayLogin,
+               @c := (SELECT COUNT(*)
+                      FROM member
+                      WHERE
+                          2 >= TIMESTAMPDIFF(DAY, lastLoginDate, NOW()) AND TIMESTAMPDIFF(DAY, lastLoginDate, NOW()) >= 1) AS yesterdayLogin,
+               @d :=	CAST((ROUND(((@b - @c) / @a), 2) * 100) AS DOUBLE(4,2)) AS growth_login
+        FROM member
+    </select>
+    <!--    일일 방문자 수 카운팅-->
+    <select id="countTodayMember" resultType="int">
+        SELECT COUNT(*)
+        FROM member
+        WHERE lastLoginDate
+        IN(
+            SELECT lastLoginDate
+            FROM member
+            WHERE
+                <![CDATA[
+                    TIMESTAMPDIFF(DAY, lastLoginDate, NOW()) <= 1
+                ]]>
+        );
+    </select>
     <!--    회원가입 수 카운팅-->
     <select id="count" parameterType="java.util.Map" resultType="int">
         SELECT count(*)
@@ -145,7 +185,8 @@
                    WHEN 'ROLE_ADMIN' THEN '관리자'
                    WHEN 'ROLE_MEMBER' THEN '일반회원'
                    END         AS authority,
-               t.encrypt_key AS encryptKey
+               t.encrypt_key AS encryptKey,
+               m.lastLoginDate
         FROM memberauthoritiesmapping a
                  JOIN member m ON m.member_id = a.member_id
                  JOIN memberauthoritiescode c ON a.member_authorities_code_id = c.member_authorities_code_id

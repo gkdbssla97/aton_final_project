@@ -64,6 +64,29 @@ public class AdminMainController {
 
         printSessionInfo(request);
         model.addAttribute("member", loginMember);
+
+        /**
+         * 회원 관련 통계 수치
+         */
+        model.addAttribute("countAllMember", memberService.countAllMember());
+        model.addAttribute("countTodayMember", memberService.countTodayMember());
+        model.addAttribute("countMemberGrowth", memberService.countMemberGrowth().parsing_member());
+        model.addAttribute("countLoginGrowth", memberService.countMemberLogin().parsing_login());
+
+        /**
+         * 서비스 관련 통계 수치
+         */
+        model.addAttribute("countAllService", fileService.countAllService());
+        model.addAttribute("countServiceGrowth", fileService.countServiceRequest().parsing_service());
+        model.addAttribute("confirmService", fileService.findLastServiceRegister(loginMember.getMemberId()).get(0));
+
+        /**
+         * 문의 관련 통계 수치
+         */
+        model.addAttribute("countAllInquiry", inquiryService.countAllInquiry());
+        model.addAttribute("countInquiryGrowth", inquiryService.countInquiryRequest().parsing_inquiry());
+        model.addAttribute("confirmInquiry", inquiryService.findLastInquiry(loginMember.getMemberId()).get(0));
+
         return "pages/admin-dashboard";
     }
 

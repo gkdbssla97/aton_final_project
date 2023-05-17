@@ -2,6 +2,7 @@ package com.example.aton_final_project.model.dao;
 
 import com.example.aton_final_project.model.domain.member.MemberAuthoritiesCode;
 import com.example.aton_final_project.model.dto.*;
+import com.example.aton_final_project.model.dto.statistics.MembershipGrowthDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -46,7 +47,10 @@ public interface MemberMapper {
     void lockMember(@Param("memberId") Long memberId, @Param("lockDate") LocalDateTime localDateTime, @Param("accountStatus") String accountStatus);
     void deleteMember(@Param("memberId") Long memberId);
     int count();
+    int countTodayMember();
     List<MemberResponseDto> getListWithPaging(Map<String, Object> params);
     List<MemberAuthoritiesMappingDto> findAuthoritiesMappingByUserId(String userId);
     MemberAuthoritiesCode findAuthoritiesCodeByCodeId(Long memberAuthoritiesMappingId);
+    MembershipGrowthDto countMemberGrowth();
+    MembershipGrowthDto countMemberLogin();
 }

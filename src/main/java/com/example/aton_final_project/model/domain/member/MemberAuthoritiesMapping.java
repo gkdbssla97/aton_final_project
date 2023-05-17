@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class MemberAuthoritiesMapping {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_authorities_mapping_id")
     private long memberAuthoritiesMappingSeq;
 

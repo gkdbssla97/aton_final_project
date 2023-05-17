@@ -76,7 +76,7 @@
                             </div>
                             <span class="inputSpan">사업자번호</span>
                             <div class="input-group input-group-outline">
-                                <label class="form-label">사업자번호를 입력하세요.</label>
+                                <label class="form-label">사업자번호를 입력하세요. ( ' - ' 를 제외한 10자리 입력)</label>
                                 <input type="text" id="businessNumber" name="businessNumber" class="form-control"
                                        onfocus="focused(this)" onfocusout="defocused(this)">
                             </div>
@@ -213,6 +213,21 @@
             input.value = null;
         }
     }
+
+    $('#businessNumber').keyup(function (e) {
+        var businessNumber = $(this).val();
+        regexp = /^[0-9]*$/g;
+        console.log(businessNumber, $("#businessNumber").val().length);
+        v = $(this).val();
+        if (!regexp.test(v)) {
+            alert("숫자만 입력가능 합니다.");
+            $(this).val(v.replace(regexp, ''));
+        }
+        if (businessNumber.length > 10) {
+            $(this).val($(this).val().substring(0, 10));
+            alert("사업자번호는 ' - ' 를 빼고 11자리를 입력하십시오.");
+        }
+    });
 
     $(document).ready(function () {
 

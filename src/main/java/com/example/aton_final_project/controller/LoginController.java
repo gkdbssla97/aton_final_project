@@ -59,8 +59,9 @@ public class LoginController {
         HttpSession httpSession = request.getSession();
         httpSession.setAttribute(LOGIN_MEMBER, findMemberById);
 
+        log.info("User: {}", memberService.maskingInformationByLogIn(findMemberById));
         return new ResponseEntity<>(
-                memberService.maskingInformationByLogIn(findMemberById.getUsername(), findMemberById.getPhoneNo()), HttpStatus.OK
+                memberService.maskingInformationByLogIn(findMemberById), HttpStatus.OK
         );
     }
 
@@ -72,6 +73,8 @@ public class LoginController {
          * 회원가입 유효성 검사
          */
         memberService.joinMember(memberRequestDto);
+
+        log.info("join User: {}", memberService.maskingInformationBySignUp(memberRequestDto));
 
         return new ResponseEntity<>(
                 memberService.maskingInformationBySignUp(memberRequestDto), HttpStatus.OK);

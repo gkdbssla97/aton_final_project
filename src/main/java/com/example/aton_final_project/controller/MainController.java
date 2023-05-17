@@ -4,8 +4,9 @@ import com.example.aton_final_project.model.dto.InquiryRegisterResponseDto;
 import com.example.aton_final_project.model.dto.MemberResponseDto;
 import com.example.aton_final_project.model.dto.MemberServiceRegisterResponseDto;
 import com.example.aton_final_project.service.BoardService;
-import com.example.aton_final_project.service.file.service.FileService;
 import com.example.aton_final_project.service.file.inquiry.InquiryService;
+import com.example.aton_final_project.service.file.service.FileService;
+import com.example.aton_final_project.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class MainController {
 
     private final FileService fileService;
     private final InquiryService inquiryService;
+    private final MemberService memberService;
     @Autowired
     private BoardService boardService;
 
@@ -44,12 +46,35 @@ public class MainController {
     @GetMapping("/main")
     public String mainPage(@SessionAttribute(name = LOGIN_MEMBER, required = false) MemberResponseDto loginMember,
                            HttpServletRequest request, Model model) {
-        System.out.println("login: " + loginMember);
+        log.info("login={} ", loginMember);
         if (loginMember == null) {
             return "redirect:/login";
         }
         printSessionInfo(request);
         model.addAttribute("member", loginMember);
+
+        /**
+         * 회원 관련 통계 수치
+         */
+        model.addAttribute("countAllMember", memberService.countAllMember());
+        model.addAttribute("countTodayMember", memberService.countTodayMember());
+        model.addAttribute("countMemberGrowth", memberService.countMemberGrowth().parsing_member());
+        model.addAttribute("countLoginGrowth", memberService.countMemberLogin().parsing_login());
+
+        /**
+         * 서비스 관련 통계 수치
+         */
+        model.addAttribute("countAllService", fileService.countAllService());
+        model.addAttribute("countServiceGrowth", fileService.countServiceRequest().parsing_service());
+        model.addAttribute("confirmService", fileService.findLastServiceRegister(loginMember.getMemberId()).get(0));
+
+        /**
+         * 문의 관련 통계 수치
+         */
+        model.addAttribute("countAllInquiry", inquiryService.countAllInquiry());
+        model.addAttribute("countInquiryGrowth", inquiryService.countInquiryRequest().parsing_inquiry());
+        model.addAttribute("confirmInquiry", inquiryService.findLastInquiry(loginMember.getMemberId()).get(0));
+
         return "pages/dashboard";
     }
 
@@ -89,7 +114,7 @@ public class MainController {
         }
 
         List<MemberServiceRegisterResponseDto> serviceRegisterList = fileService.findServiceRegisterById(loginMember.getMemberId());
-        System.out.println("size; " + serviceRegisterList.size());
+//        System.out.println("size; " + serviceRegisterList.size());
         model.addAttribute("member", loginMember);
 
         Map<String, Object> map = boardService.boardList(currentPage, searchType, keyword, SERVICE, loginMember.getMemberId());
@@ -247,7 +272,7 @@ public class MainController {
     private void printSessionInfo(HttpServletRequest request) {
         HttpSession session = request.getSession(true);
         MemberResponseDto memberResponseDto = (MemberResponseDto) session.getAttribute(LOGIN_MEMBER);
-        System.out.println("login SESSION INFO: " + memberResponseDto);
+        log.info("login SESSION INFO={} ", memberResponseDto);
         log.info("sessionId={}", session.getId());
         log.info("getMaxInactiveInterval={}", session.getMaxInactiveInterval());
         log.info("creationTime={}", new Date(session.getCreationTime()));

@@ -4,7 +4,20 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.aton_final_project.model.dao.ServiceRegisterMapper">
-<!--서비스건 검색-->
+    <!--전일대비 서비스 신청 증감률 -->
+    <select id="countServiceRequest" resultType="com.example.aton_final_project.model.dto.statistics.ServiceGrowthDto">
+        SELECT @a := COUNT(*) AS allService,
+               @b := (SELECT COUNT(*)
+                      FROM memberserviceregister
+                      WHERE 1 > TIMESTAMPDIFF(DAY, registerDate, NOW())) AS todayService,
+               @c := (SELECT COUNT(*)
+                      FROM memberserviceregister
+                      WHERE
+                                  2 >= TIMESTAMPDIFF(DAY, registerDate, NOW()) AND TIMESTAMPDIFF(DAY, registerDate, NOW()) >= 1) AS yesterdayService,
+               @d :=	CAST((ROUND(((@b - @c) / @a), 2) * 100) AS DOUBLE(4,2)) AS growth_service
+        FROM memberserviceregister
+    </select>
+    <!--서비스건 검색-->
     <sql id="searchService">
         <!--검색 키워드 있을 때-->
         <if test="keyword != null and keyword != ''">
@@ -190,4 +203,18 @@
             service_status = 2
         WHERE service_id = #{memberServiceRegisterResponseDto.serviceId};
     </update>
+    <select id="findLastServiceRegister" resultType="com.example.aton_final_project.model.dto.MemberServiceRegisterResponseDto">
+        SELECT sr.service_id      AS serviceId,
+               sr.company_name    AS companyName,
+               sr.business_no     AS businessNo,
+               sr.service_status  AS serviceStatus,
+               sr.registerDate AS registerDate,
+               m.username      AS username,
+               m.email         AS email,
+               m.member_id     AS memberId
+        FROM memberserviceregister sr
+                 JOIN member m on m.member_id = sr.member_id
+        WHERE sr.member_id = #{memberId}
+        ORDER BY sr.service_id DESC;
+    </select>
 </mapper>
