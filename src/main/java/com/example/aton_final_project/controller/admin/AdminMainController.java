@@ -16,11 +16,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -44,51 +42,51 @@ public class AdminMainController {
     @Autowired
     private BoardService boardService;
 
-    /**
-     * 메인 페이지(관리자_대시보드)
-     *
-     * @return
-     */
-    @GetMapping("/main")
-    public String adminMainPage(@SessionAttribute(name = LOGIN_MEMBER, required = false) MemberResponseDto loginMember,
-                                HttpServletRequest request, Model model) {
-        /**
-         * 권한 검증에 따른 접근 제어
-         */
-        if (loginMember == null) {
-            return "redirect:/login";
-        }
-        if (loginMember.getAuthority().equals(ROLE_MEMBER.getValue())) {
-            return commonService.verificationAuthority();
-        }
-
-        printSessionInfo(request);
-        model.addAttribute("member", loginMember);
-
-        /**
-         * 회원 관련 통계 수치
-         */
-        model.addAttribute("countAllMember", memberService.countAllMember());
-        model.addAttribute("countTodayMember", memberService.countTodayMember());
-        model.addAttribute("countMemberGrowth", memberService.countMemberGrowth().parsing_member());
-        model.addAttribute("countLoginGrowth", memberService.countMemberLogin().parsing_login());
-
-        /**
-         * 서비스 관련 통계 수치
-         */
-        model.addAttribute("countAllService", fileService.countAllService());
-        model.addAttribute("countServiceGrowth", fileService.countServiceRequest().parsing_service());
-        model.addAttribute("confirmService", fileService.findLastServiceRegister(loginMember.getMemberId()).get(0));
-
-        /**
-         * 문의 관련 통계 수치
-         */
-        model.addAttribute("countAllInquiry", inquiryService.countAllInquiry());
-        model.addAttribute("countInquiryGrowth", inquiryService.countInquiryRequest().parsing_inquiry());
-        model.addAttribute("confirmInquiry", inquiryService.findLastInquiry(loginMember.getMemberId()).get(0));
-
-        return "pages/admin-dashboard";
-    }
+//    /**
+//     * 메인 페이지(관리자_대시보드)
+//     *
+//     * @return
+//     */
+//    @GetMapping("/main")
+//    public String adminMainPage(@SessionAttribute(name = LOGIN_MEMBER, required = false) MemberResponseDto loginMember,
+//                                HttpServletRequest request, Model model) {
+//        /**
+//         * 권한 검증에 따른 접근 제어
+//         */
+//        if (loginMember == null) {
+//            return "redirect:/login";
+//        }
+//        if (loginMember.getAuthority().equals(ROLE_MEMBER.getValue())) {
+//            return commonService.verificationAuthority();
+//        }
+//
+//        printSessionInfo(request);
+//        model.addAttribute("member", loginMember);
+//
+//        /**
+//         * 회원 관련 통계 수치
+//         */
+//        model.addAttribute("countAllMember", memberService.countAllMember());
+//        model.addAttribute("countTodayMember", memberService.countTodayMember());
+//        model.addAttribute("countMemberGrowth", memberService.countMemberGrowth().parsing_member());
+//        model.addAttribute("countLoginGrowth", memberService.countMemberLogin().parsing_login());
+//
+//        /**
+//         * 서비스 관련 통계 수치
+//         */
+//        model.addAttribute("countAllService", fileService.countAllService());
+//        model.addAttribute("countServiceGrowth", fileService.countServiceRequest().parsing_service());
+//        model.addAttribute("confirmService", fileService.findLastServiceRegister(loginMember.getMemberId()).get(0));
+//
+//        /**
+//         * 문의 관련 통계 수치
+//         */
+//        model.addAttribute("countAllInquiry", inquiryService.countAllInquiry());
+//        model.addAttribute("countInquiryGrowth", inquiryService.countInquiryRequest().parsing_inquiry());
+//        model.addAttribute("confirmInquiry", inquiryService.findLastInquiry(loginMember.getMemberId()).get(0));
+//
+//        return "pages/admin-dashboard";
+//    }
 
     /**
      * 전체 관리자 추가내역
@@ -337,17 +335,5 @@ public class AdminMainController {
         model.addAttribute("inquiry", findInquiry);
 
         return "pages/admin-inquiry-page";
-    }
-
-    private void printSessionInfo(HttpServletRequest request) {
-        HttpSession session = request.getSession(true);
-        MemberResponseDto memberResponseDto = (MemberResponseDto) session.getAttribute(LOGIN_MEMBER);
-
-        log.info("login SESSION INFO: " + memberResponseDto);
-        log.info("sessionId={}", session.getId());
-        log.info("getMaxInactiveInterval={}", session.getMaxInactiveInterval());
-        log.info("creationTime={}", new Date(session.getCreationTime()));
-        log.info("lastAccessedTime={}", new Date(session.getLastAccessedTime()));
-        log.info("isNew={}", session.isNew());
     }
 }

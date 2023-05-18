@@ -21,7 +21,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
     <title>
-        메인 페이지
+        관리자 페이지
     </title>
     <!--     Fonts and icons     -->
     <link rel="stylesheet" type="text/css"
@@ -84,7 +84,7 @@
                     <div class="card-footer p-3">
                         <p class="mb-0" style="font-size: 15px">
                             <span th:if="${countLoginGrowth >= 0.0}" class="text-success text-sm font-weight-bolder" th:text="|${countLoginGrowth}%|">-2%</span>
-                            <span th:unless="${countLoginGrowth > 0.0}" class="text-danger text-sm font-weight-bolder" th:text="|${countLoginGrowth}%|">-2%</span>
+                            <span th:unless="${countLoginGrowth >= 0.0}" class="text-danger text-sm font-weight-bolder" th:text="|${countLoginGrowth}%|">-2%</span>
                             전일 대비
                         </p>
                     </div>
@@ -129,6 +129,212 @@
                             <span th:unless="${countInquiryGrowth >= 0.0}" class="text-danger text-sm font-weight-bolder" th:text="|${countInquiryGrowth}%|">+5% </span>
                             전일 대비
                         </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4" style="position: relative; top:20px;">
+            <div class="col-lg-7 col-md-6 mb-md-0 mb-4">
+                <div class="card">
+                    <div class="card-header pb-1">
+                        <div class="row">
+                            <div class="col-lg-6 col-7">
+                                <h6>전체 내역</h6>
+                                <p class="text-sm mb-0">
+                                    <i class="fa fa-check text-info" aria-hidden="true"></i>
+                                    <span class="font-weight-bold ms-1" th:text="|${findAdmin.adminApproved + findMember.memberApproved + findService.serviceApproved + findInquiry.inquiryApproved} 건|">30 done</span> 완료
+                                </p>
+                            </div>
+                            <div class="col-lg-6 col-5 my-auto text-end">
+                                <div class="dropdown float-lg-end pe-4">
+                                    <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-ellipsis-v text-secondary" aria-hidden="true"></i>
+                                    </a>
+                                    <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
+                                        <li><a class="dropdown-item border-radius-md" href="javascript:;">Action</a></li>
+                                        <li><a class="dropdown-item border-radius-md" href="javascript:;">Another action</a></li>
+                                        <li><a class="dropdown-item border-radius-md" href="javascript:;">Something else here</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body px-0 pb-2">
+                        <div class="table-responsive">
+                            <table class="table align-items-center mb-0">
+                                <thead>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">신청명</th>
+                                    <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 ps-2">총 신청인원</th>
+                                    <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">총 결재건수</th>
+                                    <th class="text-center text-uppercase text-secondary text-xs font-weight-bolder opacity-7">진행률 (단위: 10)</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex px-2 py-1">
+                                            <div>
+                                                <img src="../assets/img/small-logos/devto.svg" class="avatar avatar-sm me-3" alt="xd">
+                                            </div>
+                                            <div class="d-flex flex-column justify-content-center">
+                                                <h6 class="mb-0 text-sm">관리자 승인</h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle text-center text-sm">
+                                        <span class="text-xs font-weight-bold" th:text="${findAdmin.allAdmin}"> $14,000 </span>
+                                    </td>
+                                    <td class="align-middle text-center text-sm">
+                                        <span class="text-xs font-weight-bold" th:text="${findAdmin.adminApproved}"> $14,000 </span>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-wrapper w-75 mx-auto">
+                                            <div class="progress-info">
+                                                <div class="progress-percentage">
+                                                    <span class="text-xs font-weight-bold" th:text="|${findAdmin.adminRate}%|">60%</span>
+                                                </div>
+                                            </div>
+                                            <div class="progress">
+                                                <div th:if="${findAdmin.adminRate >= 50}" th:class="|progress-bar bg-gradient-success w-${(findAdmin.adminRate / 10) * 10}|" role="progressbar" th:aria-valuenow="${findAdmin.adminRate}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                <div th:unless="${findAdmin.adminRate >= 50}" th:class="|progress-bar bg-gradient-info w-${(findAdmin.adminRate / 10) * 10}|" role="progressbar" th:aria-valuenow="${findAdmin.adminRate}" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex px-2 py-1">
+                                            <div>
+                                                <img src="../assets/img/small-logos/google-webdev.svg" class="avatar avatar-sm me-3" alt="atlassian">
+                                            </div>
+                                            <div class="d-flex flex-column justify-content-center">
+                                                <h6 class="mb-0 text-sm">가입 신청</h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle text-center text-sm">
+                                        <span class="text-xs font-weight-bold" th:text="${findMember.allMember}"> $3,000 </span>
+                                    </td>
+                                    <td class="align-middle text-center text-sm">
+                                        <span class="text-xs font-weight-bold" th:text="${findMember.memberApproved}"> $3,000 </span>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-wrapper w-75 mx-auto">
+                                            <div class="progress-info">
+                                                <div class="progress-percentage">
+                                                    <span class="text-xs font-weight-bold" th:text="|${findMember.memberRate}%|">10%</span>
+                                                </div>
+                                            </div>
+                                            <div class="progress">
+                                                <div th:if="${findMember.memberRate >= 50}" th:class="|progress-bar bg-gradient-success w-${(findMember.memberRate / 10) * 10}|" role="progressbar" th:aria-valuenow="${findMember.memberRate}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                <div th:unless="${findMember.memberRate >= 50}" th:class="|progress-bar bg-gradient-info w-${(findMember.memberRate / 10) * 10}|" role="progressbar" th:aria-valuenow="${findMember.memberRate}" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex px-2 py-1">
+                                            <div>
+                                                <img src="../assets/img/small-logos/logo-invision.svg" class="avatar avatar-sm me-3" alt="team7">
+                                            </div>
+                                            <div class="d-flex flex-column justify-content-center">
+                                                <h6 class="mb-0 text-sm">서비스 신청</h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle text-center text-sm">
+                                        <span class="text-xs font-weight-bold" th:text="${findService.allService}"> Not set </span>
+                                    </td>
+                                    <td class="align-middle text-center text-sm">
+                                        <span class="text-xs font-weight-bold" th:text="${findService.serviceApproved}"> Not set </span>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-wrapper w-75 mx-auto">
+                                            <div class="progress-info">
+                                                <div class="progress-percentage">
+                                                    <span class="text-xs font-weight-bold" th:text="|${findService.serviceRate}%|">100%</span>
+                                                </div>
+                                            </div>
+                                            <div class="progress">
+                                                <div th:if="${findService.serviceRate >= 50}" th:class="|progress-bar bg-gradient-success w-${(findService.serviceRate / 10) * 10}|" role="progressbar" th:aria-valuenow="${findService.serviceRate}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                <div th:unless="${findService.serviceRate >= 50}" th:class="|progress-bar bg-gradient-info w-${(findService.serviceRate / 10) * 10}|" role="progressbar" th:aria-valuenow="${findService.serviceRate}" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex px-2 py-1">
+                                            <div>
+                                                <img src="../assets/img/small-logos/icon-bulb.svg" class="avatar avatar-sm me-3" alt="spotify">
+                                            </div>
+                                            <div class="d-flex flex-column justify-content-center">
+                                                <h6 class="mb-0 text-sm">문의 신청</h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle text-center text-sm">
+                                        <span class="text-xs font-weight-bold" th:text="${findInquiry.allInquiry}"> $20,500 </span>
+                                    </td>
+                                    <td class="align-middle text-center text-sm">
+                                        <span class="text-xs font-weight-bold" th:text="${findInquiry.inquiryApproved}"> $20,500 </span>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-wrapper w-75 mx-auto">
+                                            <div class="progress-info">
+                                                <div class="progress-percentage">
+                                                    <span class="text-xs font-weight-bold" th:text="|${findInquiry.inquiryRate}%|">100%</span>
+                                                </div>
+                                            </div>
+                                            <div class="progress">
+                                                <div th:if="${findInquiry.inquiryRate >= 50}" th:class="|progress-bar bg-gradient-success w-${(findInquiry.inquiryRate / 10) * 10}|" role="progressbar" th:aria-valuenow="${findInquiry.inquiryRate}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                <div th:unless="${findInquiry.inquiryRate >= 50}" th:class="|progress-bar bg-gradient-info w-${(findInquiry.inquiryRate / 10) * 10}|" role="progressbar" th:aria-valuenow="${findInquiry.inquiryRate}" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 col-md-6">
+                <div class="card h-100">
+                    <div class="card-header pb-0" style="position: relative;">
+                        <h6>관리자 최신 알림</h6>
+                        <p class="text-sm mb-0">
+                            <i class="fa fa-cog fa-spin fa-fw" aria-hidden="true"></i>
+                            현재 시각 기준 ([[${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd HH:mm:ss')}]])
+                        </p>
+                    </div>
+                    <div class="card-body p-3 pb-0">
+                        <div class="alert alert-primary alert-dismissible text-white" role="alert">
+                            <span class="text" style="font-size: 12px;" th:text="|${lastOneMember.username} 님께서 ${#temporals.format(lastOneMember.registerDate, 'yyyy/MM/dd HH:mm:ss')}에 가입요청|">김하윤님께서 2023-05-18 15:15:15에 관리자요청<a href="javascript:;" class="alert-link text-white"></a></span>
+                            <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-success alert-dismissible text-white" role="alert">
+                            <span class="text" style="font-size: 12px;" th:text="|${lastOneApprovedMember.username} 님께서 ${#temporals.format(lastOneApprovedMember.approvalDate, 'yyyy/MM/dd HH:mm:ss')}에 회원승인|">김하윤님께서 2023-05-18 15:15:15에 관리자요청<a href="javascript:;" class="alert-link text-white"></a></span>
+                            <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-warning alert-dismissible text-white" role="alert">
+                            <span class="text" style="font-size: 12px;" th:text="|${lastOneService.username} 님께서 ${#temporals.format(lastOneService.registerDate, 'yyyy/MM/dd HH:mm:ss')}에 서비스요청|">김하윤님께서 2023-05-18 15:15:15에 관리자요청<a href="javascript:;" class="alert-link text-white"></a></span>
+                            <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="alert alert-info alert-dismissible text-white" role="alert">
+                            <span class="text" style="font-size: 12px;" th:text="|${lastOneInquiry.username} 님께서 ${#temporals.format(lastOneInquiry.registerDate, 'yyyy/MM/dd HH:mm:ss')}에 문의요청|">김하윤님께서 2023-05-18 15:15:15에 관리자요청<a href="javascript:;" class="alert-link text-white"></a></span>
+                            <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -7,6 +7,7 @@ import com.example.aton_final_project.service.BoardService;
 import com.example.aton_final_project.service.file.inquiry.InquiryService;
 import com.example.aton_final_project.service.file.service.FileService;
 import com.example.aton_final_project.service.member.MemberService;
+import com.example.aton_final_project.service.statistics.StatisticsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class MainController {
     private final FileService fileService;
     private final InquiryService inquiryService;
     private final MemberService memberService;
+    private final StatisticsService statisticsService;
     @Autowired
     private BoardService boardService;
 
@@ -62,18 +64,14 @@ public class MainController {
         model.addAttribute("countLoginGrowth", memberService.countMemberLogin().parsing_login());
 
         /**
-         * 서비스 관련 통계 수치
+         * 내 서비스 관련 통계 수치
          */
-        model.addAttribute("countAllService", fileService.countAllService());
-        model.addAttribute("countServiceGrowth", fileService.countServiceRequest().parsing_service());
-        model.addAttribute("confirmService", fileService.findLastServiceRegister(loginMember.getMemberId()).get(0));
+        model.addAttribute("findMyService", statisticsService.findMyService(loginMember.getMemberId()));
 
         /**
-         * 문의 관련 통계 수치
+         * 내 문의 관련 통계 수치
          */
-        model.addAttribute("countAllInquiry", inquiryService.countAllInquiry());
-        model.addAttribute("countInquiryGrowth", inquiryService.countInquiryRequest().parsing_inquiry());
-        model.addAttribute("confirmInquiry", inquiryService.findLastInquiry(loginMember.getMemberId()).get(0));
+        model.addAttribute("findMyInquiry", statisticsService.findMyInquiry(loginMember.getMemberId()));
 
         return "pages/dashboard";
     }
