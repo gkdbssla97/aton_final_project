@@ -10,5 +10,6 @@
         <mapper resource="MemberMapper.xml" />
         <mapper resource="ServiceRegisterMapper.xml" />
         <mapper resource="InquiryMapper.xml" />
+        <mapper resource="StatisticsMapper.xml" />
     </mappers>
 </configuration>

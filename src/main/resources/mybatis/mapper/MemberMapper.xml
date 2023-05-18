@@ -84,6 +84,7 @@
                registerDate,
                lockDate,
                lastLoginDate,
+               approvalDate,
                login_fail_count AS loginFailCount,
                member_status AS memberStatus,
                account_status AS accountStatus
