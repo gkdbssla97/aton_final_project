@@ -6,29 +6,30 @@
 <mapper namespace="com.example.aton_final_project.model.dao.MemberMapper">
 <!--전일대비 가입자 증감률 -->
     <select id="countMemberGrowth" resultType="com.example.aton_final_project.model.dto.statistics.MembershipGrowthDto">
-        SELECT @a := COUNT(*) AS allMember,
-               @b := (SELECT COUNT(*)
+        SELECT A.*, ROUND(((todayMember - yesterdayMember) / allMember) * 100.0, 1) AS growth_member
+        FROM (SELECT COUNT(*)                                             AS allMember,
+                     (SELECT COUNT(*)
                       FROM member
-                      WHERE 1 > TIMESTAMPDIFF(DAY, registerDate, NOW())) AS todayMember,
-               @c := (SELECT COUNT(*)
+                      WHERE 1 > TIMESTAMPDIFF(DAY, registerDate, NOW()))  AS todayMember,
+                     (SELECT COUNT(*)
                       FROM member
-                      WHERE
-                          2 >= TIMESTAMPDIFF(DAY, registerDate, NOW()) AND TIMESTAMPDIFF(DAY, registerDate, NOW()) >= 1) AS yesterdayMember,
-               @d :=	CAST((ROUND(((@b - @c) / @a), 2) * 100) AS DOUBLE(4,2)) AS growth_member
-        FROM member
+                      WHERE 2 >= TIMESTAMPDIFF(DAY, registerDate, NOW())
+                        AND TIMESTAMPDIFF(DAY, registerDate, NOW()) >= 1) AS yesterdayMember
+
+              FROM member) A
     </select>
     <!--전일대비 접속자 증감률 -->
     <select id="countMemberLogin" resultType="com.example.aton_final_project.model.dto.statistics.MembershipGrowthDto">
-        SELECT @a := COUNT(*) AS allMember,
-               @b := (SELECT COUNT(*)
+        SELECT A.*, ROUND(((todayLogin - yesterdayLogin) / allMember) * 100.0, 1) AS growth_login
+        FROM (SELECT COUNT(*)                                              AS allMember,
+                     (SELECT COUNT(*)
                       FROM member
-                      WHERE 1 > TIMESTAMPDIFF(DAY, lastLoginDate, NOW())) AS todayLogin,
-               @c := (SELECT COUNT(*)
+                      WHERE 1 > TIMESTAMPDIFF(DAY, lastLoginDate, NOW()))  AS todayLogin,
+                     (SELECT COUNT(*)
                       FROM member
-                      WHERE
-                          2 >= TIMESTAMPDIFF(DAY, lastLoginDate, NOW()) AND TIMESTAMPDIFF(DAY, lastLoginDate, NOW()) >= 1) AS yesterdayLogin,
-               @d :=	CAST((ROUND(((@b - @c) / @a), 2) * 100) AS DOUBLE(4,2)) AS growth_login
-        FROM member
+                      WHERE 2 >= TIMESTAMPDIFF(DAY, lastLoginDate, NOW())
+                        AND TIMESTAMPDIFF(DAY, lastLoginDate, NOW()) >= 1) AS yesterdayLogin
+              FROM member) A
     </select>
     <!--    일일 방문자 수 카운팅-->
     <select id="countTodayMember" resultType="int">

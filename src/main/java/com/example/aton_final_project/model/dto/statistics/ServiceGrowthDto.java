@@ -12,8 +12,4 @@ public class ServiceGrowthDto {
     private int yesterdayService;
     private int todayService;
     private double growth_service;
-
-    public double parsing_service() {
-        return Math.round(((this.todayService - this.yesterdayService) / (double)(this.allService)) * 100);
-    }
 }

@@ -12,8 +12,4 @@ public class InquiryGrowthDto {
     private int yesterdayInquiry;
     private int todayInquiry;
     private double growth_inquiry;
-
-    public double parsing_inquiry() {
-        return Math.round(((this.todayInquiry - this.yesterdayInquiry) / (double)(this.allInquiry)) * 100);
-    }
 }

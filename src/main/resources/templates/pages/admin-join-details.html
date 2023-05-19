@@ -136,11 +136,12 @@
                     </tr>
                   </tbody>
                 </table>
+                <!--/* 페이지네이션 */-->
                 <div class="text-center">
                   <span><a th:href="@{/admin/join-details-page(currentPage=1)}">&lt;&lt;</a></span>
 
                   <!-- 현재 페이지가 1보다 클 경우 이전 href, 1보다 작은 경우 이전 text -->
-                  <span th:if="${currentPage > 1}"><a href="/admin/join-details-page?currentPage=2">&lt;</a></span>
+                  <span th:if="${currentPage > 1}"><a th:href="@{/admin/join-details-page(currentPage=(${currentPage}-1))}">&lt;</a></span>
                   <span th:unless="${currentPage > 1}" th:text="|&lt|"></span>
 
                   <!-- #number.sequence 인수로 지정한 2개의 수 범위에서 배열을 생성 -->
@@ -153,7 +154,7 @@
                   <span th:if="${currentPage != lastPage}"><a th:href="@{/admin/join-details-page(currentPage=(${currentPage}+1))}">&gt;</a></span>
                   <span th:unless="${currentPage != lastPage}" th:text="|&gt|"></span>
                   <span>
-                    <a href="/admin/join-details-page?currentPage=3">&gt;&gt;</a></span>
+                    <a th:href="|/admin/join-details-page?currentPage=${lastPage}|">&gt;&gt;</a></span>
                 </div>
               </div>
             </div>

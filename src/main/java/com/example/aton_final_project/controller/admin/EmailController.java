@@ -122,7 +122,8 @@ public class EmailController {
             if (findService.get(0).getServiceStatus() == 1) {
                 int read = 0;
                 System.out.println("GUIDE_PDF_FILE");
-                fileUrl = "C:/homework/aton_final_project/src/main/resources/static/guidefile/PASS인증서_서비스_가이드문서.pdf";
+//                fileUrl = "C:/homework/aton_final_project/src/main/resources/static/guidefile/PASS인증서_서비스_가이드문서.pdf";
+                fileUrl = "src/main/resources/static/guidefile/PASS인증서_서비스_가이드문서.pdf";
                 fileName = "PASS인증서_서비스_가이드문서.pdf";
 
                 String headerKey = "Content-Disposition";

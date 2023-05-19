@@ -6,16 +6,16 @@
 <mapper namespace="com.example.aton_final_project.model.dao.ServiceRegisterMapper">
     <!--전일대비 서비스 신청 증감률 -->
     <select id="countServiceRequest" resultType="com.example.aton_final_project.model.dto.statistics.ServiceGrowthDto">
-        SELECT @a := COUNT(*) AS allService,
-               @b := (SELECT COUNT(*)
+        SELECT A.*, ROUND(((todayService - yesterdayService) / allService) * 100.0, 1) AS growth_service
+        FROM (SELECT COUNT(*)                                             AS allService,
+                     (SELECT COUNT(*)
                       FROM memberserviceregister
-                      WHERE 1 > TIMESTAMPDIFF(DAY, registerDate, NOW())) AS todayService,
-               @c := (SELECT COUNT(*)
+                      WHERE 1 > TIMESTAMPDIFF(DAY, registerDate, NOW()))  AS todayService,
+                     (SELECT COUNT(*)
                       FROM memberserviceregister
-                      WHERE
-                                  2 >= TIMESTAMPDIFF(DAY, registerDate, NOW()) AND TIMESTAMPDIFF(DAY, registerDate, NOW()) >= 1) AS yesterdayService,
-               @d :=	CAST((ROUND(((@b - @c) / @a), 2) * 100) AS DOUBLE(4,2)) AS growth_service
-        FROM memberserviceregister
+                      WHERE 2 >= TIMESTAMPDIFF(DAY, registerDate, NOW())
+                        AND TIMESTAMPDIFF(DAY, registerDate, NOW()) >= 1) AS yesterdayService
+              FROM memberserviceregister) A
     </select>
     <!--서비스건 검색-->
     <sql id="searchService">

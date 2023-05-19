@@ -109,7 +109,7 @@
                                             <button th:onclick="|click_member_setting(${memberInfo.memberId}, '0001')|" class="btn bg-gradient-success w-100 mb-0 toast-btn" type="button" data-target="successToast">계정 장기미접속 해제</button>
                                         </div>
                                         <div class="col-lg-3 col-sm-6 col-12 mt-sm-0 mt-2">
-                                            <button th:onclick="|click_member_setting(${memberInfo.memberId}, '0002')|" class="btn bg-gradient-info w-100 mb-0 toast-btn" type="button" data-target="infoToast">계정 잠금</button>
+                                            <button th:onclick="|click_member_setting(${memberInfo.memberId}, '0002')|" class="btn bg-gradient-info w-100 mb-0 toast-btn" type="button" data-target="infoToast">계정 잠금 해제</button>
                                         </div>
                                         <div class="col-lg-3 col-sm-6 col-12 mt-lg-0 mt-2">
                                             <button th:onclick="|click_member_setting(${memberInfo.memberId}, '0003')|" class="btn bg-gradient-warning w-100 mb-0 toast-btn" type="button" data-target="warningToast">계정 중지</button>
@@ -223,7 +223,7 @@
         if(authorityType === '0001') {
             $('#one_div').text(username + ' 님, 장기미접속 해제되었습니다.');
         } else if(authorityType === '0002') {
-            $('#two_div').text(username + ' 님, 계정 잠금되었습니다.');
+            $('#two_div').text(username + ' 님, 계정 잠금 해제되었습니다.');
         } else if(authorityType === '0003') {
             $('#three_div').text(username + ' 님, 계정 중지되었습니다.');
         } else if(authorityType === '0004') {

@@ -60,18 +60,22 @@ public class MainController {
          */
         model.addAttribute("countAllMember", memberService.countAllMember());
         model.addAttribute("countTodayMember", memberService.countTodayMember());
-        model.addAttribute("countMemberGrowth", memberService.countMemberGrowth().parsing_member());
-        model.addAttribute("countLoginGrowth", memberService.countMemberLogin().parsing_login());
+        model.addAttribute("countMemberGrowth", memberService.countMemberGrowth());
+        model.addAttribute("countLoginGrowth", memberService.countMemberLogin());
 
         /**
          * 내 서비스 관련 통계 수치
          */
         model.addAttribute("findMyService", statisticsService.findMyService(loginMember.getMemberId()));
+        model.addAttribute("countAllService", fileService.countAllService());
+        model.addAttribute("confirmService", fileService.findLastServiceRegister(loginMember.getMemberId()).get(0));
 
         /**
          * 내 문의 관련 통계 수치
          */
         model.addAttribute("findMyInquiry", statisticsService.findMyInquiry(loginMember.getMemberId()));
+        model.addAttribute("countAllInquiry", inquiryService.countAllInquiry());
+        model.addAttribute("confirmInquiry", inquiryService.findLastInquiry(loginMember.getMemberId()).get(0));
 
         return "pages/dashboard";
     }

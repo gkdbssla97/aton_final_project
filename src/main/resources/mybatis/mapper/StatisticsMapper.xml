@@ -126,22 +126,24 @@
     </select>
 <!--    내 서비스 신청 진행률-->
 <select id="findMyService" resultType="com.example.aton_final_project.model.dto.statistics.MyStatisticsDto">
-    SELECT @a := COUNT(*) AS myService,
-           @b := (SELECT COUNT(*)
+    SELECT A.*,
+           ROUND((myServiceApproved / myService) * 100.0, 1) AS myServiceRate
+    FROM (SELECT COUNT(*)                                                                         AS myService,
+                 (SELECT COUNT(*)
                   FROM memberserviceregister s
-                  WHERE ((service_status = 1 OR service_status = 2) AND member_id = #{memberId})) AS myServiceApproved,
-           @d :=	(@b / @a) * 100 AS myServiceRate
-    FROM memberserviceregister
-    WHERE member_id = #{memberId}
+                  WHERE ((service_status = 1 OR service_status = 2) AND member_id = #{memberId})) AS myServiceApproved
+          FROM memberserviceregister s
+          WHERE member_id = #{memberId}) A;
 </select>
     <!--    내 문의 신청 진행률-->
 <select id="findMyInquiry" resultType="com.example.aton_final_project.model.dto.statistics.MyStatisticsDto">
-    SELECT @a := COUNT(*) AS myInquiry,
-           @b := (SELECT COUNT(*)
+    SELECT A.*,
+           (myInquiryApproved / myInquiry) * 100.0 AS myInquiryRate
+    FROM (SELECT COUNT(*)               AS myInquiry,
+                 (SELECT COUNT(*)
                   FROM inquiry i
-                  WHERE inquiry_status = 1 AND member_id = #{memberId}) AS myInquiryApproved,
-           @d :=	(@b / @a) * 100 AS myInquiryRate
-    FROM inquiry i
-    WHERE member_id = #{memberId}
+                  WHERE inquiry_status = 1 AND member_id = #{memberId}) AS myInquiryApproved
+          FROM inquiry i
+          WHERE member_id = #{memberId}) A
 </select>
 </mapper>

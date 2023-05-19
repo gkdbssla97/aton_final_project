@@ -58,22 +58,20 @@ public class AdminDashboardController {
          */
         model.addAttribute("countAllMember", memberService.countAllMember());
         model.addAttribute("countTodayMember", memberService.countTodayMember());
-        model.addAttribute("countMemberGrowth", memberService.countMemberGrowth().parsing_member());
-        model.addAttribute("countLoginGrowth", memberService.countMemberLogin().parsing_login());
+        model.addAttribute("countMemberGrowth", memberService.countMemberGrowth());
+        model.addAttribute("countLoginGrowth", memberService.countMemberLogin());
 
         /**
          * 서비스 관련 통계 수치
          */
         model.addAttribute("countAllService", fileService.countAllService());
-        model.addAttribute("countServiceGrowth", fileService.countServiceRequest().parsing_service());
-        model.addAttribute("confirmService", fileService.findLastServiceRegister(loginMember.getMemberId()).get(0));
+        model.addAttribute("countServiceGrowth", fileService.countServiceRequest());
 
         /**
          * 문의 관련 통계 수치
          */
         model.addAttribute("countAllInquiry", inquiryService.countAllInquiry());
-        model.addAttribute("countInquiryGrowth", inquiryService.countInquiryRequest().parsing_inquiry());
-        model.addAttribute("confirmInquiry", inquiryService.findLastInquiry(loginMember.getMemberId()).get(0));
+        model.addAttribute("countInquiryGrowth", inquiryService.countInquiryRequest());
 
         /**
          * 전체 내역 통계 수치

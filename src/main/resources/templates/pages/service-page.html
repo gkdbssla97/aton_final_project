@@ -98,9 +98,8 @@
                     <div class="card-header p-3">
                         <!--              <h5 class="mb-0">Notifications</h5>-->
                         <p class="text-sm mb-0" style="text-align: center;position: relative;top: 10px;">
-                            ※ 이미지는 168*168 또는 192*600(이하), 사업자등록증은 .pdf만 가능 <a
-                                href="https://getbootstrap.com/docs/5.0/components/toasts/" target="
-          ">here</a>.
+                            ※ 이미지는 168*168 또는 192*600(이하), 사업자등록증은 .pdf만 가능
+<!--                            <a href="https://getbootstrap.com/docs/5.0/components/toasts/" target="">here</a>.-->
                         </p>
                     </div>
                     <div class="card-body p-3">
@@ -117,69 +116,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="position-fixed bottom-1 end-1 z-index-2">
-            <div class="toast fade hide p-2 bg-white" role="alert" aria-live="assertive" id="successToast"
-                 aria-atomic="true">
-                <div class="toast-header border-0">
-                    <i class="material-icons text-success me-2">
-                        check
-                    </i>
-                    <span class="me-auto font-weight-bold">Material Dashboard </span>
-                    <small class="text-body">11 mins ago</small>
-                    <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
-                </div>
-                <hr class="horizontal dark m-0">
-                <div class="toast-body">
-                    Hello, world! This is a notification message.
-                </div>
-            </div>
-            <div class="toast fade hide p-2 mt-2 bg-gradient-info" role="alert" aria-live="assertive" id="infoToast"
-                 aria-atomic="true">
-                <div class="toast-header bg-transparent border-0">
-                    <i class="material-icons text-white me-2">
-                        notifications
-                    </i>
-                    <span class="me-auto text-white font-weight-bold">Material Dashboard </span>
-                    <small class="text-white">11 mins ago</small>
-                    <i class="fas fa-times text-md text-white ms-3 cursor-pointer" data-bs-dismiss="toast"
-                       aria-label="Close"></i>
-                </div>
-                <hr class="horizontal light m-0">
-                <div class="toast-body text-white">
-                    Hello, world! This is a notification message.
-                </div>
-            </div>
-            <div class="toast fade hide p-2 mt-2 bg-white" role="alert" aria-live="assertive" id="warningToast"
-                 aria-atomic="true">
-                <div class="toast-header border-0">
-                    <i class="material-icons text-warning me-2">
-                        travel_explore
-                    </i>
-                    <span class="me-auto font-weight-bold">Material Dashboard </span>
-                    <small class="text-body">11 mins ago</small>
-                    <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
-                </div>
-                <hr class="horizontal dark m-0">
-                <div class="toast-body">
-                    Hello, world! This is a notification message.
-                </div>
-            </div>
-            <div class="toast fade hide p-2 mt-2 bg-white" role="alert" aria-live="assertive" id="dangerToast"
-                 aria-atomic="true">
-                <div class="toast-header border-0">
-                    <i class="material-icons text-danger me-2">
-                        campaign
-                    </i>
-                    <span class="me-auto text-gradient text-danger font-weight-bold">Material Dashboard </span>
-                    <small class="text-body">11 mins ago</small>
-                    <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
-                </div>
-                <hr class="horizontal dark m-0">
-                <div class="toast-body">
-                    Hello, world! This is a notification message.
                 </div>
             </div>
         </div>
@@ -213,6 +149,26 @@
             input.value = null;
         }
     }
+    function checkBusinessNo() {
+        var businessNumber = $('#businessNumber').val();
+        console.log(businessNumber)
+        if (businessNumber === "" || businessNumber.length !== 10) {
+            alert("사업자 번호 10자리를 입력해주세요.")
+            $("#businessNumber").focus();
+            return false;
+        }
+        return true;
+    };
+    function checkCompanyName() {
+        var companyName = $('#companyName').val();
+        console.log(companyName)
+        if (companyName === "") {
+            alert("회사명을 입력해주세요.")
+            $("#companyName").focus();
+            return false;
+        }
+        return true;
+    };
 
     $('#businessNumber').keyup(function (e) {
         var businessNumber = $(this).val();
@@ -233,7 +189,6 @@
 
         $('#service-page-ok').click(
             function () {
-                // if (checkOldPassword() && checkNewPassword() && checkReNewPassword()) {
                 var formData = new FormData();
                 var inputImages = $("input[name ='uploadImages']");
                 var inputPdf = $("input[name ='uploadFile']");
@@ -249,41 +204,17 @@
                 }
                 let fileSize = imgFiles.length + pdfFile.length;
                 console.log(fileSize);
-                $.ajax({
-                    type: "POST",
-                    url: "/service-page-text",
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        companyName: $('#companyName').val(),
-                        businessNo: $('#businessNumber').val(),
-                        fileSize: fileSize
-                    }),
-                    success: function (result) {
-                    },
-                    error: function (error) {
-                        console.log(error.responseJSON)
-                        console.log(error.responseJSON.errorCode);
-                        console.log(error.responseJSON.message);
-                        console.log(error.responseJSON.httpStatus);
-                        alert(error.responseJSON.errorCode + '\n' +
-                            error.responseJSON.message + '\n' +
-                            error.responseJSON.httpStatus);
-                    },
-                })
-                if (fileSize === 3) {
+                if (checkCompanyName() && checkBusinessNo()) {
                     $.ajax({
                         type: "POST",
-                        url: "/service-page-image",
-                        data: formData,
-                        // dataType: 'json',
+                        url: "/service-page-text",
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            companyName: $('#companyName').val(),
+                            businessNo: $('#businessNumber').val(),
+                            fileSize: fileSize
+                        }),
                         success: function (result) {
-                            if (result) {
-                                alert("서비스 신청 성공")
-                                console.log(result)
-                                window.location.href = "/service-details-page";
-                            } else {
-                                console.log(result.message);
-                            }
                         },
                         error: function (error) {
                             console.log(error.responseJSON)
@@ -294,10 +225,36 @@
                                 error.responseJSON.message + '\n' +
                                 error.responseJSON.httpStatus);
                         },
-                        cache: false,
-                        contentType: false,
-                        processData: false
                     })
+                    if (fileSize === 3) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/service-page-image",
+                            data: formData,
+                            // dataType: 'json',
+                            success: function (result) {
+                                if (result) {
+                                    alert("서비스 신청 성공")
+                                    console.log(result)
+                                    window.location.href = "/service-details-page";
+                                } else {
+                                    console.log(result.message);
+                                }
+                            },
+                            error: function (error) {
+                                console.log(error.responseJSON)
+                                console.log(error.responseJSON.errorCode);
+                                console.log(error.responseJSON.message);
+                                console.log(error.responseJSON.httpStatus);
+                                alert(error.responseJSON.errorCode + '\n' +
+                                    error.responseJSON.message + '\n' +
+                                    error.responseJSON.httpStatus);
+                            },
+                            cache: false,
+                            contentType: false,
+                            processData: false
+                        })
+                    }
                 }
             });
     });
