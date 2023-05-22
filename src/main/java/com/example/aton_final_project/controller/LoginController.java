@@ -55,7 +55,7 @@ public class LoginController {
         MemberResponseDto findMemberById = memberService.findMemberById(findAccessToken.getMemberId());
         memberService.updateLastLoginDate(findMemberById.getMemberId(), LocalDateTime.now());
         memberService.resetLoginFailCount(findMemberById.getMemberId());
-
+        System.out.println("adminApproval: " + findMemberById);
         HttpSession httpSession = request.getSession();
         httpSession.setAttribute(LOGIN_MEMBER, findMemberById);
 

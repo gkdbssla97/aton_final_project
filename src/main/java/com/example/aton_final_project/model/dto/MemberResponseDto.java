@@ -28,6 +28,7 @@ public class MemberResponseDto {
     private String _newPassword; // 새 비밀번호
     private String newPassword; // 재입력 새 비밀번호
     private int loginFailCount;
+    private LocalDateTime adminApprovalDate; // 관리자 등록시간
 
     public Member toEntity() {
         return Member.builder()

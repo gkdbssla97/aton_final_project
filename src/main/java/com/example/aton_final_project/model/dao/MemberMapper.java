@@ -39,7 +39,7 @@ public interface MemberMapper {
     void resetLoginFailCount(@Param("memberId") Long memberId);
     void updateLoginFailCount(@Param("failCount") int failCount, @Param("memberId") Long memberId);
     void updateMemberApproval(@Param("memberId") Long memberId, @Param("approvalDate") LocalDateTime localDateTime);
-    void updateMemberToAdmin(@Param("member_authorities_mapping_id") Long mappingId);
+    void updateMemberToAdmin(@Param("member_authorities_mapping_id") Long mappingId, @Param("registerDate") LocalDateTime localDateTime);
     void updateLastLoginDate(@Param("memberId") Long memberId, @Param("lastLoginDate") LocalDateTime localDateTime);
     void activeLongTermMember(@Param("memberId") Long memberId, @Param("accountStatus") String accountStatus);
     void inactiveLongTermMember(@Param("memberId") Long memberId, @Param("lockDate") LocalDateTime localDateTime, @Param("accountStatus") String accountStatus);

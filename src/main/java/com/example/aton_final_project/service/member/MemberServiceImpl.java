@@ -129,6 +129,7 @@ public class MemberServiceImpl implements MemberService {
                 .accountStatus(memberById.getAccountStatus())
                 .password(aesCipher.decrypt(memberById.getPassword()))
                 .authority(memberById.getAuthority())
+                .adminApprovalDate(memberById.getAdminApprovalDate())
                 .build();
     }
 
@@ -257,7 +258,7 @@ public class MemberServiceImpl implements MemberService {
     public void updateMemberToAdmin(Long memberId) {
         LogInResponseDto memberAuthorityInfo = findMemberAuthorityInfoByMemberId(memberId);
 //        System.out.println("Login: " + memberAuthorityInfo);
-        memberMapper.updateMemberToAdmin(memberAuthorityInfo.getMember_authorities_mapping_id());
+        memberMapper.updateMemberToAdmin(memberAuthorityInfo.getMember_authorities_mapping_id(), LocalDateTime.now());
     }
 
     @Override

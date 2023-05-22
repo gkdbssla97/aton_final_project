@@ -76,21 +76,24 @@
 
 <!--        회원 정보 가져오기-->
     <select id="findMemberByEmail" resultType="com.example.aton_final_project.model.dto.MemberResponseDto">
-        SELECT member_id AS memberId,
-               username,
-               email,
-               password,
-               phoneNo,
-               telcoTycd,
-               registerDate,
-               lockDate,
-               lastLoginDate,
-               approvalDate,
-               login_fail_count AS loginFailCount,
-               member_status AS memberStatus,
-               account_status AS accountStatus
-        FROM member
-        WHERE email = #{email}
+        SELECT m.member_id AS memberId,
+               m.username,
+               m.email,
+               m.password,
+               m.phoneNo,
+               m.telcoTycd,
+               m.registerDate,
+               m.lockDate,
+               m.lastLoginDate,
+               m.approvalDate,
+               m.login_fail_count AS loginFailCount,
+               m.member_status AS memberStatus,
+               m.account_status AS accountStatus,
+               a.registerDate AS adminApprovalDate
+        FROM memberauthoritiesmapping a
+                 JOIN member m ON m.member_id = a.member_id
+                 JOIN memberauthoritiescode c ON a.member_authorities_code_id = c.member_authorities_code_id
+        WHERE m.email = #{email}
     </select>
 
     <!--    모든 회원 조회-->
@@ -188,7 +191,8 @@
                    WHEN 'ROLE_MEMBER' THEN '일반회원'
                    END         AS authority,
                t.encrypt_key AS encryptKey,
-               m.lastLoginDate
+               m.lastLoginDate,
+               a.registerDate AS adminApprovalDate
         FROM memberauthoritiesmapping a
                  JOIN member m ON m.member_id = a.member_id
                  JOIN memberauthoritiescode c ON a.member_authorities_code_id = c.member_authorities_code_id
@@ -250,7 +254,8 @@
     <!--    회원 관리자로 등록-->
     <update id="updateMemberToAdmin">
         UPDATE memberauthoritiesmapping
-        SET member_authorities_code_id = 1
+        SET member_authorities_code_id = 1,
+            registerDate = #{registerDate}
         WHERE member_authorities_mapping_id = #{member_authorities_mapping_id}
     </update>
     <!--장기 미접속자 해제 -->

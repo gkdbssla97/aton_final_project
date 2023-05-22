@@ -7,7 +7,7 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -31,6 +31,6 @@ public class MemberAuthoritiesMapping {
 
     @Column
     @CreationTimestamp
-    private LocalDate registerDate;
+    private LocalDateTime registerDate;
 }
 
