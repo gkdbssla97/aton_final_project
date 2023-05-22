@@ -559,9 +559,11 @@
                     <i class="material-icons text-success text-gradient">notifications</i>
                   </span>
                                 <div class="timeline-content">
-                                    <h6 class="text-dark text-sm font-weight-bold mb-0">가입 상태: 승인</h6>
-
-                                    <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">2023.01.01 10:28:06</p>
+                                    <h6 th:if ="${member.memberStatus == true}" class="text-dark text-sm font-weight-bold mb-0">가입 상태: 승인</h6>
+                                    <h6 th:unless ="${member.memberStatus == true}" class="text-dark text-sm font-weight-bold mb-0">가입 상태: 대기</h6>
+                                    <th:block th:if ="${member.memberStatus == true}">
+                                        <p class="text-secondary font-weight-bold text-xs mt-1 mb-0" th:text="${#temporals.format(member.approvalDate, 'yyyy.MM.dd HH:mm:ss')}">2023.01.01 10:28:06</p>
+                                    </th:block>
                                 </div>
                             </div>
                             <div class="timeline-block mb-3">
@@ -569,8 +571,11 @@
                     <i class="material-icons text-danger text-gradient">code</i>
                   </span>
                                 <div class="timeline-content">
-                                    <h6 class="text-dark text-sm font-weight-bold mb-0">관리자 상태: 등록</h6>
-
+                                    <h6 th:if="${#strings.equals(member.authority, '관리자')}" class="text-dark text-sm font-weight-bold mb-0">관리자 상태: 등록</h6>
+                                    <h6 th:unless="${#strings.equals(member.authority, '관리자')}" class="text-dark text-sm font-weight-bold mb-0">관리자 상태: 대기</h6>
+                                    <th:block th:if="${#strings.equals(member.authority, '관리자')}">
+                                        <p class="text-secondary font-weight-bold text-xs mt-1 mb-0" th:text="${#temporals.format(member.adminApprovalDate, 'yyyy.MM.dd HH:mm:ss')}">2023.01.01 10:28:06</p>
+                                    </th:block>
                                 </div>
                             </div>
                             <div class="timeline-block mb-3">
@@ -579,9 +584,8 @@
                   </span>
                                 <div class="timeline-content">
                                     <h6 class="text-dark text-sm font-weight-bold mb-0">최근 서비스 신청일자</h6>
-
-                                    <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">2023.05.19 14:19:41</p>
-
+                                    <p th:if="${!confirmService.isEmpty()}" class="text-secondary font-weight-bold text-xs mt-1 mb-0" th:text="${#temporals.format(confirmService[0].registerDate, 'yyyy.MM.dd HH:mm:ss')}">2023.05.19 14:19:41</p>
+                                    <p th:unless="${!confirmService.isEmpty()}" class="text-secondary font-weight-bold text-xs mt-1 mb-0">신청한 서비스가 없습니다.</p>
                                 </div>
                             </div>
                             <div class="timeline-block mb-3">
@@ -590,9 +594,8 @@
                   </span>
                                 <div class="timeline-content">
                                     <h6 class="text-dark text-sm font-weight-bold mb-0">최근 문의 신청일자</h6>
-
-                                    <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">2023.05.12 16:00:54</p>
-
+                                    <p th:if="${!confirmInquiry.isEmpty()}" class="text-secondary font-weight-bold text-xs mt-1 mb-0" th:text="${#temporals.format(confirmInquiry[0].registerDate, 'yyyy.MM.dd HH:mm:ss')}">2023.05.19 14:19:41</p>
+                                    <p th:unless="${!confirmInquiry.isEmpty()}" class="text-secondary font-weight-bold text-xs mt-1 mb-0">신청한 문의가 없습니다.</p>
                                 </div>
                             </div>
                             <div class="timeline-block mb-3">
@@ -601,7 +604,8 @@
                   </span>
                                 <div class="timeline-content">
                                     <h6 class="text-dark text-sm font-weight-bold mb-0">최근 접속일자</h6>
-                                    <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">2023.05.19 15:55:19</p>
+                                    <p th:if="${member.lastLoginDate != null}" class="text-secondary font-weight-bold text-xs mt-1 mb-0" th:text="${#temporals.format(member.lastLoginDate, 'yyyy.MM.dd HH:mm:ss')}">2023.05.19 14:19:41</p>
+                                    <p th:unless="${member.lastLoginDate != null}" class="text-secondary font-weight-bold text-xs mt-1 mb-0">기존 접속 기록이 없습니다.</p>
                                 </div>
                             </div>
                         </div>
@@ -625,7 +629,8 @@
                         <caption>
                             <p class="text-xs mb-0">
                                 <i class="font-weight-bold ms-1" aria-hidden="true"></i>
-                                <span class="fa fa-check text-info"> 출처: </span> <a href="https://openweathermap.org/">  https://openweathermap.org/</a>
+                                <span class="fa fa-check text-info"> 출처: </span> <a href="https://openweathermap.org/">
+                                https://openweathermap.org/</a>
                             </p>
                         </caption>
                         <tbody>
@@ -636,65 +641,65 @@
                         </tr>
                         <tr>
                             <td><img src="http://openweathermap.org/img/wn/01d@2x.png" width="50px"
-                                             height="50px" alt=""></td>
+                                     height="50px" alt=""></td>
                             <td><img src="http://openweathermap.org/img/wn/01n@2x.png" width="50px"
-                                              height="50px" alt=""></td>
+                                     height="50px" alt=""></td>
                             <td> 맑음</td>
                         </tr>
                         <tr>
                             <td><img src="http://openweathermap.org/img/wn/02d@2x.png" width="50px"
-                                             height="50px" alt=""></td>
+                                     height="50px" alt=""></td>
                             <td><img src="http://openweathermap.org/img/wn/02n@2x.png" width="50px"
-                                              height="50px" alt=""></td>
+                                     height="50px" alt=""></td>
                             <td> 약간의 구름</td>
                         </tr>
                         <tr>
                             <td><img src="http://openweathermap.org/img/wn/03d@2x.png" width="50px"
-                                             height="50px" alt=""></td>
+                                     height="50px" alt=""></td>
                             <td><img src="http://openweathermap.org/img/wn/03n@2x.png" width="50px"
-                                              height="50px" alt=""></td>
+                                     height="50px" alt=""></td>
                             <td> 흩어져있는 구름</td>
                         </tr>
                         <tr>
                             <td><img src="http://openweathermap.org/img/wn/04d@2x.png" width="50px"
-                                             height="50px" alt=""></td>
+                                     height="50px" alt=""></td>
                             <td><img src="http://openweathermap.org/img/wn/04n@2x.png" width="50px"
-                                              height="50px" alt=""></td>
+                                     height="50px" alt=""></td>
                             <td> 부서진 구름</td>
                         </tr>
                         <tr>
                             <td><img src="http://openweathermap.org/img/wn/09d@2x.png" width="50px"
-                                             height="50px" alt=""></td>
+                                     height="50px" alt=""></td>
                             <td><img src="http://openweathermap.org/img/wn/09n@2x.png" width="50px"
-                                              height="50px" alt=""></td>
+                                     height="50px" alt=""></td>
                             <td> 샤워 비</td>
                         </tr>
                         <tr>
                             <td><img src="http://openweathermap.org/img/wn/10d@2x.png" width="50px"
-                                             height="50px" alt=""></td>
+                                     height="50px" alt=""></td>
                             <td><img src="http://openweathermap.org/img/wn/10n@2x.png" width="50px"
-                                              height="50px" alt=""></td>
+                                     height="50px" alt=""></td>
                             <td> 비</td>
                         </tr>
                         <tr>
                             <td><img src="http://openweathermap.org/img/wn/11d@2x.png" width="50px"
-                                             height="50px" alt=""></td>
+                                     height="50px" alt=""></td>
                             <td><img src="http://openweathermap.org/img/wn/11n@2x.png" width="50px"
-                                              height="50px" alt=""></td>
+                                     height="50px" alt=""></td>
                             <td> 뇌우</td>
                         </tr>
                         <tr>
                             <td><img src="http://openweathermap.org/img/wn/13d@2x.png" width="50px"
-                                             height="50px" alt=""></td>
+                                     height="50px" alt=""></td>
                             <td><img src="http://openweathermap.org/img/wn/13n@2x.png" width="50px"
-                                              height="50px" alt=""></td>
+                                     height="50px" alt=""></td>
                             <td> 눈</td>
                         </tr>
                         <tr>
                             <td><img src="http://openweathermap.org/img/wn/50d@2x.png" width="50px"
-                                             height="50px" alt=""></td>
+                                     height="50px" alt=""></td>
                             <td><img src="http://openweathermap.org/img/wn/50n@2x.png" width="50px"
-                                              height="50px" alt=""></td>
+                                     height="50px" alt=""></td>
                             <td> 안개</td>
                         </tr>
                         </tbody>
