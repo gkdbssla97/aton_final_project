@@ -47,13 +47,13 @@
             </choose>
         </if>
     </sql>
-<!--    게시글 수 카운팅-->
+    <!--    게시글 수 카운팅-->
     <select id="count" parameterType="java.util.Map" resultType="int">
         SELECT count(*)
         FROM memberserviceregister ms
-#         WHERE <include refid="searchService" />
+        #         WHERE <include refid="searchService" />
     </select>
-<!--    개인 게시글 수 카운팅-->
+    <!--    개인 게시글 수 카운팅-->
     <select id="count_private" parameterType="java.util.Map" resultType="int">
         SELECT count(*)
         FROM memberserviceregister ms
@@ -66,7 +66,7 @@
                 #{memberServiceRegisterRequestDto.companyName},
                 #{memberId}, #{memberServiceRegisterRequestDto.registerDate});
     </insert>
-<!--    회원 서비스 신청 전체내역 조회-->
+    <!--    회원 서비스 신청 전체내역 조회-->
     <select id="findServiceRegisterById" resultType="com.example.aton_final_project.model.dto.MemberServiceRegisterResponseDto">
         SELECT sr.service_id      AS serviceId,
                sr.company_name    AS companyName,
@@ -81,16 +81,16 @@
     <!--    개인 서비스 신청 페이징 조회-->
     <select id="getListWithPagingForPrivate" parameterType="java.util.Map" resultType="com.example.aton_final_project.model.dto.MemberServiceRegisterResponseDto">
         SELECT sr.service_id      AS serviceId,
-               sr.company_name    AS companyName,
-               sr.business_no     AS businessNo,
-               sr.service_status  AS serviceStatus,
-               sr.registerDate AS registerDate,
-               m.username      AS username
+        sr.company_name    AS companyName,
+        sr.business_no     AS businessNo,
+        sr.service_status  AS serviceStatus,
+        sr.registerDate AS registerDate,
+        m.username      AS username
         FROM memberserviceregister sr
-                 JOIN member m on m.member_id = sr.member_id
+        JOIN member m on m.member_id = sr.member_id
         where sr.member_id = #{memberId}
 
-      <!-- 메서드 오버로딩으로 다른 메서드를 호출하기 위해 개인적으로 걸어놓은 조건문 -->
+        <!-- 메서드 오버로딩으로 다른 메서드를 호출하기 위해 개인적으로 걸어놓은 조건문 -->
         <if test="serviceId neq null and serviceId neq ''.toString()">
             AND sr.service_id = #{serviceId}
         </if>
@@ -100,13 +100,13 @@
             LIMIT #{startRow}, #{rowPerPage}
         </if>
     </select>
-<!--    회원 서비스 단건 ID 조회-->
+    <!--    회원 서비스 단건 ID 조회-->
     <select id="findServiceIdByMemberId" resultType="Long">
         SELECT service_id
         FROM memberserviceregister
         WHERE member_id = #{memberId}
         ORDER BY service_id DESC
-        LIMIT 1;
+            LIMIT 1;
     </select>
     <!--    회원 서비스 단건 조회-->
     <select id="findServiceByServiceId" resultType="com.example.aton_final_project.model.dto.MemberServiceRegisterResponseDto">
@@ -146,22 +146,22 @@
     <!--    회원 서비스 신청 페이징 조회-->
     <select id="getListWithPaging" parameterType="java.util.Map" resultType="com.example.aton_final_project.model.dto.MemberServiceRegisterResponseDto">
         SELECT sr.service_id      AS serviceId,
-               sr.company_name    AS companyName,
-               sr.business_no     AS businessNo,
-               sr.service_status  AS serviceStatus,
-               sr.registerDate AS registerDate,
-               m.username      AS username,
-               m.email         AS email,
-               m.member_id     AS memberId
+        sr.company_name    AS companyName,
+        sr.business_no     AS businessNo,
+        sr.service_status  AS serviceStatus,
+        sr.registerDate AS registerDate,
+        m.username      AS username,
+        m.email         AS email,
+        m.member_id     AS memberId
         FROM memberserviceregister sr
-                 JOIN member m on m.member_id = sr.member_id
+        JOIN member m on m.member_id = sr.member_id
         <include refid="searchService" />
         <!-- 메서드 오버로딩으로 다른 메서드를 호출하기 위해 개인적으로 걸어놓은 조건문 -->
         <if test="serviceId neq null and serviceId neq ''.toString()">
             AND sr.service_id = #{serviceId}
         </if>
 
-<!--        &lt;!&ndash; 다른 메서드 호출시 반영되지 않기위해 걸어놓은 조건문 &ndash;&gt;-->
+        <!--        &lt;!&ndash; 다른 메서드 호출시 반영되지 않기위해 걸어놓은 조건문 &ndash;&gt;-->
         <if test="startRow != lastPage">
             ORDER BY sr.service_id DESC
             LIMIT #{startRow}, #{rowPerPage}
@@ -174,17 +174,17 @@
                  JOIN accesstoken a on m.member_id = a.member_id
         WHERE sr.service_id = #{serviceId};
     </select>
-<!--    <select id="findFilesById" resultType="com.example.aton_final_project.model.dto.FilesDto">-->
-<!--        SELECT filename,-->
-<!--               file_url AS 'fileUrl',-->
-<!--               original_filename AS 'originalFileName'-->
-<!--        FROM files-->
-<!--        WHERE file_id = #{fileId}-->
-<!--    </select>-->
+    <!--    <select id="findFilesById" resultType="com.example.aton_final_project.model.dto.FilesDto">-->
+    <!--        SELECT filename,-->
+    <!--               file_url AS 'fileUrl',-->
+    <!--               original_filename AS 'originalFileName'-->
+    <!--        FROM files-->
+    <!--        WHERE file_id = #{fileId}-->
+    <!--    </select>-->
     <select id="findAllFiles" resultType="com.example.aton_final_project.model.dto.FilesDto">
         SELECT filename,
                file_url          AS 'fileUrl',
-               original_filename AS 'originalFileName'
+                original_filename AS 'originalFileName'
         FROM files
     </select>
     <insert id="saveFile">
