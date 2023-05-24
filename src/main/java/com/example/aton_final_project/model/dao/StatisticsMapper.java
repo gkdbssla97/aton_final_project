@@ -24,7 +24,7 @@ public interface StatisticsMapper {
     StatisticsDto findServiceMemberCount();
     StatisticsDto findInquiryMemberCount();
     MemberResponseDto findLastOneMember();
-    MemberResponseDto findLastOneApprovedMember();
+    MemberResponseDto findLastOneApprovedAdmin();
     MemberServiceRegisterResponseDto findLastOneService();
     InquiryRegisterResponseDto findLastOneInquiry();
     MyStatisticsDto findMyService(@Param("memberId") Long memberId);
