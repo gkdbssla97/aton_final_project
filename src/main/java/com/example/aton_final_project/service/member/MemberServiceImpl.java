@@ -36,6 +36,11 @@ public class MemberServiceImpl implements MemberService {
     private final MemberMapper memberMapper;
 
     @Override
+    public int isDuplicateEmail(String email) {
+        return memberMapper.duplicateEmail(email);
+    }
+
+    @Override
     public void joinAdmin(MemberRequestDto memberRequestDto) throws Exception {
 
         String accessToken = initializeAccessKey(ACCESS_TOKEN.getValue());
@@ -64,6 +69,9 @@ public class MemberServiceImpl implements MemberService {
             throw new RegisterCustomException(AuthenticationRegistrationError.MISSING_REQUIRED_ITEM, EMAIL.getValue());
         } else if (!StringUtils.hasText(memberRequestDto.getPassword())) {
             throw new RegisterCustomException(AuthenticationRegistrationError.MISSING_REQUIRED_ITEM, PASSWORD.getValue());
+        }
+        if (isDuplicateEmail(memberRequestDto.getEmail()) == 0) {
+            throw new RegisterCustomException(AuthenticationRegistrationError.DUPLICATE_ID);
         }
         String accessToken = initializeAccessKey(ACCESS_TOKEN.getValue());
         String encryptKey = initializeAccessKey(ENCRYPT_KEY.getValue());
@@ -170,6 +178,18 @@ public class MemberServiceImpl implements MemberService {
             }
         } catch (NullPointerException e) {
             System.out.println(e.getMessage());
+        }
+        throw new LoginCustomException(AuthenticationLoginError.USER_NOT_FOUND);
+    }
+
+    @Override
+    public MemberResponseDto verificationUsernameAndEmail(AccessTokenDto accessTokenDto, String username) throws Exception {
+        MemberResponseDto memberById = findMemberById(accessTokenDto.getMemberId());
+        if (memberById.getUsername().equals(username)) {
+            memberById.setTmpPassword(initializeAccessKey(6));
+            // 임시비밀번호로 변경
+            editMemberInformation(accessTokenDto.getMemberId(), memberById.getTmpPassword());
+            return memberById;
         }
         throw new LoginCustomException(AuthenticationLoginError.USER_NOT_FOUND);
     }
@@ -389,7 +409,7 @@ public class MemberServiceImpl implements MemberService {
         if (verifiedMember.equals(LoginConstants.NO_ACCOUNT.getValue())) {
             throw new LoginCustomException(AuthenticationLoginError.USER_NOT_FOUND);
         } else if (verifiedMember.equals(LoginConstants.NO_MATCH_INFO_PWD.getValue())) {
-            if(findMember.getAccountStatus().equals(MEMBER_LOCK.getValue())) {
+            if (findMember.getAccountStatus().equals(MEMBER_LOCK.getValue())) {
                 throw new LoginCustomException(AuthenticationLoginError.LOCK_ACCOUNT);
             }
             increaseLoginFailureCount(findMember);
@@ -426,10 +446,10 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void validationLoginInfo(MemberRequestDto memberRequestDto) {
-        if(memberRequestDto.getEmail() == null || memberRequestDto.getEmail().equals("")) {
+        if (memberRequestDto.getEmail() == null || memberRequestDto.getEmail().equals("")) {
             throw new LoginCustomException(AuthenticationLoginError.MISSING_REQUIRED_ITEM, LoginConstants.EMAIL.getValue());
         }
-        if(memberRequestDto.getPassword() == null || memberRequestDto.getPassword().equals("")) {
+        if (memberRequestDto.getPassword() == null || memberRequestDto.getPassword().equals("")) {
             throw new LoginCustomException(AuthenticationLoginError.MISSING_REQUIRED_ITEM, LoginConstants.PASSWORD.getValue());
         }
     }

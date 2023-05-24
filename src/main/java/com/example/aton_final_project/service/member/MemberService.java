@@ -4,13 +4,15 @@ import com.example.aton_final_project.model.domain.member.MemberAuthoritiesCode;
 import com.example.aton_final_project.model.dto.*;
 import com.example.aton_final_project.model.dto.statistics.MembershipGrowthDto;
 import com.example.aton_final_project.util.constants.AccountStatus;
+import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 public interface MemberService {
-    public void joinAdmin(MemberRequestDto memberRequestDto) throws Exception;
+    int isDuplicateEmail(String email);
+    void joinAdmin(MemberRequestDto memberRequestDto) throws Exception;
 
     void authorizeAdmin(Long memberId);
 
@@ -75,4 +77,5 @@ public interface MemberService {
     int countTodayMember();
     MembershipGrowthDto countMemberGrowth();
     MembershipGrowthDto countMemberLogin();
+    public MemberResponseDto verificationUsernameAndEmail(AccessTokenDto accessTokenDto, String username) throws Exception;
 }
