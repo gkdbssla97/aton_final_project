@@ -4,21 +4,23 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.aton_final_project.model.dao.StatisticsMapper">
-<!--최신 가입 회원 단건 조회-->
+    <!--최신 가입 회원 단건 조회-->
     <select id="findLastOneMember" resultType="com.example.aton_final_project.model.dto.MemberResponseDto">
         SELECT m.username, m.registerDate, m.member_id AS memberId, t.encrypt_key AS encryptKey
         FROM member m
-             JOIN accesstoken t ON t.member_id = m.member_id
-        ORDER BY m.member_id DESC
-        LIMIT 1;
-    </select>
-    <!--최신 가입 승인 단건 조회-->
-    <select id="findLastOneApprovedMember" resultType="com.example.aton_final_project.model.dto.MemberResponseDto">
-        SELECT m.username, m.member_id AS memberId, m.approvalDate, t.encrypt_key AS encryptKey
-        FROM member m
                  JOIN accesstoken t ON t.member_id = m.member_id
-        where approvalDate IS NOT NULL
-        ORDER BY m.member_id DESC LIMIT 1;
+        ORDER BY m.member_id DESC
+            LIMIT 1;
+    </select>
+    <!--최신 관리자 승인 단건 조회-->
+    <select id="findLastOneApprovedAdmin" resultType="com.example.aton_final_project.model.dto.MemberResponseDto">
+        SELECT a.member_id AS memberId, m.username AS username, t.encrypt_key AS encryptKey, a.registerDate AS adminApprovalDate
+        FROM memberauthoritiesmapping a
+                 JOIN member m ON a.member_id = m.member_id
+                 JOIN memberauthoritiescode c ON c.member_authorities_code_id = a.member_authorities_code_id
+                 JOIN accesstoken t ON t.member_id = m.member_id
+        WHERE c.member_authorities_code_id = 1
+        ORDER BY a.member_id DESC LIMIT 1
     </select>
     <!--최신 등록 서비스 단건 조회-->
     <select id="findLastOneService" resultType="com.example.aton_final_project.model.dto.MemberServiceRegisterResponseDto">
@@ -46,7 +48,7 @@
                @d := @b * 100 / @a                          AS adminRate
         FROM member
     </select>
-<!--    전체 가입 승인 증감율-->
+    <!--    전체 가입 승인 증감율-->
     <select id="findMemberApprovalChangeRate" resultType="com.example.aton_final_project.model.dto.statistics.StatisticsDto">
         SELECT @a := COUNT(*)                     AS allMember,
                @b := (SELECT COUNT(*)
@@ -55,7 +57,7 @@
                @d := CAST((@b / @a) * 100 AS int) AS memberRate
         FROM member
     </select>
-<!--    전체 서비스 승인 증감율-->
+    <!--    전체 서비스 승인 증감율-->
     <select id="findServiceApprovalChangeRate" resultType="com.example.aton_final_project.model.dto.statistics.StatisticsDto">
         SELECT @a := COUNT(*) AS allService,
                @b := (SELECT COUNT(*)
@@ -64,7 +66,7 @@
                @d :=	CAST((@b / @a) * 100 AS int) AS serviceRate
         FROM memberserviceregister
     </select>
-<!--    전체 문의 승인 증감율-->
+    <!--    전체 문의 승인 증감율-->
     <select id="findInquiryApprovalChangeRate" resultType="com.example.aton_final_project.model.dto.statistics.StatisticsDto">
         SELECT @a := COUNT(*) AS allInquiry,
                @b := (SELECT COUNT(*)
@@ -73,7 +75,7 @@
                @d :=	CAST((@b / @a) * 100 AS int) AS inquiryRate
         FROM inquiry
     </select>
-<!--    관리자 승인건 조회 -->
+    <!--    관리자 승인건 조회 -->
     <select id="findAdminApproval" resultType="com.example.aton_final_project.model.dto.statistics.StatisticsDto">
         SELECT COUNT(*) AS adminApproved
         FROM memberauthoritiesmapping a
@@ -81,30 +83,30 @@
                  JOIN memberauthoritiescode c ON c.member_authorities_code_id = a.member_authorities_code_id
         WHERE c.member_authorities_code_id = 1;
     </select>
-<!--    가입 승인건 조회-->
+    <!--    가입 승인건 조회-->
     <select id="findMemberApproval" resultType="com.example.aton_final_project.model.dto.statistics.StatisticsDto">
         SELECT COUNT(*) AS memberApproved
         FROM member
         WHERE member_status = 1;
     </select>
-<!--    서비스 승인건 조회-->
+    <!--    서비스 승인건 조회-->
     <select id="findServiceApproved" resultType="com.example.aton_final_project.model.dto.statistics.StatisticsDto">
         SELECT COUNT(*) AS serviceApproved
         FROM memberserviceregister
         WHERE service_status = 1 OR service_status = 2;
     </select>
-<!--    문의 답변건 조회-->
+    <!--    문의 답변건 조회-->
     <select id="findInquiryApproved" resultType="com.example.aton_final_project.model.dto.statistics.StatisticsDto">
         SELECT COUNT(*) AS inquiryApproved
         FROM inquiry
         WHERE inquiry_status = 1
     </select>
-<!--    전체 회원 수 조회-->
+    <!--    전체 회원 수 조회-->
     <select id="findTotalMember" resultType="com.example.aton_final_project.model.dto.statistics.StatisticsDto">
         SELECT COUNT(*) AS allMember
         FROM member
     </select>
-<!--    전체 서비스 신청 회원 수 조회-->
+    <!--    전체 서비스 신청 회원 수 조회-->
     <select id="findServiceMemberCount" resultType="com.example.aton_final_project.model.dto.statistics.StatisticsDto">
         SELECT COUNT(*) AS allService
         FROM(
@@ -114,7 +116,7 @@
                 GROUP BY m.username
             ) A;
     </select>
-<!--    전체 문의 신청 회원 수 조회-->
+    <!--    전체 문의 신청 회원 수 조회-->
     <select id="findInquiryMemberCount" resultType="com.example.aton_final_project.model.dto.statistics.StatisticsDto">
         SELECT COUNT(*) AS allInquiry
         FROM(
@@ -124,26 +126,26 @@
                 GROUP BY m.username
             ) A;
     </select>
-<!--    내 서비스 신청 진행률-->
-<select id="findMyService" resultType="com.example.aton_final_project.model.dto.statistics.MyStatisticsDto">
-    SELECT A.*,
-           ROUND((myServiceApproved / myService) * 100.0, 1) AS myServiceRate
-    FROM (SELECT COUNT(*)                                                                         AS myService,
-                 (SELECT COUNT(*)
-                  FROM memberserviceregister s
-                  WHERE ((service_status = 1 OR service_status = 2) AND member_id = #{memberId})) AS myServiceApproved
-          FROM memberserviceregister s
-          WHERE member_id = #{memberId}) A;
-</select>
+    <!--    내 서비스 신청 진행률-->
+    <select id="findMyService" resultType="com.example.aton_final_project.model.dto.statistics.MyStatisticsDto">
+        SELECT A.*,
+               ROUND((myServiceApproved / myService) * 100.0, 1) AS myServiceRate
+        FROM (SELECT COUNT(*)                                                                         AS myService,
+                     (SELECT COUNT(*)
+                      FROM memberserviceregister s
+                      WHERE ((service_status = 1 OR service_status = 2) AND member_id = #{memberId})) AS myServiceApproved
+              FROM memberserviceregister s
+              WHERE member_id = #{memberId}) A;
+    </select>
     <!--    내 문의 신청 진행률-->
-<select id="findMyInquiry" resultType="com.example.aton_final_project.model.dto.statistics.MyStatisticsDto">
-    SELECT A.*,
-           (myInquiryApproved / myInquiry) * 100.0 AS myInquiryRate
-    FROM (SELECT COUNT(*)               AS myInquiry,
-                 (SELECT COUNT(*)
-                  FROM inquiry i
-                  WHERE inquiry_status = 1 AND member_id = #{memberId}) AS myInquiryApproved
-          FROM inquiry i
-          WHERE member_id = #{memberId}) A
-</select>
+    <select id="findMyInquiry" resultType="com.example.aton_final_project.model.dto.statistics.MyStatisticsDto">
+        SELECT A.*,
+               (myInquiryApproved / myInquiry) * 100.0 AS myInquiryRate
+        FROM (SELECT COUNT(*)               AS myInquiry,
+                     (SELECT COUNT(*)
+                      FROM inquiry i
+                      WHERE inquiry_status = 1 AND member_id = #{memberId}) AS myInquiryApproved
+              FROM inquiry i
+              WHERE member_id = #{memberId}) A
+    </select>
 </mapper>
