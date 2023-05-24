@@ -74,7 +74,7 @@
                 #{inquiryRegisterRequestDto.title}, #{inquiryRegisterRequestDto.contents},
                 #{inquiryRegisterRequestDto.registerDate}, #{memberId});
     </insert>
-<!--    특정 회원 문의 전체 내역 조회-->
+    <!--    특정 회원 문의 전체 내역 조회-->
     <select id="findInquiriesRegisterById" resultType="com.example.aton_final_project.model.dto.InquiryRegisterResponseDto">
         SELECT i.inquiry_id        AS inquiryId,
                m.member_id         AS memberId,
@@ -98,31 +98,31 @@
                  LEFT JOIN member m on m.member_id = i.member_id
         where m.member_id = #{memberId};
     </select>
-<!--    특정 회원 문의 전체 내역 조회-->
+    <!--    특정 회원 문의 전체 내역 조회-->
     <select id="getListWithPagingForPrivate" parameterType="java.util.Map" resultType="com.example.aton_final_project.model.dto.InquiryRegisterResponseDto">
         SELECT i.inquiry_id        AS inquiryId,
-               m.member_id         AS memberId,
-               m.username          AS username,
-               CASE i.category
-                   WHEN '0001' THEN '일반문의'
-                   WHEN '0002' THEN '계정문의'
-                   WHEN '0003' THEN '탈퇴문의'
-                   WHEN '0004' THEN '신고/이용제한'
-                   END             AS category,
-               i.title,
-               i.contents,
-               f.filename,
-               f.original_filename AS originalFileName,
-               f.file_url          AS fileUrl,
-               i.registerDate,
-               i.inquiry_status    AS inquiryStatus,
-               i.answerDate
+        m.member_id         AS memberId,
+        m.username          AS username,
+        CASE i.category
+        WHEN '0001' THEN '일반문의'
+        WHEN '0002' THEN '계정문의'
+        WHEN '0003' THEN '탈퇴문의'
+        WHEN '0004' THEN '신고/이용제한'
+        END             AS category,
+        i.title,
+        i.contents,
+        f.filename,
+        f.original_filename AS originalFileName,
+        f.file_url          AS fileUrl,
+        i.registerDate,
+        i.inquiry_status    AS inquiryStatus,
+        i.answerDate
         FROM inquiry i
-                 LEFT JOIN inquiryfiles f on f.inquiry_id = i.inquiry_id
-                 LEFT JOIN member m on m.member_id = i.member_id
+        LEFT JOIN inquiryfiles f on f.inquiry_id = i.inquiry_id
+        LEFT JOIN member m on m.member_id = i.member_id
         where m.member_id = #{memberId}
 
-    <!-- 메서드 오버로딩으로 다른 메서드를 호출하기 위해 개인적으로 걸어놓은 조건문 -->
+        <!-- 메서드 오버로딩으로 다른 메서드를 호출하기 위해 개인적으로 걸어놓은 조건문 -->
         <if test="serviceId neq null and serviceId neq ''.toString()">
             AND i.inquiry_id = #{inquiryId}
         </if>
@@ -132,13 +132,13 @@
             LIMIT #{startRow}, #{rowPerPage}
         </if>
     </select>
-<!--    회원 단건 문의 ID 조회-->
+    <!--    회원 단건 문의 ID 조회-->
     <select id="findInquiryIdByMemberId" resultType="Long">
         SELECT inquiry_id
         FROM inquiry
         WHERE member_id = #{memberId}
         ORDER BY inquiry_id DESC
-        LIMIT 1;
+            LIMIT 1;
     </select>
     <!--    회원 문의 단건 조회-->
     <select id="findInquiryByInquiryId" resultType="com.example.aton_final_project.model.dto.InquiryRegisterResponseDto">
@@ -167,17 +167,17 @@
         WHERE i.inquiry_id = #{inquiryId}
         ORDER BY i.registerDate, f.file_id;
     </select>
-<!--    <select id="findFilesById" resultType="com.example.aton_final_project.model.dto.FilesDto">-->
-<!--        SELECT filename,-->
-<!--               file_url AS 'fileUrl',-->
-<!--               original_filename AS 'originalFileName'-->
-<!--        FROM inquiryfiles-->
-<!--        WHERE file_id = #{fileId}-->
-<!--    </select>-->
+    <!--    <select id="findFilesById" resultType="com.example.aton_final_project.model.dto.FilesDto">-->
+    <!--        SELECT filename,-->
+    <!--               file_url AS 'fileUrl',-->
+    <!--               original_filename AS 'originalFileName'-->
+    <!--        FROM inquiryfiles-->
+    <!--        WHERE file_id = #{fileId}-->
+    <!--    </select>-->
     <select id="findAllFiles" resultType="com.example.aton_final_project.model.dto.FilesDto">
         SELECT filename,
                file_url          AS 'fileUrl',
-               original_filename AS 'originalFileName'
+                original_filename AS 'originalFileName'
         FROM inquiryfiles
     </select>
     <insert id="saveInquiryFile">
@@ -232,7 +232,7 @@
             LIMIT #{startRow}, #{rowPerPage}
         </if>
     </select>
-<!--    문의 ID로 회원정보 조회 -->
+    <!--    문의 ID로 회원정보 조회 -->
     <select id="findMemberInfoByInquiryId" resultType="com.example.aton_final_project.model.dto.AccessTokenDto">
         SELECT m.username, a.encrypt_key AS 'encryptKey', a.authorization
         FROM inquiry i
@@ -240,7 +240,7 @@
                  JOIN accesstoken a on m.member_id = a.member_id
         WHERE inquiry_id = #{inquiryId};
     </select>
-<!--    문의 답변 등록-->
+    <!--    문의 답변 등록-->
     <update id="updateInquiryAnswer">
         UPDATE inquiry
         SET answer_inquiry    = #{inquiryRegisterRequestDto.answerInquiry},
