@@ -8,4 +8,6 @@ public interface MailService {
     void sendMail(MailDto dto, String username);
 
     void execute(MemberResponseDto memberResponseDto, FilesDto filesDto) throws Exception;
+    void executeFindPwd(MemberResponseDto member) throws Exception;
 }
+

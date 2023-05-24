@@ -30,6 +30,11 @@ public class MailServiceImpl implements MailService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final JavaMailSender javaMailSender;
 
+    /**
+     * 서비스 승인 이메일 전송
+     * @param mailDto
+     * @param username
+     */
     public void sendMail(MailDto mailDto, String username) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
@@ -70,6 +75,48 @@ public class MailServiceImpl implements MailService {
             List<AttachFileDto> atchFileList = new ArrayList<>(Arrays.asList(new AttachFileDto(filesDto.getFileUrl(), filesDto.getFilename())));
 
             sendMail(new MailDto("admin@atonIntern.com", toAddress, mailSubject, mailContent, true, atchFileList), member.getUsername());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 비밀번호찾기 이메일 전송
+     * @param mailDto
+     * @param username
+     */
+    public void sendMailFindPwd(MailDto mailDto, String username) {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8"); // use multipart (true)
+
+            InternetAddress toAddress = new InternetAddress(mailDto.getReceiver(), username, "UTF-8");
+
+            mimeMessageHelper.setSubject(MimeUtility.encodeText(mailDto.getSubject(), "UTF-8", "B")); // Base64 encoding
+            mimeMessageHelper.setText(mailDto.getContent(), mailDto.isUseHtmlYn());
+            mimeMessageHelper.setFrom(new InternetAddress(mailDto.getSender(), mailDto.getReceiver(), "UTF-8"));
+            mimeMessageHelper.setTo(toAddress);
+
+            javaMailSender.send(mimeMessage);
+
+            log.info("MailServiceImpl.sendMail() :: SUCCESS");
+        } catch (Exception e) {
+            log.info("MailServiceImpl.sendMail() :: FAILED");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void executeFindPwd(MemberResponseDto member) throws Exception {
+        try {
+            String mailSubject = String.format("[%s] 님 비밀번호찾기 메일", member.getUsername());
+            String mailContent = "<p>안녕하세요.</p><p>" + member.getUsername() + "님께서 요청하신 임시비밀번호입니다.</p>" +
+                    "</br><p> 임시비밀번호: " + member.getTmpPassword() + "</p>" +
+                    "</br><p>감사합니다.</p>";
+
+            String toAddress = member.getEmail();
+            sendMailFindPwd(new MailDto("admin@atonIntern.com", toAddress, mailSubject, mailContent, true), member.getUsername());
         } catch (Exception e) {
             e.printStackTrace();
         }
