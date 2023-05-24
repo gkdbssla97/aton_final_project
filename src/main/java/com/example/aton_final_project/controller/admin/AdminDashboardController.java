@@ -1,6 +1,7 @@
 package com.example.aton_final_project.controller.admin;
 
 import com.example.aton_final_project.model.dto.MemberResponseDto;
+import com.example.aton_final_project.model.dto.statistics.StatisticsDto;
 import com.example.aton_final_project.service.CommonService;
 import com.example.aton_final_project.service.file.inquiry.InquiryService;
 import com.example.aton_final_project.service.file.service.FileService;
@@ -76,18 +77,26 @@ public class AdminDashboardController {
         /**
          * 전체 내역 통계 수치
          */
-        model.addAttribute("findAdmin", statisticsService.findAdminApprovalChangeRate());
-        model.addAttribute("findMember", statisticsService.findMemberApprovalChangeRate());
-        model.addAttribute("findService", statisticsService.findServiceApprovalChangeRate());
-        model.addAttribute("findInquiry", statisticsService.findInquiryApprovalChangeRate());
+        StatisticsDto adminApprovalChangeRate = statisticsService.findAdminApprovalChangeRate();
+        StatisticsDto memberApprovalChangeRate = statisticsService.findMemberApprovalChangeRate();
+        StatisticsDto serviceApprovalChangeRate = statisticsService.findServiceApprovalChangeRate();
+        StatisticsDto inquiryApprovalChangeRate = statisticsService.findInquiryApprovalChangeRate();
+
+        model.addAttribute("findAdmin", adminApprovalChangeRate);
+        model.addAttribute("findMember", memberApprovalChangeRate);
+        model.addAttribute("findService", serviceApprovalChangeRate);
+        model.addAttribute("findInquiry", inquiryApprovalChangeRate);
+        model.addAttribute("addAllApproved",
+                adminApprovalChangeRate.getAllAdmin() + memberApprovalChangeRate.getAllMember() +
+                        serviceApprovalChangeRate.getAllService() + inquiryApprovalChangeRate.getAllInquiry());
 
         /**
          * 최신 신청/등록 현황
          */
         model.addAttribute("lastOneMember", statisticsService.findLastOneMember());
-        model.addAttribute("lastOneApprovedMember", statisticsService.findLastOneApprovedMember());
+        model.addAttribute("lastOneApprovedAdmin", statisticsService.findLastOneApprovedAdmin());
         model.addAttribute("lastOneService", statisticsService.findLastOneService());
-        model.addAttribute("lastOneInquiry", statisticsService.findLastOneMember());
+        model.addAttribute("lastOneInquiry", statisticsService.findLastOneInquiry());
 
         return "pages/admin-dashboard";
     }
