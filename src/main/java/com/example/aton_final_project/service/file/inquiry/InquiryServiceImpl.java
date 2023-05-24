@@ -30,6 +30,11 @@ public class InquiryServiceImpl implements InquiryService {
     }
 
     @Override
+    public void saveInquiryFile(FilesDto filesDto, Long inquiryId) {
+        inquiryMapper.saveInquiryFile(filesDto, inquiryId);
+    }
+
+    @Override
     public void saveInquiry(InquiryRegisterRequestDto inquiryRegisterRequestDto, Long memberId) throws Exception {
         MemberResponseDto memberById = memberService.findMemberById(memberId);
         inquiryRegisterRequestDto.setUsername(memberById.getUsername());
@@ -39,11 +44,6 @@ public class InquiryServiceImpl implements InquiryService {
             throw new InquiryCustomException(InquiryError.MISSING_REQUIRED_ITEM, INQUIRY_CONTENTS.getValue());
         }
         inquiryMapper.saveInquiry(inquiryRegisterRequestDto, memberId);
-    }
-
-    @Override
-    public void saveInquiryFile(FilesDto filesDto, Long inquiryId) {
-        inquiryMapper.saveInquiryFile(filesDto, inquiryId);
     }
 
     @Override
