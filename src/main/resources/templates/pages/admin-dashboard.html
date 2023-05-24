@@ -142,20 +142,8 @@
                                 <h6>전체 내역</h6>
                                 <p class="text-sm mb-0">
                                     <i class="fa fa-check text-info" aria-hidden="true"></i>
-                                    <span class="font-weight-bold ms-1">26 건</span> 완료
+                                    <span class="font-weight-bold ms-1" th:text="|${addAllApproved} 건|">26 건</span> 완료
                                 </p>
-                            </div>
-                            <div class="col-lg-6 col-5 my-auto text-end">
-                                <div class="dropdown float-lg-end pe-4">
-                                    <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="fa fa-ellipsis-v text-secondary" aria-hidden="true"></i>
-                                    </a>
-                                    <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                                        <li><a class="dropdown-item border-radius-md" href="javascript:;">Action</a></li>
-                                        <li><a class="dropdown-item border-radius-md" href="javascript:;">Another action</a></li>
-                                        <li><a class="dropdown-item border-radius-md" href="javascript:;">Something else here</a></li>
-                                    </ul>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -183,21 +171,21 @@
                                         </div>
                                     </td>
                                     <td class="align-middle text-center text-sm">
-                                        <span class="text-xs font-weight-bold">10</span>
+                                        <span class="text-xs font-weight-bold" th:text="${findAdmin.allAdmin}">10</span>
                                     </td>
                                     <td class="align-middle text-center text-sm">
-                                        <span class="text-xs font-weight-bold">6</span>
+                                        <span class="text-xs font-weight-bold" th:text="${findAdmin.adminApproved}">6</span>
                                     </td>
                                     <td class="align-middle">
                                         <div class="progress-wrapper w-75 mx-auto">
                                             <div class="progress-info">
                                                 <div class="progress-percentage">
-                                                    <span class="text-xs font-weight-bold">60%</span>
+                                                    <span class="text-xs font-weight-bold" th:text="|${findAdmin.adminRate}%|">60%</span>
                                                 </div>
                                             </div>
                                             <div class="progress">
-                                                <div class="progress-bar bg-gradient-success w-60" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-
+                                                <div th:if="${findAdmin.adminRate >= 50.0}" th:class="|progress-bar bg-gradient-success w-${(findAdmin.adminRate / 5) * 5}|" role="progressbar" th:aria-valuenow="${(findAdmin.adminRate / 5) * 5}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                <div th:unless="${findAdmin.adminRate >= 50.0}" th:class="|progress-bar bg-gradient-info w-${(findAdmin.adminRate / 5) * 5}|" role="progressbar" th:aria-valuenow="${(findAdmin.adminRate / 5) * 5}" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
                                         </div>
                                     </td>
@@ -214,21 +202,21 @@
                                         </div>
                                     </td>
                                     <td class="align-middle text-center text-sm">
-                                        <span class="text-xs font-weight-bold">10</span>
+                                        <span class="text-xs font-weight-bold" th:text="${findMember.allMember}">10</span>
                                     </td>
                                     <td class="align-middle text-center text-sm">
-                                        <span class="text-xs font-weight-bold">7</span>
+                                        <span class="text-xs font-weight-bold" th:text="${findMember.memberApproved}">7</span>
                                     </td>
                                     <td class="align-middle">
                                         <div class="progress-wrapper w-75 mx-auto">
                                             <div class="progress-info">
                                                 <div class="progress-percentage">
-                                                    <span class="text-xs font-weight-bold">70%</span>
+                                                    <span class="text-xs font-weight-bold" th:text="|${findMember.memberRate}%|">70%</span>
                                                 </div>
                                             </div>
                                             <div class="progress">
-                                                <div class="progress-bar bg-gradient-success w-70" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-
+                                                <div th:if="${findMember.memberRate >= 50.0}" th:class="|progress-bar bg-gradient-success w-${(findMember.memberRate/ 5) * 5}|" role="progressbar" th:aria-valuenow="${findMember.memberRate}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                <div th:unless="${findMember.memberRate >= 50.0}" th:class="|progress-bar bg-gradient-info w-${(findMember.memberRate / 5) * 5}|" role="progressbar" th:aria-valuenow="${findMember.memberRate}" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
                                         </div>
                                     </td>
@@ -245,21 +233,21 @@
                                         </div>
                                     </td>
                                     <td class="align-middle text-center text-sm">
-                                        <span class="text-xs font-weight-bold">45</span>
+                                        <span class="text-xs font-weight-bold" th:text="${findService.allService}">45</span>
                                     </td>
                                     <td class="align-middle text-center text-sm">
-                                        <span class="text-xs font-weight-bold">11</span>
+                                        <span class="text-xs font-weight-bold" th:text="${findService.serviceApproved}">11</span>
                                     </td>
                                     <td class="align-middle">
                                         <div class="progress-wrapper w-75 mx-auto">
                                             <div class="progress-info">
                                                 <div class="progress-percentage">
-                                                    <span class="text-xs font-weight-bold">24%</span>
+                                                    <span class="text-xs font-weight-bold" th:text="|${findService.serviceRate}%|">24%</span>
                                                 </div>
                                             </div>
                                             <div class="progress">
-
-                                                <div class="progress-bar bg-gradient-info w-20" role="progressbar" aria-valuenow="24" aria-valuemin="0" aria-valuemax="100"></div>
+                                                <div th:if="${findService.serviceRate >= 50.0}" th:class="|progress-bar bg-gradient-success w-${(findService.serviceRate / 5) * 5}|" role="progressbar" th:aria-valuenow="${findService.serviceRate}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                <div th:unless="${findService.serviceRate >= 50.0}" th:class="|progress-bar bg-gradient-info w-${(findService.serviceRate / 5) * 5}|" role="progressbar" th:aria-valuenow="${findService.serviceRate}" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
                                         </div>
                                     </td>
@@ -276,21 +264,21 @@
                                         </div>
                                     </td>
                                     <td class="align-middle text-center text-sm">
-                                        <span class="text-xs font-weight-bold">17</span>
+                                        <span class="text-xs font-weight-bold" th:text="${findInquiry.allInquiry}">17</span>
                                     </td>
                                     <td class="align-middle text-center text-sm">
-                                        <span class="text-xs font-weight-bold">2</span>
+                                        <span class="text-xs font-weight-bold" th:text="${findInquiry.inquiryApproved}">2</span>
                                     </td>
                                     <td class="align-middle">
                                         <div class="progress-wrapper w-75 mx-auto">
                                             <div class="progress-info">
                                                 <div class="progress-percentage">
-                                                    <span class="text-xs font-weight-bold">11%</span>
+                                                    <span class="text-xs font-weight-bold" th:text="|${findInquiry.inquiryRate}%|">11%</span>
                                                 </div>
                                             </div>
                                             <div class="progress">
-
-                                                <div class="progress-bar bg-gradient-info w-10" role="progressbar" aria-valuenow="11" aria-valuemin="0" aria-valuemax="100"></div>
+                                                <div th:if="${findInquiry.inquiryRate >= 50.0}" th:class="|progress-bar bg-gradient-success w-${(findInquiry.inquiryRate / 5) * 5}|" role="progressbar" th:aria-valuenow="${findInquiry.inquiryRate}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                <div th:unless="${findInquiry.inquiryRate >= 50.0}" th:class="|progress-bar bg-gradient-info w-${(findInquiry.inquiryRate / 5) * 5}|" role="progressbar" th:aria-valuenow="${findInquiry.inquiryRate}" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
                                         </div>
                                     </td>
@@ -307,30 +295,30 @@
                         <h6>관리자 최신 알림</h6>
                         <p class="text-sm mb-0">
                             <i class="fa fa-cog fa-spin fa-fw" aria-hidden="true"></i>
-                            현재 시각 기준 ([[${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd HH:mm:ss')}]])
+                            현재 시각 기준 ([[${#calendars.format(#calendars.createNow(), 'yyyy/MM/dd HH:mm:ss')}]])
                         </p>
                     </div>
                     <div class="card-body p-2 pb-0">
                         <div class="alert alert-primary alert-dismissible text-white" role="alert">
-                            <span class="text" style="font-size: 12px;">가입자테스트 님께서 2023/05/17 15:18:52에 가입요청</span>
+                            <span class="text" style="font-size: 12px;" th:text="|${lastOneMember.username} 님께서 ${#temporals.format(lastOneMember.registerDate, 'yyyy/MM/dd HH:mm:ss')}에 가입요청|">가입자테스트 님께서 2023/05/17 15:18:52에 가입요청</span>
                             <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
                         </div>
                         <div class="alert alert-success alert-dismissible text-white" role="alert">
-                            <span class="text" style="font-size: 12px;">테스트아이디 님께서 2023/05/16 19:37:45에 회원승인</span>
+                            <span class="text" style="font-size: 12px;" th:text="|${lastOneApprovedAdmin.username} 님께서 ${#temporals.format(lastOneApprovedAdmin.adminApprovalDate, 'yyyy/MM/dd HH:mm:ss')}에 관리자등록|">테스트아이디 님께서 2023/05/16 19:37:45에 회원승인</span>
                             <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
                         </div>
                         <div class="alert alert-warning alert-dismissible text-white" role="alert">
-                            <span class="text" style="font-size: 12px;">테스트아이디 님께서 2023/05/16 20:26:54에 서비스요청</span>
+                            <span class="text" style="font-size: 12px;" th:text="|${lastOneService.username} 님께서 ${#temporals.format(lastOneService.registerDate, 'yyyy/MM/dd HH:mm:ss')}에 서비스요청|">테스트아이디 님께서 2023/05/16 20:26:54에 서비스요청</span>
                             <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
                         </div>
                         <div class="alert alert-info alert-dismissible text-white" role="alert">
-                            <span class="text" style="font-size: 12px;">가입자테스트 님께서 2023/05/17 15:18:52에 문의요청</span>
+                            <span class="text" style="font-size: 12px;" th:text="|${lastOneInquiry.username} 님께서 ${#temporals.format(lastOneInquiry.registerDate, 'yyyy/MM/dd HH:mm:ss')}에 문의요청|">가입자테스트 님께서 2023/05/17 15:18:52에 문의요청</span>
                             <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
