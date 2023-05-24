@@ -35,7 +35,7 @@ public class InquiryController {
     @PostMapping("/inquiry-page-text")
     @ResponseBody
     public ResponseEntity<String> inquiryPageText(@RequestBody InquiryRegisterRequestDto inquiryRegisterDto,
-                                              HttpServletRequest request) throws Exception {
+                                                  HttpServletRequest request) throws Exception {
 
         HttpSession session = request.getSession(true);
         MemberResponseDto loginMember = (MemberResponseDto) session.getAttribute(LOGIN_MEMBER);
@@ -52,11 +52,11 @@ public class InquiryController {
 
         HttpSession session = request.getSession(true);
         MemberResponseDto loginMember = (MemberResponseDto) session.getAttribute(LOGIN_MEMBER);
-
+        System.out.println("id!: " + inquiryService.findInquiryIdByMemberId(loginMember.getMemberId()));
         commonService.uploadFiles(uploadFiles, loginMember, INQUIRY);
 
         return new ResponseEntity<>(
-                "image uploaded success", HttpStatus.OK
+                "inquiry uploaded success", HttpStatus.OK
         );
     }
 }
