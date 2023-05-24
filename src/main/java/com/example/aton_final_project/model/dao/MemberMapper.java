@@ -14,6 +14,7 @@ import java.util.Map;
 @Repository
 @Mapper
 public interface MemberMapper {
+    int duplicateEmail(@Param("email") String email);
     void joinAdmin(@Param("memberRequestDto") MemberRequestDto memberRequestDto);
 
     void authorizeAdmin(@Param("memberId") Long memberId);
