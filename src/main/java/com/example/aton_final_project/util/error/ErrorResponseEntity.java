@@ -17,11 +17,15 @@ public class ErrorResponseEntity {
     private HttpStatus httpStatus;
 
     public static ResponseEntity<ErrorResponseEntity> toResponseEntityRegister(AuthenticationRegistrationError e, String key) {
+        String msg = e.getErrorMessage();
+        if(key != null) {
+            msg = String.format(e.getErrorMessage(), key);
+        }
         return ResponseEntity
                 .status(e.getHttpStatus())
                 .body(ErrorResponseEntity.builder()
                         .errorCode(e.getErrorCd())
-                        .message(String.format(e.getErrorMessage(), key))
+                        .message(msg)
                         .errorPointCd(e.getErrorPointCd())
                         .httpStatus(e.getHttpStatus())
                         .build()
@@ -30,8 +34,9 @@ public class ErrorResponseEntity {
 
     public static ResponseEntity<ErrorResponseEntity> toResponseEntityLogin(AuthenticationLoginError e, String key, int failureCount) {
         String msg = e.getErrorMessage();
-        if (key != null)
+        if (key != null) {
             msg = String.format(e.getErrorMessage(), key);
+        }
         String failureMsg = e.getLoginFailureCount();
         if(failureMsg != null) {
             failureMsg = String.format(e.getLoginFailureCount(), failureCount);
