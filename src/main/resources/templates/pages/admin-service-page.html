@@ -96,7 +96,7 @@
                                 <span style="display: flex;">
                                     <i th:class="deco_img" th:each="index : ${#numbers.sequence(1, service.size() - 1)}">
     <!--                                    <img th:src="${service.get(index).fileUrl}" alt="이미지">-->
-<!--                                        <img th:src="|/${#strings.substring(service.get(index).fileUrl, 65)}|" alt="이미지" style="max-width: 100%;">-->
+                                        <!--                                        <img th:src="|/${#strings.substring(service.get(index).fileUrl, 65)}|" alt="이미지" style="max-width: 100%;">-->
                                         <img th:src="|${#strings.substring(service.get(index).fileUrl, #strings.indexOf(service.get(index).fileUrl, 'uploaded_files') + 14)}|" alt="이미지" style="max-width: 100%;">
                                         <div th:text="${service[index].originalFileName}" />
                                     </i>
@@ -107,7 +107,7 @@
                                 <div class="input-group input-group-outline">
                                     <div id="businessRegister" class="form-control" th:text="${service[0].originalFileName}"></div>
                                 </div>
-<!--                                <iframe style="width: 100%; height: 500px;" th:src="|/${#strings.substring(service.get(0).fileUrl, 65)}|">-->
+                                <!--                                <iframe style="width: 100%; height: 500px;" th:src="|/${#strings.substring(service.get(0).fileUrl, 65)}|">-->
                                 <iframe style="width: 100%; height: 500px;" th:src="|${#strings.substring(service.get(0).fileUrl, #strings.indexOf(service.get(0).fileUrl, 'uploaded_files') + 14)}|">
                                 </iframe>
                             </div>
@@ -118,8 +118,8 @@
                     <div class="card-body p-3">
                         <div class="row">
                             <div id="img_download" class="col-lg-3 col-sm-6 col-12 mt-lg-0">
-                                <button th:onclick="|location.href='@{/admin/file-download(serviceId=${service[0].serviceId}, type=${IMG})}'|" class="btn bg-gradient-danger w-100 mb-0 toast-btn" type="button"
-                                        data-target="dangerToast" style="color: #fff; background: darkorange;">이미지(ZIP) 다운로드
+                                <button th:onclick="|location.href='@{/admin/file-download(serviceId=${service[0].serviceId}, type=${IMG})}'|" class="btn bg-gradient-warning w-100 mb-0 toast-btn" type="button"
+                                        data-target="warningToast" style="color: #fff; background: darkorange;">이미지(ZIP) 다운로드
                                 </button>
                             </div>
                             <div id="pdf_download" class="col-lg-3 col-sm-6 col-12">
@@ -133,65 +133,24 @@
             </div>
         </div>
         <div class="position-fixed bottom-1 end-1 z-index-2">
-            <div class="toast fade hide p-2 bg-white" role="alert" aria-live="assertive" id="successToast"
-                 aria-atomic="true">
-                <div class="toast-header border-0">
-                    <i class="material-icons text-success me-2">
-                        check
-                    </i>
-                    <span class="me-auto font-weight-bold">Material Dashboard </span>
-                    <small class="text-body">11 mins ago</small>
-                    <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
-                </div>
-                <hr class="horizontal dark m-0">
-                <div class="toast-body">
-                    Hello, world! This is a notification message.
-                </div>
-            </div>
-            <div class="toast fade hide p-2 mt-2 bg-gradient-info" role="alert" aria-live="assertive" id="infoToast"
+            <div class="toast fade hide p-2 mt-2 bg-gradient-success" role="alert" aria-live="assertive" id="successToast"
                  aria-atomic="true">
                 <div class="toast-header bg-transparent border-0">
                     <i class="material-icons text-white me-2">
                         notifications
                     </i>
-                    <span class="me-auto text-white font-weight-bold">Material Dashboard </span>
-                    <small class="text-white">11 mins ago</small>
-                    <i class="fas fa-times text-md text-white ms-3 cursor-pointer" data-bs-dismiss="toast"
-                       aria-label="Close"></i>
-                </div>
-                <hr class="horizontal light m-0">
-                <div class="toast-body text-white">
-                    Hello, world! This is a notification message.
+                    <span class="me-auto text-white font-weight-bold">사업자등록증 다운로드 완료! </span>
+                    <i class="fas fa-times text-md text-white ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
                 </div>
             </div>
-            <div class="toast fade hide p-2 mt-2 bg-white" role="alert" aria-live="assertive" id="warningToast"
+            <div class="toast fade hide p-2 mt-2 bg-gradient-warning" role="alert" aria-live="assertive" id="warningToast"
                  aria-atomic="true">
-                <div class="toast-header border-0">
-                    <i class="material-icons text-warning me-2">
-                        travel_explore
+                <div class="toast-header bg-transparent border-0">
+                    <i class="material-icons text-white me-2">
+                        notifications
                     </i>
-                    <span class="me-auto font-weight-bold">Material Dashboard </span>
-                    <small class="text-body">11 mins ago</small>
-                    <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
-                </div>
-                <hr class="horizontal dark m-0">
-                <div class="toast-body">
-                    Hello, world! This is a notification message.
-                </div>
-            </div>
-            <div class="toast fade hide p-2 mt-2 bg-white" role="alert" aria-live="assertive" id="dangerToast"
-                 aria-atomic="true">
-                <div class="toast-header border-0">
-                    <i class="material-icons text-danger me-2">
-                        campaign
-                    </i>
-                    <span class="me-auto text-gradient text-danger font-weight-bold">Material Dashboard </span>
-                    <small class="text-body">11 mins ago</small>
-                    <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
-                </div>
-                <hr class="horizontal dark m-0">
-                <div class="toast-body">
-                    Hello, world! This is a notification message.
+                    <span class="me-auto text-white font-weight-bold">이미지 다운로드 완료! </span>
+                    <i class="fas fa-times text-md text-white ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
                 </div>
             </div>
         </div>
