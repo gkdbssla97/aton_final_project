@@ -96,8 +96,8 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public MemberResponseDto findLastOneApprovedMember() throws Exception {
-        MemberResponseDto lastOneApprovedMember = statisticsMapper.findLastOneApprovedMember();
+    public MemberResponseDto findLastOneApprovedAdmin() throws Exception {
+        MemberResponseDto lastOneApprovedMember = statisticsMapper.findLastOneApprovedAdmin();
         AESCipher aesCipher = new AESCipher(lastOneApprovedMember.getEncryptKey());
         lastOneApprovedMember.setUsername(aesCipher.decrypt(lastOneApprovedMember.getUsername()));
         return lastOneApprovedMember;

@@ -21,7 +21,7 @@ public interface StatisticsService {
     StatisticsDto findInquiryMemberCount();
 
     MemberResponseDto findLastOneMember() throws Exception;
-    MemberResponseDto findLastOneApprovedMember() throws Exception;
+    MemberResponseDto findLastOneApprovedAdmin() throws Exception;
     MemberServiceRegisterResponseDto findLastOneService();
     InquiryRegisterResponseDto findLastOneInquiry();
 
