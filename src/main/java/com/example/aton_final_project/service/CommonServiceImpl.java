@@ -73,8 +73,12 @@ public class CommonServiceImpl implements CommonService {
 
             // DB에 파일 저장
             if (type.equals(SERVICE)) {
+                Long serviceIdByMemberId = fileService.findServiceIdByMemberId(loginMember.getMemberId());
+                System.out.println("serviceId: " + serviceIdByMemberId);
                 fileService.saveFile(new FilesDto(saveFileName, fileName, savePath.toString()), fileService.findServiceIdByMemberId(loginMember.getMemberId()));
             } else if (type.equals(INQUIRY)) {
+                Long inquiryIdByMemberId = inquiryService.findInquiryIdByMemberId(loginMember.getMemberId());
+                System.out.println("inquiryId: " + inquiryIdByMemberId);
                 inquiryService.saveInquiryFile(new FilesDto(saveFileName, fileName, savePath.toString()), inquiryService.findInquiryIdByMemberId(loginMember.getMemberId()));
             }
 
