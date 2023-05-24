@@ -52,7 +52,6 @@ public class InquiryController {
 
         HttpSession session = request.getSession(true);
         MemberResponseDto loginMember = (MemberResponseDto) session.getAttribute(LOGIN_MEMBER);
-        System.out.println("id!: " + inquiryService.findInquiryIdByMemberId(loginMember.getMemberId()));
         commonService.uploadFiles(uploadFiles, loginMember, INQUIRY);
 
         return new ResponseEntity<>(
