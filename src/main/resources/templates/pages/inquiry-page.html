@@ -70,13 +70,13 @@
                         <form id="form" class="form-horizontal" role="form" method="post" enctype="multipart/form-data"
                               action="/service-page">
                             <div th:class="inquiry_wrap">
-                            <span class="inputSpan">문의 분류 &nbsp;&nbsp;</span>
-                            <select name="inquirySelectNm" id="inquirySelect">
-                                <option value="0001">일반문의</option>
-                                <option value="0002">계정문의</option>
-                                <option value="0003">탈퇴문의</option>
-                                <option value="0004">신고/이용제한</option>
-                            </select>
+                                <span class="inputSpan">문의 분류 &nbsp;&nbsp;</span>
+                                <select name="inquirySelectNm" id="inquirySelect">
+                                    <option value="0001">일반문의</option>
+                                    <option value="0002">계정문의</option>
+                                    <option value="0003">탈퇴문의</option>
+                                    <option value="0004">신고/이용제한</option>
+                                </select>
                             </div>
                             <span class="inputSpan">문의 제목</span>
                             <div class="input-group input-group-outline">
@@ -283,6 +283,7 @@
                             title: $('#inquiryTitle').val(),
                             contents: $('#inquiryContent').val()
                         }),
+                        async: false,
                         success: function (result) {
                             if (imgFiles.length === 0) {
                                 if (result) {
@@ -301,10 +302,12 @@
                             console.log(error.responseJSON.httpStatus);
                             alert(error.responseJSON.errorCode + '\n' +
                                 error.responseJSON.message + '\n' +
+                                error.responseJSON.errorPointCd + '\n' +
                                 error.responseJSON.httpStatus);
                         },
                     })
                     if (imgFiles.length > 0) {
+                        console.log("checkPoint");
                         for (var i = 0; i < imgFiles.length; i++) {
                             console.log(imgFiles[i]);
                             formData.append("uploadFiles", imgFiles[i]);
