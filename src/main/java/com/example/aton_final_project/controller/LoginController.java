@@ -1,6 +1,7 @@
 package com.example.aton_final_project.controller;
 
 import com.example.aton_final_project.model.dto.*;
+import com.example.aton_final_project.service.mail.MailService;
 import com.example.aton_final_project.service.member.MemberService;
 import com.example.aton_final_project.util.AESCipher;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import static com.example.aton_final_project.util.session.SessionConstant.LOGIN_
 public class LoginController {
 
     private final MemberService memberService;
+    private final MailService mailService;
 
     @GetMapping("/login")
     public String login() {
@@ -73,6 +75,23 @@ public class LoginController {
          * 회원가입 유효성 검사
          */
         memberService.joinMember(memberRequestDto);
+
+        log.info("join User: {}", memberService.maskingInformationBySignUp(memberRequestDto));
+
+        return new ResponseEntity<>(
+                memberService.maskingInformationBySignUp(memberRequestDto), HttpStatus.OK);
+    }
+
+    @PostMapping("/lost-password")
+    @ResponseBody
+    public ResponseEntity<SignUpResponseDto> lostPassword(@RequestBody(required = false) MemberRequestDto memberRequestDto) throws Exception {
+
+        /**
+         * 비밀번호 찾기 회원 검증
+         */
+        AccessTokenDto memberKeyByEmail = memberService.findMemberKeyByEmail(memberRequestDto.getEmail());
+        MemberResponseDto verificationMember = memberService.verificationUsernameAndEmail(memberKeyByEmail, memberRequestDto.getUsername());
+        mailService.executeFindPwd(verificationMember);
 
         log.info("join User: {}", memberService.maskingInformationBySignUp(memberRequestDto));
 
