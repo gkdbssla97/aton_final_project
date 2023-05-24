@@ -4,14 +4,15 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Font online-->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
     <!--        Animate.css-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
-
-
+    <link rel="icon" type="imgage/png" href="../assets/img/hylogo_.png">
+    <title>
+        로그인
+    </title>
     <link rel="stylesheet" href="/css/login.css">
 
     <!-- Google JQuery CDN -->
@@ -21,6 +22,54 @@
 
 </head>
 <body>
+<style>
+    .background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+
+        /* 숨기기 */
+        z-index: -1;
+        opacity: 0;
+    }
+
+    .show {
+        opacity: 1;
+        z-index: 1000;
+        transition: all 0.5s;
+    }
+
+    .window {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .popup {
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -70%);
+        background-color: #ffffff;
+        box-shadow: 0 2px 7px rgba(0, 0, 0, 0.3);
+
+        /* 임시 지정 */
+        width: 270px;
+        height: 80px;
+
+        /* 초기에 약간 아래에 배치 */
+        transform: translate(-50%, -40%);
+    }
+
+    .show .popup {
+        transform: translate(-50%, -50%);
+        transition: all 0.5s;
+    }
+</style>
 <div>
     <div class="panel shadow1">
         <form class="login-form">
@@ -58,7 +107,30 @@
                    value="로그인">
             <input type="button" id="signup-form-button" class="login_form button animated fadeInUp animate4 hidden"
                    value="회원가입">
-            <p><a id="lost-password-link" href="" class="animated fadeIn animate5">비밀번호를 잊어버렸습니다.</a>
+            <p><a id="lost-password" href="" class="animated fadeIn animate5">비밀번호를 잊어버렸습니다.</a>
+            <div class="background">
+                <div class="window">
+                    <div class="popup">
+                        <div id="header" style="display: flex;">
+                            <p style="font-size: 13px;">가입한 사용자명, 이메일을 입력해주세요.</p>
+                            <button id="close" style="background-color: white; border: none; position: relative; top: 4px; height: 3px; left: 7px;">x</button>
+                        </div>
+                        <div id="lost-body" style="display: flex;">
+                            <div id="lost-password-fieldset" style="position: relative; bottom: 5px; right: 6px;">
+                                <input class="login animated fadeInUp animate2" id = "lost-password-name" name="loginEmail" type="text" required
+                                       placeholder="이름을 입력하세요." value="" style="border: 1px solid black; width: 200px;">
+                                <input class="login animated fadeInUp animate3" id = "lost-password-email" name="loginPassword" type="email" required
+                                       placeholder="이메일을 입력하세요." value="" style="border: 1px solid black; width: 200px;">
+                            </div>
+                            <button id ="lost-submit" type="button" class="panel-switch button" style="position: relative; width: 80px; height: 42px; bottom: 33px; right: 8px; background: #f03699;
+                                border: 1px black solid; color: #fff; letter-spacing: 2px;">제출</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div></div>
+                    </div>
+                </div>
+            </div>
             </p>
         </form>
     </div>
@@ -66,6 +138,19 @@
 <script src="/js/login.js"></script>
 <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
 <script>
+    // 팝업창
+    function show() {
+        document.querySelector(".background").className = "background show";
+    }
+
+    function close() {
+        document.querySelector(".background").className = "background";
+    }
+
+    document.querySelector("#lost-password").addEventListener("click", show);
+    document.querySelector("#close").addEventListener("click", close);
+    //
+
     $('#username').keyup(function (e) {
         let content = $(this).val();
 
@@ -96,9 +181,19 @@
         }
     });
 
-   function checkEmailFormat() {
+    function checkEmailFormatForLogin() {
         var regexp = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
         var email =  $('#email').val();
+        if (!regexp.test(email)) {
+            alert("이메일 형식에 맞게 기입하십시오.");
+            $("#email").focus();
+            return false;
+        }
+        return true;
+    }
+    function checkEmailFormatForFindPwd() {
+        var regexp = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+        var email =  $('#lost-password-email').val();
         if (!regexp.test(email)) {
             alert("이메일 형식에 맞게 기입하십시오.");
             $("#email").focus();
@@ -161,10 +256,12 @@
                             alert(error.responseJSON.errorCode + '\n' +
                                 error.responseJSON.message + '\n' +
                                 error.responseJSON.loginFailureCount + '\n' +
+                                error.responseJSON.errorPointCd + '\n' +
                                 error.responseJSON.httpStatus);
                         } else {
                             alert(error.responseJSON.errorCode + '\n' +
                                 error.responseJSON.message + '\n' +
+                                error.responseJSON.errorPointCd + '\n' +
                                 error.responseJSON.httpStatus);
                         }
                     }
@@ -173,7 +270,7 @@
 
         $('#signup-form-button').click(
             function () {
-                if(checkEmailFormat() && checkPhoneNo()) {
+                if(checkEmailFormatForLogin() && checkPhoneNo()) {
                     $.ajax({
                         type: "POST",
                         url: "/sign-up",
@@ -200,7 +297,40 @@
                             console.log(error.responseJSON.httpStatus);
                             alert(error.responseJSON.errorCode + '\n' +
                                 error.responseJSON.message + '\n' +
-                                error.responseJSON.loginFailureCount + '\n' +
+                                error.responseJSON.errorPointCd + '\n' +
+                                error.responseJSON.httpStatus);
+                        }
+                    })
+                }
+            });
+
+        $('#lost-submit').click(
+            function () {
+                if(checkEmailFormatForFindPwd()) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/lost-password",
+                        dataType: 'json',
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            username: $('#lost-password-name').val(),
+                            email: $('#lost-password-email').val()
+                        }),
+                        success: function (response) {
+                            alert("이메일 전송 완료")
+                            window.location.href = "/login";
+                            console.log(response)
+                        },
+                        error: function (error, txtStatus, xhr) {
+                            console.log(xhr);
+                            console.log(error.responseJSON)
+                            console.log(error.responseJSON.errorCode);
+                            console.log(error.responseJSON.message);
+                            console.log(error.responseJSON.loginFailureCount);
+                            console.log(error.responseJSON.httpStatus);
+                            alert(error.responseJSON.errorCode + '\n' +
+                                error.responseJSON.message + '\n' +
+                                error.responseJSON.errorPointCd + '\n' +
                                 error.responseJSON.httpStatus);
                         }
                     })
