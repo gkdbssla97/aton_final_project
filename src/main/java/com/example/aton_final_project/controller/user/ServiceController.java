@@ -35,7 +35,7 @@ public class ServiceController {
     @PostMapping("/service-page-text")
     @ResponseBody
     public ResponseEntity<String> servicePageText(@RequestBody MemberServiceRegisterRequestDto memberServiceRegisterDto,
-                                              HttpServletRequest request) throws Exception {
+                                                  HttpServletRequest request) throws Exception {
 
         HttpSession session = request.getSession(true);
         MemberResponseDto loginMember = (MemberResponseDto) session.getAttribute(LOGIN_MEMBER);
