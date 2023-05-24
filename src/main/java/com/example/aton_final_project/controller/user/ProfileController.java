@@ -33,7 +33,7 @@ public class ProfileController {
     @PostMapping("/edit-profile")
     @ResponseBody
     public ResponseEntity<MemberResponseDto> profilePage(@RequestBody(required = false) EditProfileDto editProfileDto,
-                                                        HttpServletResponse response, HttpServletRequest request) throws Exception {
+                                                         HttpServletResponse response, HttpServletRequest request) throws Exception {
 
         HttpSession session = request.getSession(true);
         MemberResponseDto loginMember = (MemberResponseDto) session.getAttribute(LOGIN_MEMBER);
