@@ -102,7 +102,7 @@
                                 <span style="display: flex;">
                                     <i th:class="deco_img" th:each="index : ${#numbers.sequence(1, serviceList.size() - 1)}">
     <!--                                    <img th:src="${service.get(index).fileUrl}" alt="이미지">-->
-<!--                                        <img th:src="|/${#strings.substring(serviceList.get(index).fileUrl, 65)}|" alt="이미지" style="max-width: 100%;">-->
+                                        <!--                                        <img th:src="|/${#strings.substring(serviceList.get(index).fileUrl, 65)}|" alt="이미지" style="max-width: 100%;">-->
                                         <img th:src="|${#strings.substring(serviceList.get(index).fileUrl, #strings.indexOf(serviceList.get(index).fileUrl, 'uploaded_files') + 14)}|" alt="이미지" style="max-width: 100%;">
                                         <div style="text-align: center;" th:text="${serviceList[index].originalFileName}" />
                                     </i>
@@ -142,13 +142,13 @@
                         check
                     </i>
                     <span class="me-auto font-weight-bold">가이드문서(PDF) 다운로드 성공</span>
-<!--                    <small class="text-body">11 mins ago</small>-->
-<!--                    <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>-->
+                    <!--                    <small class="text-body">11 mins ago</small>-->
+                    <!--                    <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>-->
                 </div>
-<!--                <hr class="horizontal dark m-0">-->
-<!--                <div class="toast-body">-->
-<!--                    Hello, world! This is a notification message.-->
-<!--                </div>-->
+                <!--                <hr class="horizontal dark m-0">-->
+                <!--                <div class="toast-body">-->
+                <!--                    Hello, world! This is a notification message.-->
+                <!--                </div>-->
             </div>
         </div>
         <div th:replace="~{fragment/bottom :: bottom}"></div>
