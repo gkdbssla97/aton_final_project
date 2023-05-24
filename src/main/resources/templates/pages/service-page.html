@@ -99,7 +99,7 @@
                         <!--              <h5 class="mb-0">Notifications</h5>-->
                         <p class="text-sm mb-0" style="text-align: center;position: relative;top: 10px;">
                             ※ 이미지는 168*168 또는 192*600(이하), 사업자등록증은 .pdf만 가능
-<!--                            <a href="https://getbootstrap.com/docs/5.0/components/toasts/" target="">here</a>.-->
+                            <!--                            <a href="https://getbootstrap.com/docs/5.0/components/toasts/" target="">here</a>.-->
                         </p>
                     </div>
                     <div class="card-body p-3">
@@ -214,6 +214,7 @@
                             businessNo: $('#businessNumber').val(),
                             fileSize: fileSize
                         }),
+                        async: false, // 비동기 설정 해제
                         success: function (result) {
                         },
                         error: function (error) {
@@ -248,6 +249,7 @@
                                 console.log(error.responseJSON.httpStatus);
                                 alert(error.responseJSON.errorCode + '\n' +
                                     error.responseJSON.message + '\n' +
+                                    error.responseJSON.errorPointCd + '\n' +
                                     error.responseJSON.httpStatus);
                             },
                             cache: false,
