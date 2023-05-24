@@ -94,7 +94,7 @@
                                     <span style="display: flex;">
                                     <i th:class="deco_img" th:each="inquiryFile : ${inquiry}">
     <!--                                    <img th:src="${service.get(index).fileUrl}" alt="이미지">-->
-<!--                                        <img th:src="|/${#strings.substring(inquiryFile.fileUrl, 65)}|" alt="이미지" style="max-width: 100%;">-->
+                                        <!--                                        <img th:src="|/${#strings.substring(inquiryFile.fileUrl, 65)}|" alt="이미지" style="max-width: 100%;">-->
                                         <img th:src="|${#strings.substring(inquiryFile.fileUrl, #strings.indexOf(inquiryFile.fileUrl, 'uploaded_files') + 14)}|" alt="이미지" style="max-width: 100%;">
                                         <div style="text-align: center;" th:text="${inquiryFile.originalFileName}" />
                                     </i>
