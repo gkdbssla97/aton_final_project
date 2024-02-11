@@ -19,7 +19,6 @@
 ### Server
 - 회원가입, AES256 암호화 로그인 / 아웃(로그인 세션)
 - SMTP 프로토콜 이메일 발송, 파일(img / pdf) 업로드, 다운로드
-- 검색 쿼리 / 페이지네이션 활용한 게시물 구현
 - 외부 API 활용
   - 날씨 공공 데이터 조회 (https://openweathermap.org/api)
   - kakao Map API 지도 조회 (https://apis.map.kakao.com/)
